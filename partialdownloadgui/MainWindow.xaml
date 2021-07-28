@@ -136,7 +136,7 @@
                         <GridViewColumn Width="30">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Image Source="/Images/right-arrow.png"></Image>
+                                    <Image Source="{Binding Path=StatusImage}"></Image>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>

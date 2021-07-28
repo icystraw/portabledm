@@ -10,6 +10,7 @@
 	<ItemGroup>
 		<None Remove="Images\diskette.png" />
 		<None Remove="Images\download.png" />
+		<None Remove="Images\error.png" />
 		<None Remove="Images\folder.png" />
 		<None Remove="Images\go.png" />
 		<None Remove="Images\new-document.png" />
@@ -21,6 +22,7 @@
 	<ItemGroup>
 		<Resource Include="Images\diskette.png" />
 		<Resource Include="Images\download.png" />
+		<Resource Include="Images\error.png" />
 		<Resource Include="Images\folder.png" />
 		<Resource Include="Images\go.png" />
 		<Resource Include="Images\new-document.png" />

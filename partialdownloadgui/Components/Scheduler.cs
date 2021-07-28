@@ -220,11 +220,15 @@ namespace partialdownloadgui.Components
                 {
                     long secTotal = ds.Total;
                     long secDownloaded = ds.BytesDownloaded;
+                    DownloadStatus status = ds.DownloadStatus;
                     total += secTotal;
                     totalDownloaded += secDownloaded;
                     ProgressView pv = new();
                     pv.Total = secTotal;
                     pv.BytesDownloaded = secDownloaded;
+                    if (status == DownloadStatus.Downloading || status == DownloadStatus.PrepareToDownload) pv.StatusImage = "pack://application:,,,/Images/right-arrow.png";
+                    else if (status == DownloadStatus.DownloadError) pv.StatusImage = "pack://application:,,,/Images/error.png";
+                    else pv.StatusImage = string.Empty;
                     pv.Section = "Section " + sectionIndex.ToString();
                     sectionIndex++;
                     pv.Size = Util.getShortFileSize(secTotal);
@@ -245,6 +249,7 @@ namespace partialdownloadgui.Components
                 ProgressView pvTotal = new();
                 pvTotal.Total = total;
                 pvTotal.BytesDownloaded = totalDownloaded;
+                pvTotal.StatusImage = string.Empty;
                 pvTotal.Section = "Overall " + Util.getShortFileSize(sc.GetSpeed()) + "/sec";
                 pvTotal.Size = Util.getShortFileSize(total);
                 if (total > 0)
