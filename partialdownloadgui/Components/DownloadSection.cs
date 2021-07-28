@@ -31,7 +31,7 @@ namespace partialdownloadgui.Components
         public DownloadSection()
         {
             this.id = Guid.NewGuid();
-            this.fileName = Path.GetTempPath() + this.id.ToString();
+            this.fileName = Util.appDataDirectory + this.id.ToString();
             this.bytesDownloaded = 0;
         }
 

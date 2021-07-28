@@ -11,6 +11,8 @@ namespace partialdownloadgui.Components
 {
     public class Util
     {
+        public static readonly string appDataDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\partialdownloadgui\\";
+
         public static string convertFromBase64(string base64String)
         {
             return Encoding.GetEncoding(28591).GetString(Convert.FromBase64String(base64String));
@@ -62,15 +64,14 @@ namespace partialdownloadgui.Components
         public static void saveAppSettingsToFile()
         {
             string jsonString = JsonSerializer.Serialize(App.AppSettings);
-            string settingsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\partialdownloadgui";
-            Directory.CreateDirectory(settingsDirectory);
-            File.WriteAllText(settingsDirectory + "\\settings.json", jsonString);
+            Directory.CreateDirectory(appDataDirectory);
+            File.WriteAllText(appDataDirectory + "settings.json", jsonString);
         }
 
         public static void loadAppSettingsFromFile()
         {
-            string settingsFile = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\partialdownloadgui\\settings.json";
-            string jsonString = File.ReadAllText(settingsFile);
+            Directory.CreateDirectory(appDataDirectory);
+            string jsonString = File.ReadAllText(appDataDirectory + "settings.json");
             App.AppSettings = JsonSerializer.Deserialize<ApplicationSettings>(jsonString);
         }
 
