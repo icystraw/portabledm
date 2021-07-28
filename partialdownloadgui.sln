@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31424.327
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "partialdownloadgui", "partialdownloadgui\partialdownloadgui.csproj", "{6CB99842-A27C-491C-BDF1-E362B385C05D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6CB99842-A27C-491C-BDF1-E362B385C05D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CB99842-A27C-491C-BDF1-E362B385C05D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CB99842-A27C-491C-BDF1-E362B385C05D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CB99842-A27C-491C-BDF1-E362B385C05D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2FD559DE-4DD8-43E1-8A7B-1703F5E160A6}
+	EndGlobalSection
+EndGlobal

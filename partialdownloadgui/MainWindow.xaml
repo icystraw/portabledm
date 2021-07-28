@@ -1,0 +1,149 @@
+﻿<Window x:Class="partialdownloadgui.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:partialdownloadgui"
+        mc:Ignorable="d"
+        Title="HTTP Download Manager" Height="600" Width="500" Background="#FFF5F6F7" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+    <DockPanel>
+        <GroupBox Header="Options" Margin="5" DockPanel.Dock="Top">
+            <StackPanel>
+                <DockPanel>
+                    <Label Content="URL to download:" DockPanel.Dock="Left" />
+                    <TextBox TextWrapping="NoWrap" Name="txtUrl" TextChanged="txtUrl_TextChanged" />
+                </DockPanel>
+                <DockPanel Margin="0,5,0,0">
+                    <Label Content="Save to disk:" DockPanel.Dock="Left"></Label>
+                    <Button Name="btnBrowse" Content="Choose location..." Click="btnBrowse_Click"></Button>
+                </DockPanel>
+                <GroupBox Header="Multi-threading">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Maximum number of download thread:" />
+                        <ComboBox Width="50" Name="cbThreads">
+                            <ComboBoxItem>1</ComboBoxItem>
+                            <ComboBoxItem>2</ComboBoxItem>
+                            <ComboBoxItem>3</ComboBoxItem>
+                            <ComboBoxItem>4</ComboBoxItem>
+                            <ComboBoxItem IsSelected="True">5</ComboBoxItem>
+                            <ComboBoxItem>6</ComboBoxItem>
+                            <ComboBoxItem>7</ComboBoxItem>
+                            <ComboBoxItem>8</ComboBoxItem>
+                            <ComboBoxItem>9</ComboBoxItem>
+                            <ComboBoxItem>10</ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
+                </GroupBox>
+                <Expander Header="Advanced Options">
+                    <StackPanel>
+                        <GroupBox Header="Partial Download">
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="Download"></Label>
+                                <TextBox Text="0" Width="60" Name="txtRangeFrom">
+                                    <TextBox.ToolTip>
+                                        <ToolTip>
+                                            <TextBlock>0 means from the start</TextBlock>
+                                        </ToolTip>
+                                    </TextBox.ToolTip>
+                                </TextBox>
+                                <Label Content="-"></Label>
+                                <TextBox Text="0" Width="60" Name="txtRangeTo">
+                                    <TextBox.ToolTip>
+                                        <ToolTip>
+                                            <TextBlock>0 means to the end</TextBlock>
+                                        </ToolTip>
+                                    </TextBox.ToolTip>
+                                </TextBox>
+                                <Label Content="bytes(only if server supports)."></Label>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="Authentication">
+                            <StackPanel Orientation="Horizontal">
+                                <Label>Username</Label>
+                                <TextBox Name="txtUsername" Width="100"></TextBox>
+                                <Label>Password</Label>
+                                <PasswordBox Name="txtPassword" Width="100"></PasswordBox>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="Post-Download">
+                            <CheckBox Name="chkShutdown">Shut down computer after download finishes (need admin rights).</CheckBox>
+                        </GroupBox>
+                    </StackPanel>
+                </Expander>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Name="btnStart" Margin="5" Width="40" Click="btnStart_Click" Background="White">
+                        <Image Source="pack://application:,,,/Images/go.png" Margin="3" />
+                        <Button.ToolTip>
+                            <ToolTip>
+                                <TextBlock>Start a new download.</TextBlock>
+                            </ToolTip>
+                        </Button.ToolTip>
+                    </Button>
+                    <Button Name="btnPauseResume" IsEnabled="False" Margin="5" Width="40" Click="btnPauseResume_Click" Background="White">
+                        <Grid>
+                            <Image Source="pack://application:,,,/Images/pause.png" Margin="3" Name="imgPause" />
+                            <Image Source="pack://application:,,,/Images/play.png" Margin="3" Visibility="Hidden" Name="imgResume" />
+                        </Grid>
+                        <Button.ToolTip>
+                            <ToolTip>
+                                <TextBlock>Pause/resume current download.</TextBlock>
+                            </ToolTip>
+                        </Button.ToolTip>
+                    </Button>
+                    <Button Name="btnNew" Margin="5" Width="40" Click="btnNew_Click" Background="White">
+                        <Image Source="pack://application:,,,/Images/new-document.png" Margin="3" />
+                        <Button.ToolTip>
+                            <ToolTip>
+                                <TextBlock>Clear current download and prepare to start a new download.</TextBlock>
+                            </ToolTip>
+                        </Button.ToolTip>
+                    </Button>
+                    <Button Name="btnOpen" Margin="5" Width="40" Click="btnOpen_Click" Background="White">
+                        <Image Source="pack://application:,,,/Images/folder.png" Margin="3" />
+                        <Button.ToolTip>
+                            <ToolTip>
+                                <TextBlock>Load previous unfinished download from a download configuration file.</TextBlock>
+                            </ToolTip>
+                        </Button.ToolTip>
+                    </Button>
+                    <Button Name="btnSave" Margin="5" Width="40" Click="btnSave_Click" Background="White">
+                        <Image Source="pack://application:,,,/Images/diskette.png" Margin="3" />
+                        <Button.ToolTip>
+                            <ToolTip>
+                                <TextBlock>Save current download to a download configuration file.</TextBlock>
+                            </ToolTip>
+                        </Button.ToolTip>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Margin="5" Header="Status" DockPanel.Dock="Bottom">
+            <TextBox Name="txtStatus" TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True" Text="Paste URL to start download."></TextBox>
+        </GroupBox>
+        <WrapPanel Name="wpProgress" DockPanel.Dock="Bottom" Margin="5" />
+        <GroupBox Margin="5" Header="Download Progress">
+            <ListView Name="lstProgress">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="30">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Image Source="/Images/right-arrow.png"></Image>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Section}" Header="Section" Width="120"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Size}" Header="Size" Width="100"/>
+                        <GridViewColumn Header="Progress" Width="180">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ProgressBar Minimum="0" Maximum="100" Value="{Binding Path=Progress}" Width="160" Height="3"></ProgressBar>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </GroupBox>
+    </DockPanel>
+</Window>

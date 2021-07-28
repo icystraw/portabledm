@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net5.0-windows</TargetFramework>
+		<UseWPF>true</UseWPF>
+		<ApplicationIcon>Images\decrease.ico</ApplicationIcon>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="Images\diskette.png" />
+		<None Remove="Images\folder.png" />
+		<None Remove="Images\go.png" />
+		<None Remove="Images\new-document.png" />
+		<None Remove="Images\pause.png" />
+		<None Remove="Images\play.png" />
+		<None Remove="Images\right-arrow.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Resource Include="Images\diskette.png" />
+		<Resource Include="Images\folder.png" />
+		<Resource Include="Images\go.png" />
+		<Resource Include="Images\new-document.png" />
+		<Resource Include="Images\pause.png" />
+		<Resource Include="Images\play.png" />
+		<Resource Include="Images\right-arrow.png" />
+	</ItemGroup>
+
+</Project>
