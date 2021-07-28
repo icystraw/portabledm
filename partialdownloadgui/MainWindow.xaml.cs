@@ -495,13 +495,12 @@ namespace partialdownloadgui
         {
             if (!string.IsNullOrEmpty(App.AppSettings.DownloadFolder) && Directory.Exists(App.AppSettings.DownloadFolder))
             {
-                if (App.AppSettings.DownloadFolder.EndsWith('\\'))
+                string fileNameOnly = Util.getFileName(txtUrl.Text.Trim());
+                downloadedFile = System.IO.Path.Combine(App.AppSettings.DownloadFolder, fileNameOnly);
+                if (File.Exists(downloadedFile))
                 {
-                    downloadedFile = App.AppSettings.DownloadFolder + Util.getFileName(txtUrl.Text.Trim());
-                }
-                else
-                {
-                    downloadedFile = App.AppSettings.DownloadFolder + "\\" + Util.getFileName(txtUrl.Text.Trim());
+                    fileNameOnly = DateTime.Now.ToString("yyyy-MMM-dd-HH-mm-ss") + " " + fileNameOnly;
+                    downloadedFile = System.IO.Path.Combine(App.AppSettings.DownloadFolder, fileNameOnly);
                 }
                 btnBrowse.Content = downloadedFile;
             }
