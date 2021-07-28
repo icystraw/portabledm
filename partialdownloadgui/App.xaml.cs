@@ -20,6 +20,11 @@ namespace partialdownloadgui
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            if (Environment.GetCommandLineArgs().Length == 3)
+            {
+                Util.startTcpServer();
+                return;
+            }
             try
             {
                 Util.loadAppSettingsFromFile();
@@ -28,15 +33,8 @@ namespace partialdownloadgui
             {
                 appSettings = new();
             }
-        }
-
-        private void Application_Exit(object sender, ExitEventArgs e)
-        {
-            try
-            {
-                Util.saveAppSettingsToFile();
-            }
-            catch { }
+            MainWindow mw = new();
+            mw.Show();
         }
     }
 }

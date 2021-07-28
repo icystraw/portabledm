@@ -513,5 +513,14 @@ namespace partialdownloadgui
                 Process.Start("explorer.exe", App.AppSettings.DownloadFolder);
             }
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            try
+            {
+                Util.saveAppSettingsToFile();
+            }
+            catch { }
+        }
     }
 }

@@ -6,6 +6,8 @@ using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Windows;
+using System.Net.Sockets;
+using System.Diagnostics;
 
 namespace partialdownloadgui.Components
 {
@@ -15,7 +17,15 @@ namespace partialdownloadgui.Components
 
         public static string convertFromBase64(string base64String)
         {
-            return Encoding.GetEncoding(28591).GetString(Convert.FromBase64String(base64String));
+            try
+            {
+                return Encoding.GetEncoding(28591).GetString(Convert.FromBase64String(base64String));
+
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
 
         public static string getShortFileSize(long fileSize)
@@ -200,6 +210,56 @@ namespace partialdownloadgui.Components
             {
                 if (response != null) response.Dispose();
             }
+        }
+
+        public static void startTcpServer()
+        {
+            TcpListener server = new(IPAddress.Parse("127.0.0.1"), 13000);
+            server.Start();
+            while (true)
+            {
+                TcpClient client = null;
+                try
+                {
+                    // Perform a blocking call to accept requests.
+                    // You could also use server.AcceptSocket() here.
+                    client = server.AcceptTcpClient();
+
+                    int i;
+                    byte[] bytes = new byte[2048];
+                    StringBuilder sb = new();
+                    string request, response;
+                    NetworkStream stream = client.GetStream();
+                    // Loop to receive all the data sent by the client.
+                    while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
+                    {
+                        // Translate data bytes to a ASCII string.
+                        sb.Append(Encoding.ASCII.GetString(bytes, 0, i));
+                        if (!stream.DataAvailable) break;
+                    }
+                    request = sb.ToString();
+                    if (request.Contains("__SERVER_STOP"))
+                    {
+                        client.Close();
+                        break;
+                    }
+                    if (request.StartsWith("GET /") && request.Contains(" HTTP"))
+                    {
+                        response = "HTTP/1.1 403 Forbidden\r\nDate: " + DateTime.Now.ToUniversalTime().ToString("R") + "\r\n\r\n";
+                        byte[] msg = Encoding.ASCII.GetBytes(response);
+                        stream.Write(msg, 0, msg.Length);
+                        string base64Url = request.Substring(5, request.IndexOf(" HTTP") - 5);
+                        Process.Start("partialdownloadgui.exe", base64Url);
+                    }
+                    client.Close();
+                }
+                catch
+                {
+                    client.Close();
+                    continue;
+                }
+            }
+            server.Stop();
         }
     }
 }
