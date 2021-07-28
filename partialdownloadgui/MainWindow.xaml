@@ -15,7 +15,15 @@
                 </DockPanel>
                 <DockPanel Margin="0,5,0,0">
                     <Label Content="Save to disk:" DockPanel.Dock="Left"></Label>
-                    <Button Name="btnBrowse" Content="Choose location..." Click="btnBrowse_Click"></Button>
+                    <Button Name="btnOpenDownloadFolder" Background="White" Width="25" DockPanel.Dock="Right" Click="btnOpenDownloadFolder_Click">
+                        <Image Source="pack://application:,,,/Images/download.png" />
+                        <Button.ToolTip>
+                            <ToolTip>
+                                <TextBlock>Open download folder in Windows Explorer.</TextBlock>
+                            </ToolTip>
+                        </Button.ToolTip>
+                    </Button>
+                    <Button Name="btnBrowse" Content="Choose location..." Click="btnBrowse_Click" Background="White"></Button>
                 </DockPanel>
                 <GroupBox Header="Multi-threading">
                     <StackPanel Orientation="Horizontal">

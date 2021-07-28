@@ -505,5 +505,13 @@ namespace partialdownloadgui
                 btnBrowse.Content = downloadedFile;
             }
         }
+
+        private void btnOpenDownloadFolder_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(App.AppSettings.DownloadFolder))
+            {
+                Process.Start("explorer.exe", App.AppSettings.DownloadFolder);
+            }
+        }
     }
 }
