@@ -80,7 +80,17 @@
                 </Expander>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button Name="btnStart" Margin="5" Width="40" Click="btnStart_Click" Background="White">
-                        <Image Source="pack://application:,,,/Images/go.png" Margin="3" />
+                        <Image Source="pack://application:,,,/Images/go.png" Margin="3">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Opacity" Value="0.5" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
                         <Button.ToolTip>
                             <ToolTip>
                                 <TextBlock>Start a new download.</TextBlock>
@@ -89,8 +99,28 @@
                     </Button>
                     <Button Name="btnPauseResume" IsEnabled="False" Margin="5" Width="40" Click="btnPauseResume_Click" Background="White">
                         <Grid>
-                            <Image Source="pack://application:,,,/Images/pause.png" Margin="3" Name="imgPause" />
-                            <Image Source="pack://application:,,,/Images/play.png" Margin="3" Visibility="Hidden" Name="imgResume" />
+                            <Image Source="pack://application:,,,/Images/pause.png" Margin="3" Name="imgPause">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Opacity" Value="0.5" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                            <Image Source="pack://application:,,,/Images/play.png" Margin="3" Visibility="Hidden" Name="imgResume">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Opacity" Value="0.5" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
                         </Grid>
                         <Button.ToolTip>
                             <ToolTip>
