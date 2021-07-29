@@ -296,7 +296,7 @@ namespace partialdownloadgui.Components
         }
 
         // this method will be called by a different thread
-        public void JoinSectionsToFile(string fileName)
+        public void JoinSectionsToFile()
         {
             if (sections.Count == 0) return;
             // make sure the download cannot continue
@@ -305,9 +305,24 @@ namespace partialdownloadgui.Components
             DownloadSection ds = sections[0];
             Stream streamDest = null, streamSection = null;
             byte[] buffer = new byte[bufferSize];
+            string fileNameWithPath;
             try
             {
-                streamDest = File.OpenWrite(fileName);
+                if (!string.IsNullOrEmpty(App.AppSettings.DownloadFolder) && Directory.Exists(App.AppSettings.DownloadFolder))
+                {
+                    string fileNameOnly = Util.getFileName(ds.Url);
+                    fileNameWithPath = Path.Combine(App.AppSettings.DownloadFolder, fileNameOnly);
+                    if (File.Exists(fileNameWithPath))
+                    {
+                        fileNameOnly = DateTime.Now.ToString("yyyy-MMM-dd-HH-mm-ss") + " " + fileNameOnly;
+                        fileNameWithPath = Path.Combine(App.AppSettings.DownloadFolder, fileNameOnly);
+                    }
+                }
+                else
+                {
+                    throw new NullReferenceException("Download folder is not present.");
+                }
+                streamDest = File.OpenWrite(fileNameWithPath);
                 while (true)
                 {
                     if (ds.DownloadStatus != DownloadStatus.Finished) continue;

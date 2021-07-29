@@ -36,7 +36,6 @@ namespace partialdownloadgui
             txtUrl.Text = "http://192.168.1.46/1.bin";
         }
 
-        private string downloadedFile;
         private string configFile;
         private Scheduler scheduler;
         private DispatcherTimer timer;
@@ -54,7 +53,7 @@ namespace partialdownloadgui
                 MessageBox.Show("URL should be an HTTP address (starts with 'http').", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            if (string.IsNullOrEmpty(downloadedFile))
+            if (string.IsNullOrEmpty(App.AppSettings.DownloadFolder))
             {
                 MessageBox.Show("Please select a location for your downloaded file.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
@@ -123,7 +122,6 @@ namespace partialdownloadgui
         {
             SetOptionControlsState(true);
             txtUrl.Text = string.Empty;
-            btnBrowse.Content = "Choose location...";
             txtRangeFrom.Text = "0";
             txtRangeTo.Text = "0";
             TogglePauseResume(false);
@@ -131,7 +129,6 @@ namespace partialdownloadgui
             lstProgress.ItemsSource = null;
             txtStatus.Text = "Ready.";
             chkShutdown.IsChecked = false;
-            downloadedFile = string.Empty;
             configFile = string.Empty;
             scheduler = null;
             schedulerThread = null;
@@ -248,20 +245,17 @@ namespace partialdownloadgui
             return false;
         }
 
-        private bool BrowseForDownloadedFile(string url)
+        private bool BrowseForDownloadedFile()
         {
-            SaveFileDialog dlg = new();
-            dlg.Filter = "All files|*.*";
-            dlg.FileName = Util.getFileName(url);
+            System.Windows.Forms.FolderBrowserDialog dlg = new();
             if (!string.IsNullOrEmpty(App.AppSettings.DownloadFolder))
             {
-                if (Directory.Exists(App.AppSettings.DownloadFolder)) dlg.InitialDirectory = App.AppSettings.DownloadFolder;
+                if (Directory.Exists(App.AppSettings.DownloadFolder)) dlg.SelectedPath = App.AppSettings.DownloadFolder;
             }
-            if (dlg.ShowDialog(this) == true)
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                downloadedFile = dlg.FileName;
-                btnBrowse.Content = downloadedFile;
-                App.AppSettings.DownloadFolder = System.IO.Path.GetDirectoryName(dlg.FileName);
+                btnBrowse.Content = dlg.SelectedPath;
+                App.AppSettings.DownloadFolder = dlg.SelectedPath;
                 return true;
             }
             return false;
@@ -322,7 +316,7 @@ namespace partialdownloadgui
                 });
                 try
                 {
-                    scheduler.JoinSectionsToFile(downloadedFile);
+                    scheduler.JoinSectionsToFile();
                     scheduler.CleanTempFiles();
                     this.Dispatcher.Invoke(() =>
                     {
@@ -354,7 +348,7 @@ namespace partialdownloadgui
             else
             {
                 if (IsDownloadingFinished()) return;
-                if (string.IsNullOrEmpty(downloadedFile))
+                if (string.IsNullOrEmpty(App.AppSettings.DownloadFolder))
                 {
                     MessageBox.Show("Please select a location for your downloaded file.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
@@ -396,7 +390,7 @@ namespace partialdownloadgui
 
         private void btnBrowse_Click(object sender, RoutedEventArgs e)
         {
-            BrowseForDownloadedFile(txtUrl.Text.Trim());
+            BrowseForDownloadedFile();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -499,20 +493,9 @@ namespace partialdownloadgui
                 this.Topmost = true;
                 this.Topmost = false;
             }
-        }
-
-        private void txtUrl_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
-            if (!string.IsNullOrEmpty(App.AppSettings.DownloadFolder) && Directory.Exists(App.AppSettings.DownloadFolder))
+            if (!string.IsNullOrEmpty(App.AppSettings.DownloadFolder))
             {
-                string fileNameOnly = Util.getFileName(txtUrl.Text.Trim());
-                downloadedFile = System.IO.Path.Combine(App.AppSettings.DownloadFolder, fileNameOnly);
-                if (File.Exists(downloadedFile))
-                {
-                    fileNameOnly = DateTime.Now.ToString("yyyy-MMM-dd-HH-mm-ss") + " " + fileNameOnly;
-                    downloadedFile = System.IO.Path.Combine(App.AppSettings.DownloadFolder, fileNameOnly);
-                }
-                btnBrowse.Content = downloadedFile;
+                btnBrowse.Content = App.AppSettings.DownloadFolder;
             }
         }
 

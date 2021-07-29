@@ -11,10 +11,10 @@
             <StackPanel>
                 <DockPanel>
                     <Label Content="URL to download:" DockPanel.Dock="Left" />
-                    <TextBox TextWrapping="NoWrap" Name="txtUrl" TextChanged="txtUrl_TextChanged" />
+                    <TextBox TextWrapping="NoWrap" Name="txtUrl" />
                 </DockPanel>
                 <DockPanel Margin="0,5,0,0">
-                    <Label Content="Save to disk:" DockPanel.Dock="Left"></Label>
+                    <Label Content="Save to folder:" DockPanel.Dock="Left"></Label>
                     <Button Name="btnOpenDownloadFolder" Background="White" Width="25" DockPanel.Dock="Right" Click="btnOpenDownloadFolder_Click">
                         <Image Source="pack://application:,,,/Images/download.png" />
                         <Button.ToolTip>
