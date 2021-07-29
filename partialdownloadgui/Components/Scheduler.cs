@@ -221,15 +221,16 @@ namespace partialdownloadgui.Components
                     long secTotal = ds.Total;
                     long secDownloaded = ds.BytesDownloaded;
                     DownloadStatus status = ds.DownloadStatus;
+                    int httpStatusCode = (int)ds.HttpStatusCode;
                     total += secTotal;
                     totalDownloaded += secDownloaded;
                     ProgressView pv = new();
                     pv.Total = secTotal;
                     pv.BytesDownloaded = secDownloaded;
-                    if (status == DownloadStatus.Downloading || status == DownloadStatus.PrepareToDownload) pv.StatusImage = "pack://application:,,,/Images/right-arrow.png";
-                    else if (status == DownloadStatus.DownloadError) pv.StatusImage = "pack://application:,,,/Images/error.png";
+                    if (status == DownloadStatus.Downloading || status == DownloadStatus.PrepareToDownload) pv.StatusImage = "downloading";
+                    else if (status == DownloadStatus.DownloadError) pv.StatusImage = "error";
                     else pv.StatusImage = string.Empty;
-                    pv.Section = "Section " + sectionIndex.ToString();
+                    pv.Section = "Section " + sectionIndex.ToString() + "(" + httpStatusCode + ")";
                     sectionIndex++;
                     pv.Size = Util.getShortFileSize(secTotal);
                     if (secTotal > 0)

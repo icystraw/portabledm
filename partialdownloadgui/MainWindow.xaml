@@ -166,7 +166,20 @@
                         <GridViewColumn Width="30">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Image Source="{Binding Path=StatusImage}"></Image>
+                                    <Image>
+                                        <Image.Style>
+                                            <Style TargetType="Image">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding StatusImage}" Value="downloading">
+                                                        <Setter Property="Source" Value="pack://application:,,,/Images/right-arrow.png"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding StatusImage}" Value="error">
+                                                        <Setter Property="Source" Value="pack://application:,,,/Images/error.png"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>

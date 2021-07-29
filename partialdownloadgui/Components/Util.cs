@@ -5,7 +5,6 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
-using System.Windows;
 using System.Net.Sockets;
 using System.Diagnostics;
 
@@ -14,6 +13,8 @@ namespace partialdownloadgui.Components
     public class Util
     {
         public static readonly string appDataDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\partialdownloadgui\\";
+        public static readonly string settingsFileName = "settings.json";
+        public static readonly Int32 listenPort = 13000;
 
         public static string convertFromBase64(string base64String)
         {
@@ -75,13 +76,13 @@ namespace partialdownloadgui.Components
         {
             string jsonString = JsonSerializer.Serialize(App.AppSettings);
             Directory.CreateDirectory(appDataDirectory);
-            File.WriteAllText(appDataDirectory + "settings.json", jsonString);
+            File.WriteAllText(appDataDirectory + settingsFileName, jsonString);
         }
 
         public static void loadAppSettingsFromFile()
         {
             Directory.CreateDirectory(appDataDirectory);
-            string jsonString = File.ReadAllText(appDataDirectory + "settings.json");
+            string jsonString = File.ReadAllText(appDataDirectory + settingsFileName);
             App.AppSettings = JsonSerializer.Deserialize<ApplicationSettings>(jsonString);
         }
 
@@ -214,8 +215,16 @@ namespace partialdownloadgui.Components
 
         public static void startTcpServer()
         {
-            TcpListener server = new(IPAddress.Parse("127.0.0.1"), 13000);
-            server.Start();
+            TcpListener server = new(IPAddress.Parse("127.0.0.1"), listenPort);
+            try
+            {
+                server.Start();
+            }
+            catch
+            {
+                return;
+            }
+
             while (true)
             {
                 TcpClient client = null;
@@ -238,18 +247,18 @@ namespace partialdownloadgui.Components
                         if (!stream.DataAvailable) break;
                     }
                     request = sb.ToString();
+                    response = "HTTP/1.1 403 Forbidden\r\nDate: " + DateTime.Now.ToUniversalTime().ToString("R") + "\r\n\r\n";
+                    byte[] msg = Encoding.ASCII.GetBytes(response);
+                    stream.Write(msg, 0, msg.Length);
                     if (request.Contains("__SERVER_STOP"))
                     {
                         client.Close();
                         break;
                     }
-                    if (request.StartsWith("GET /") && request.Contains(" HTTP"))
+                    else if (request.StartsWith("GET /") && request.Contains(" HTTP"))
                     {
-                        response = "HTTP/1.1 403 Forbidden\r\nDate: " + DateTime.Now.ToUniversalTime().ToString("R") + "\r\n\r\n";
-                        byte[] msg = Encoding.ASCII.GetBytes(response);
-                        stream.Write(msg, 0, msg.Length);
                         string base64Url = request.Substring(5, request.IndexOf(" HTTP") - 5);
-                        Process.Start("partialdownloadgui.exe", base64Url);
+                        Process.Start(AppDomain.CurrentDomain.FriendlyName, base64Url);
                     }
                     client.Close();
                 }
