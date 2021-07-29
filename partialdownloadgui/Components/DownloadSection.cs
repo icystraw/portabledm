@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Net;
 using System.Text.Json.Serialization;
 
@@ -40,6 +39,7 @@ namespace partialdownloadgui.Components
         private long start;
         private long end;
         private string fileName;
+        private string suggestedName;
         private DownloadStatus downloadStatus;
         private long bytesDownloaded;
         private HttpStatusCode httpStatusCode;
@@ -66,5 +66,6 @@ namespace partialdownloadgui.Components
         public long BytesDownloaded { get => bytesDownloaded; set => bytesDownloaded = value; }
         public HttpStatusCode HttpStatusCode { get => httpStatusCode; set => httpStatusCode = value; }
         public Guid NextSectionId { get => nextSectionId; set => nextSectionId = value; }
+        public string SuggestedName { get => suggestedName; set => suggestedName = value; }
     }
 }

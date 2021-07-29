@@ -29,6 +29,26 @@ namespace partialdownloadgui.Components
             }
         }
 
+        public static string removeInvalidCharFromFileName(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName)) return string.Empty;
+            StringBuilder sb = new();
+            for (int i = 0; i < fileName.Length; i++)
+            {
+                if (fileName[i] == '\\' || fileName[i] == '/' ||
+                    fileName[i] == ':' || fileName[i] == '*' ||
+                    fileName[i] == '?' || fileName[i] == '"' ||
+                    fileName[i] == '<' || fileName[i] == '>' ||
+                    fileName[i] == '|')
+                {
+                    continue;
+                }
+                sb.Append(fileName[i]);
+            }
+            if (sb.Length == 0) return "download.bin";
+            return sb.ToString();
+        }
+
         public static string getShortFileSize(long fileSize)
         {
             decimal size = fileSize;

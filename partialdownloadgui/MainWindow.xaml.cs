@@ -9,7 +9,6 @@ using System.Threading;
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
-using System.Windows.Controls;
 
 namespace partialdownloadgui
 {
@@ -347,7 +346,6 @@ namespace partialdownloadgui
             }
             else
             {
-                if (IsDownloadingFinished()) return;
                 if (string.IsNullOrEmpty(App.AppSettings.DownloadFolder))
                 {
                     MessageBox.Show("Please select a location for your downloaded file.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);

@@ -311,6 +311,10 @@ namespace partialdownloadgui.Components
                 if (!string.IsNullOrEmpty(App.AppSettings.DownloadFolder) && Directory.Exists(App.AppSettings.DownloadFolder))
                 {
                     string fileNameOnly = Util.getFileName(ds.Url);
+                    if (!string.IsNullOrEmpty(ds.SuggestedName))
+                    {
+                        fileNameOnly = Util.removeInvalidCharFromFileName(ds.SuggestedName);
+                    }
                     fileNameWithPath = Path.Combine(App.AppSettings.DownloadFolder, fileNameOnly);
                     if (File.Exists(fileNameWithPath))
                     {
