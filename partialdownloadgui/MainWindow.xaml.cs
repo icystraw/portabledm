@@ -25,6 +25,13 @@ namespace partialdownloadgui
             timer = new DispatcherTimer();
             timer.Tick += Timer_Tick;
             timer.Interval = new TimeSpan(0, 0, 1);
+
+            __debug__();
+        }
+
+        [Conditional("DEBUG")]
+        private void __debug__()
+        {
             // code for testing
             txtUrl.Text = "http://192.168.1.46/1.bin";
         }
@@ -100,10 +107,10 @@ namespace partialdownloadgui
             scheduler = new(ds.Url, ds.Start, ds.End);
             StartDownloadThread();
 
-            SetOptionControlsStatus(false);
+            SetOptionControlsState(false);
         }
 
-        private void SetOptionControlsStatus(bool inputEnabled)
+        private void SetOptionControlsState(bool inputEnabled)
         {
             txtUrl.IsEnabled = inputEnabled;
             txtRangeFrom.IsEnabled = inputEnabled;
@@ -114,7 +121,7 @@ namespace partialdownloadgui
 
         private void ClearDownload()
         {
-            SetOptionControlsStatus(true);
+            SetOptionControlsState(true);
             txtUrl.Text = string.Empty;
             btnBrowse.Content = "Choose location...";
             txtRangeFrom.Text = "0";
@@ -474,7 +481,7 @@ namespace partialdownloadgui
             if (!LoadConfigFile()) return;
             ShowDownloadStatus();
             txtUrl.Text = scheduler.Sections[0].Url;
-            SetOptionControlsStatus(false);
+            SetOptionControlsState(false);
             TogglePauseResume(true);
             if (IsDownloadingFinished())
             {
