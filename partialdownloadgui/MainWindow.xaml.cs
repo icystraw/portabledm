@@ -488,6 +488,9 @@ namespace partialdownloadgui
             if (args.Length == 2)
             {
                 txtUrl.Text = Util.convertFromBase64(args[1]);
+                Activate();
+                this.Topmost = true;
+                this.Topmost = false;
             }
         }
 
