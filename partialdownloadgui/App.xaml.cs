@@ -18,6 +18,7 @@ namespace partialdownloadgui
             if (Environment.GetCommandLineArgs().Length == 3)
             {
                 Util.startTcpServer();
+                Application.Current.Shutdown();
                 return;
             }
             try
