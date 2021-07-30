@@ -3,11 +3,8 @@ var normalIcons = {"16": "16.png", "48": "48.png", "128": "128.png"};
 
 function sendDownload(downloadItem) {
   chrome.storage.local.get(["enabled"], function(result) {
-    var isEnabled = true;
-    if (result.hasOwnProperty("enabled")) {
-      isEnabled = result.enabled;
-    }
-    if (isEnabled == false) return;
+    var isEnabled = result.hasOwnProperty("enabled") ? result.enabled : true;
+    if (!isEnabled) return;
     var startTime = Date.parse(downloadItem.startTime);
     var now = Date.now();
     if (Math.abs(now - startTime) < 1000) {
@@ -25,34 +22,24 @@ function sendDownload(downloadItem) {
   });
 }
 
-function setIconStatus(tab)
-{
+function toggleIconStatus(tab) {
   chrome.storage.local.get(["enabled"], function(result) {
-    if (result.hasOwnProperty("enabled")) {
-      chrome.storage.local.set({enabled: !result.enabled}, function() {
-        setIconStyle(!result.enabled);
-      });
-    }
-    else {
-      chrome.storage.local.set({enabled: false}, function() {
-        setIconStyle(false);
-      });
-    }
+    var isEnabled = result.hasOwnProperty("enabled") ? !result.enabled : false;
+    chrome.storage.local.set({enabled: isEnabled}, function() {
+      setIconStyle(isEnabled);
+    });
   });
 }
 
 function syncIconStatus(tab) {
   chrome.storage.local.get(["enabled"], function(result) {
-    var isEnabled = true;
-    if (result.hasOwnProperty("enabled")) {
-      isEnabled = result.enabled;
-    }
+    var isEnabled = result.hasOwnProperty("enabled") ? result.enabled : true;
     setIconStyle(isEnabled);
   });
 }
 
 function setIconStyle(bEnabled) {
-  if (bEnabled == true) {
+  if (bEnabled) {
     chrome.action.setIcon({path: normalIcons});
   }
   else {
@@ -62,4 +49,4 @@ function setIconStyle(bEnabled) {
 
 chrome.tabs.onCreated.addListener(syncIconStatus);
 chrome.downloads.onCreated.addListener(sendDownload);
-chrome.action.onClicked.addListener(setIconStatus);
+chrome.action.onClicked.addListener(toggleIconStatus);
