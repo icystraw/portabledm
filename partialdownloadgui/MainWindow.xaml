@@ -10,7 +10,7 @@
         <GroupBox Header="Options" Margin="5" DockPanel.Dock="Top">
             <StackPanel>
                 <DockPanel>
-                    <Label Content="URL to download:" DockPanel.Dock="Left" />
+                    <Label Content="Download URL:" DockPanel.Dock="Left" />
                     <TextBox TextWrapping="NoWrap" Name="txtUrl" />
                 </DockPanel>
                 <DockPanel Margin="0,5,0,0">
@@ -23,10 +23,10 @@
                             </ToolTip>
                         </Button.ToolTip>
                     </Button>
-                    <Button Name="btnBrowse" Content="Choose location..." Click="btnBrowse_Click" Background="White"></Button>
+                    <Button Name="btnBrowse" Content="Choose location..." Click="btnBrowse_Click" Background="White" Margin="0,0,5,0"></Button>
                 </DockPanel>
                 <GroupBox Header="Multi-threading">
-                    <StackPanel Orientation="Horizontal">
+                    <WrapPanel>
                         <Label Content="Maximum number of download thread:" />
                         <ComboBox Width="50" Name="cbThreads">
                             <ComboBoxItem>1</ComboBoxItem>
@@ -40,12 +40,12 @@
                             <ComboBoxItem>9</ComboBoxItem>
                             <ComboBoxItem>10</ComboBoxItem>
                         </ComboBox>
-                    </StackPanel>
+                    </WrapPanel>
                 </GroupBox>
                 <Expander Header="Advanced Options">
                     <StackPanel>
                         <GroupBox Header="Partial Download">
-                            <StackPanel Orientation="Horizontal">
+                            <WrapPanel>
                                 <Label Content="Download"></Label>
                                 <TextBox Text="0" Width="60" Name="txtRangeFrom">
                                     <TextBox.ToolTip>
@@ -62,23 +62,23 @@
                                         </ToolTip>
                                     </TextBox.ToolTip>
                                 </TextBox>
-                                <Label Content="bytes(only if server supports)."></Label>
-                            </StackPanel>
+                                <Label Content="bytes only(if server supports)."></Label>
+                            </WrapPanel>
                         </GroupBox>
                         <GroupBox Header="Authentication">
-                            <StackPanel Orientation="Horizontal">
+                            <WrapPanel>
                                 <Label>Username</Label>
                                 <TextBox Name="txtUsername" Width="100"></TextBox>
                                 <Label>Password</Label>
                                 <PasswordBox Name="txtPassword" Width="100"></PasswordBox>
-                            </StackPanel>
+                            </WrapPanel>
                         </GroupBox>
                         <GroupBox Header="Post-Download">
                             <CheckBox Name="chkShutdown">Shut down computer after download finishes (need admin rights).</CheckBox>
                         </GroupBox>
                     </StackPanel>
                 </Expander>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <WrapPanel HorizontalAlignment="Center">
                     <Button Name="btnStart" Margin="5" Width="40" Click="btnStart_Click" Background="White">
                         <Image Source="pack://application:,,,/Images/go.png" Margin="3">
                             <Image.Style>
@@ -152,13 +152,13 @@
                             </ToolTip>
                         </Button.ToolTip>
                     </Button>
-                </StackPanel>
+                </WrapPanel>
             </StackPanel>
         </GroupBox>
         <GroupBox Margin="5" Header="Status" DockPanel.Dock="Bottom">
             <TextBox Name="txtStatus" TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True" Text="Paste URL to start download."></TextBox>
         </GroupBox>
-        <WrapPanel Name="wpProgress" DockPanel.Dock="Bottom" Margin="5" />
+        <UniformGrid Rows="1" Name="wpProgress" DockPanel.Dock="Bottom" Margin="5" />
         <GroupBox Margin="5" Header="Download Progress">
             <ListView Name="lstProgress">
                 <ListView.View>

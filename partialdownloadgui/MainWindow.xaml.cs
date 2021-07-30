@@ -285,7 +285,7 @@ namespace partialdownloadgui
             for (int i = 0; i < progress.Length; i++)
             {
                 Rectangle r = new();
-                r.Width = 5;
+                RenderOptions.SetEdgeMode(r, EdgeMode.Aliased);
                 r.Height = 10;
                 if (progress[i] == '\u2593')
                 {
