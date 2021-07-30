@@ -79,13 +79,13 @@ namespace partialdownloadgui
                 MessageBox.Show("Please specify numbers for download range.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            Scheduler.Username = txtUsername.Text;
-            Scheduler.Password = txtPassword.Password;
 
             DownloadSection ds = new();
             ds.Url = txtUrl.Text.Trim();
             ds.Start = start;
             ds.End = end;
+            ds.UserName = txtUsername.Text;
+            ds.Password = txtPassword.Password;
             try
             {
                 Util.downloadPreprocess(ds);
@@ -304,8 +304,8 @@ namespace partialdownloadgui
             this.Dispatcher.Invoke(() =>
             {
                 scheduler.NoDownloader = cbThreads.SelectedIndex + 1;
-                Scheduler.Username = txtUsername.Text;
-                Scheduler.Password = txtPassword.Password;
+                scheduler.Username = txtUsername.Text;
+                scheduler.Password = txtPassword.Password;
             });
             if (scheduler.Start())
             {
@@ -473,6 +473,11 @@ namespace partialdownloadgui
             if (!LoadConfigFile()) return;
             ShowDownloadStatus();
             txtUrl.Text = scheduler.Sections[0].Url;
+            if (!string.IsNullOrEmpty(scheduler.Sections[0].UserName) && !string.IsNullOrEmpty(scheduler.Sections[0].Password))
+            {
+                txtUsername.Text = scheduler.Sections[0].UserName;
+                txtPassword.Password = scheduler.Sections[0].Password;
+            }
             SetOptionControlsState(false);
             TogglePauseResume(true);
             if (IsDownloadingFinished())

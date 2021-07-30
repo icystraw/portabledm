@@ -11,8 +11,8 @@ namespace partialdownloadgui.Components
         private static readonly int maxNoDownloader = 10;
         private static readonly long minSectionSize = 10485760;
         private static readonly int bufferSize = 1048576;
-        private static string username;
-        private static string password;
+        private string username;
+        private string password;
 
         private readonly Downloader[] downloaders = new Downloader[maxNoDownloader];
         private readonly List<DownloadSection> sections;
@@ -23,9 +23,9 @@ namespace partialdownloadgui.Components
         private bool downloadStopFlag = false;
         private SpeedCalculator sc = new();
 
-        public static string Username { get => username; set => username = value; }
+        public string Username { get => username; set => username = value; }
 
-        public static string Password { get => password; set => password = value; }
+        public string Password { get => password; set => password = value; }
 
         public List<DownloadSection> Sections => sections;
 
@@ -387,6 +387,11 @@ namespace partialdownloadgui.Components
         {
             sc = new();
             this.downloadStopFlag = false;
+            foreach (DownloadSection ds in this.sections)
+            {
+                ds.UserName = this.username;
+                ds.Password = this.password;
+            }
             while (true)
             {
                 // if there is download stop request from other thread

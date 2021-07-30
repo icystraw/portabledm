@@ -109,9 +109,9 @@ namespace partialdownloadgui.Components
                 }
             }
             request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(this.downloadSection.Start + this.downloadSection.BytesDownloaded, endParam);
-            if (!string.IsNullOrEmpty(Scheduler.Username) && !string.IsNullOrEmpty(Scheduler.Password))
+            if (!string.IsNullOrEmpty(this.downloadSection.UserName) && !string.IsNullOrEmpty(this.downloadSection.Password))
             {
-                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes(Scheduler.Username + ':' + Scheduler.Password)));
+                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes(this.downloadSection.UserName + ':' + this.downloadSection.Password)));
             }
 
             byte[] buffer = new byte[1048576];

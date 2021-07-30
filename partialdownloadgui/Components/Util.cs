@@ -158,9 +158,9 @@ namespace partialdownloadgui.Components
             HttpRequestMessage request = new(HttpMethod.Get, ds.Url);
             long? endParam = (ds.End >= 0 ? ds.End : null);
             request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(ds.Start, endParam);
-            if (!string.IsNullOrEmpty(Scheduler.Username) && !string.IsNullOrEmpty(Scheduler.Password))
+            if (!string.IsNullOrEmpty(ds.UserName) && !string.IsNullOrEmpty(ds.Password))
             {
-                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes(Scheduler.Username + ':' + Scheduler.Password)));
+                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes(ds.UserName + ':' + ds.Password)));
             }
             HttpResponseMessage response = null;
             try

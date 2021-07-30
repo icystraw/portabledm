@@ -17,6 +17,8 @@ namespace partialdownloadgui.Components
             newSection.DownloadStatus = DownloadStatus.Stopped;
             newSection.BytesDownloaded = 0;
             newSection.HttpStatusCode = 0;
+            newSection.UserName = this.userName;
+            newSection.Password = this.password;
             newSection.NextSection = this.nextSection;
             if (this.nextSection != null) newSection.NextSectionId = this.nextSection.Id;
 
@@ -43,6 +45,8 @@ namespace partialdownloadgui.Components
         private DownloadStatus downloadStatus;
         private long bytesDownloaded;
         private HttpStatusCode httpStatusCode;
+        private string userName;
+        private string password;
         private DownloadSection nextSection;
         private Guid nextSectionId;
 
@@ -67,5 +71,7 @@ namespace partialdownloadgui.Components
         public HttpStatusCode HttpStatusCode { get => httpStatusCode; set => httpStatusCode = value; }
         public Guid NextSectionId { get => nextSectionId; set => nextSectionId = value; }
         public string SuggestedName { get => suggestedName; set => suggestedName = value; }
+        public string UserName { get => userName; set => userName = value; }
+        public string Password { get => password; set => password = value; }
     }
 }
