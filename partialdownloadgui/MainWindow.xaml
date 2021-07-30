@@ -10,7 +10,7 @@
         <GroupBox Header="Options" Margin="5" DockPanel.Dock="Top">
             <StackPanel>
                 <DockPanel>
-                    <Label Content="Download URL:" DockPanel.Dock="Left" />
+                    <Label Content="Download URL:" DockPanel.Dock="Left" AllowDrop="True" />
                     <TextBox TextWrapping="NoWrap" Name="txtUrl" />
                 </DockPanel>
                 <DockPanel Margin="0,5,0,0">
