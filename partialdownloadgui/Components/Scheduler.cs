@@ -251,7 +251,7 @@ namespace partialdownloadgui.Components
                 ProgressView pvTotal = new();
                 pvTotal.Total = total;
                 pvTotal.BytesDownloaded = totalDownloaded;
-                pvTotal.StatusImage = string.Empty;
+                pvTotal.StatusImage = "downarrow";
                 pvTotal.Section = "Overall " + Util.getShortFileSize(sc.GetSpeed()) + "/sec";
                 pvTotal.Size = Util.getShortFileSize(total);
                 if (total > 0)

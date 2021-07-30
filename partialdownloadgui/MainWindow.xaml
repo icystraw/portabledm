@@ -185,6 +185,9 @@
                                                     <DataTrigger Binding="{Binding StatusImage}" Value="finished">
                                                         <Setter Property="Source" Value="pack://application:,,,/Images/finished.png"/>
                                                     </DataTrigger>
+                                                    <DataTrigger Binding="{Binding StatusImage}" Value="downarrow">
+                                                        <Setter Property="Source" Value="pack://application:,,,/Images/down-arrow.png"/>
+                                                    </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </Image.Style>
