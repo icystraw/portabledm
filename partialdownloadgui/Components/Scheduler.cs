@@ -11,7 +11,7 @@ namespace partialdownloadgui.Components
         private static readonly int maxNoDownloader = 10;
         private static readonly long minSectionSize = 10485760;
         private static readonly int bufferSize = 1048576;
-        private string username;
+        private string userName;
         private string password;
 
         private readonly Downloader[] downloaders = new Downloader[maxNoDownloader];
@@ -23,7 +23,7 @@ namespace partialdownloadgui.Components
         private bool downloadStopFlag = false;
         private SpeedCalculator sc = new();
 
-        public string Username { get => username; set => username = value; }
+        public string UserName { get => userName; set => userName = value; }
 
         public string Password { get => password; set => password = value; }
 
@@ -389,7 +389,7 @@ namespace partialdownloadgui.Components
             this.downloadStopFlag = false;
             foreach (DownloadSection ds in this.sections)
             {
-                ds.UserName = this.username;
+                ds.UserName = this.userName;
                 ds.Password = this.password;
             }
             while (true)

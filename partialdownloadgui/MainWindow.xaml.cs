@@ -304,7 +304,7 @@ namespace partialdownloadgui
             this.Dispatcher.Invoke(() =>
             {
                 scheduler.NoDownloader = cbThreads.SelectedIndex + 1;
-                scheduler.Username = txtUsername.Text;
+                scheduler.UserName = txtUsername.Text;
                 scheduler.Password = txtPassword.Password;
             });
             if (scheduler.Start())
