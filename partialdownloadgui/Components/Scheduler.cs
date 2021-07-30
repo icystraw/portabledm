@@ -229,6 +229,7 @@ namespace partialdownloadgui.Components
                     pv.BytesDownloaded = secDownloaded;
                     if (status == DownloadStatus.Downloading || status == DownloadStatus.PrepareToDownload) pv.StatusImage = "downloading";
                     else if (status == DownloadStatus.DownloadError) pv.StatusImage = "error";
+                    else if (status == DownloadStatus.Finished) pv.StatusImage = "finished";
                     else pv.StatusImage = string.Empty;
                     pv.Section = "Section " + sectionIndex.ToString() + "(" + httpStatusCode + ")";
                     sectionIndex++;

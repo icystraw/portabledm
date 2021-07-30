@@ -182,6 +182,9 @@
                                                     <DataTrigger Binding="{Binding StatusImage}" Value="error">
                                                         <Setter Property="Source" Value="pack://application:,,,/Images/error.png"/>
                                                     </DataTrigger>
+                                                    <DataTrigger Binding="{Binding StatusImage}" Value="finished">
+                                                        <Setter Property="Source" Value="pack://application:,,,/Images/finished.png"/>
+                                                    </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </Image.Style>
