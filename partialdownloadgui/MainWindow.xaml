@@ -10,8 +10,14 @@
         <GroupBox Header="Options" Margin="5" DockPanel.Dock="Top">
             <StackPanel>
                 <DockPanel>
-                    <Label Content="Download URL:" DockPanel.Dock="Left" AllowDrop="True" />
-                    <TextBox TextWrapping="NoWrap" Name="txtUrl" />
+                    <Label Content="Download URL:" DockPanel.Dock="Left" />
+                    <TextBox TextWrapping="NoWrap" Name="txtUrl">
+                        <TextBox.ToolTip>
+                            <ToolTip>
+                                <TextBlock>You can drag and drop URL from your browser.</TextBlock>
+                            </ToolTip>
+                        </TextBox.ToolTip>
+                    </TextBox>
                 </DockPanel>
                 <DockPanel Margin="0,5,0,0">
                     <Label Content="Save to folder:" DockPanel.Dock="Left"></Label>
