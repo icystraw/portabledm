@@ -6,6 +6,22 @@ namespace partialdownloadgui.Components
 {
     public class DownloadSection
     {
+        public DownloadSection Clone()
+        {
+            DownloadSection newSection = new();
+            newSection.Url = this.url;
+            newSection.Start = this.start;
+            newSection.End = this.end;
+            newSection.SuggestedName = this.suggestedName;
+            newSection.DownloadStatus = DownloadStatus.Stopped;
+            newSection.BytesDownloaded = 0;
+            newSection.HttpStatusCode = 0;
+            newSection.UserName = this.userName;
+            newSection.Password = this.password;
+
+            return newSection;
+        }
+
         public DownloadSection Split()
         {
             long _bytesDownloaded = this.bytesDownloaded;

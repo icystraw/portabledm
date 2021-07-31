@@ -14,6 +14,7 @@ namespace partialdownloadgui.Components
     {
         public static readonly string appDataDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\partialdownloadgui\\";
         public static readonly string settingsFileName = "settings.json";
+        public static readonly string downloadsFileName = "downloads.json";
         public static readonly Int32 listenPort = 13000;
 
         public static string convertFromBase64(string base64String)
@@ -113,7 +114,7 @@ namespace partialdownloadgui.Components
             File.WriteAllText(fileName, jsonString);
         }
 
-        public static List<DownloadSection> retriveSectionsFromFile(string fileName)
+        public static List<DownloadSection> retrieveSectionsFromFile(string fileName)
         {
             string jsonString = File.ReadAllText(fileName);
             List<DownloadSection> ret = JsonSerializer.Deserialize<List<DownloadSection>>(jsonString);
@@ -127,6 +128,36 @@ namespace partialdownloadgui.Components
                     {
                         ret[i].NextSection = ret[j];
                         break;
+                    }
+                }
+            }
+            return ret;
+        }
+
+        public static void saveDownloadsToFile(List<Download> downloads)
+        {
+            if (null == downloads) return;
+            string jsonString = JsonSerializer.Serialize(downloads);
+            File.WriteAllText(appDataDirectory + downloadsFileName, jsonString);
+        }
+
+        public static List<Download> retrieveDownloadsFromFile()
+        {
+            string jsonString = File.ReadAllText(appDataDirectory + downloadsFileName);
+            List<Download> ret = JsonSerializer.Deserialize<List<Download>>(jsonString);
+            if (null == ret) return null;
+            // rebuild section chain
+            foreach (Download d in ret)
+            {
+                for (int i = 0; i < d.Sections.Count; i++)
+                {
+                    for (int j = 0; j < d.Sections.Count; j++)
+                    {
+                        if (d.Sections[j].Id == d.Sections[i].NextSectionId)
+                        {
+                            d.Sections[i].NextSection = d.Sections[j];
+                            break;
+                        }
                     }
                 }
             }
@@ -218,6 +249,10 @@ namespace partialdownloadgui.Components
                         ds.DownloadStatus = DownloadStatus.DownloadError;
                         return;
                     }
+                }
+                if (response.Content.Headers.ContentDisposition != null && !string.IsNullOrEmpty(response.Content.Headers.ContentDisposition.FileName))
+                {
+                    ds.SuggestedName = response.Content.Headers.ContentDisposition.FileName;
                 }
                 response.Dispose();
                 ds.DownloadStatus = DownloadStatus.Stopped;

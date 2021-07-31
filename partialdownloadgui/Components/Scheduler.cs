@@ -53,7 +53,7 @@ namespace partialdownloadgui.Components
 
         public Scheduler(string savedFileName)
         {
-            this.sections = Util.retriveSectionsFromFile(savedFileName);
+            this.sections = Util.retrieveSectionsFromFile(savedFileName);
             if (null == sections || sections.Count == 0) throw new ArgumentException("Saved file invalid or is empty", nameof(savedFileName));
         }
 
