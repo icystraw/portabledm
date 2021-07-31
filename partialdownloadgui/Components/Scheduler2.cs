@@ -216,8 +216,9 @@ namespace partialdownloadgui.Components
                 if (download.Sections.Count == 0) return string.Empty;
 
                 DownloadSection ds = download.Sections[0];
+                long total = download.SummarySection.Total;
                 long totalDownloaded = 0;
-                int sectionIndex = 1;
+                StringBuilder sb = new();
                 do
                 {
                     long secTotal = ds.Total;
@@ -228,13 +229,12 @@ namespace partialdownloadgui.Components
                     ProgressView pv = new();
                     pv.Total = secTotal;
                     pv.BytesDownloaded = secDownloaded;
+                    pv.Section = "HTTP Response: " + httpStatusCode;
+                    pv.Size = Util.getShortFileSize(secTotal);
                     if (status == DownloadStatus.Downloading || status == DownloadStatus.PrepareToDownload) pv.StatusImage = "downloading";
                     else if (status == DownloadStatus.DownloadError) pv.StatusImage = "error";
                     else if (status == DownloadStatus.Finished) pv.StatusImage = "finished";
                     else pv.StatusImage = string.Empty;
-                    pv.Section = "Section " + sectionIndex.ToString() + "(" + httpStatusCode + ")";
-                    sectionIndex++;
-                    pv.Size = Util.getShortFileSize(secTotal);
                     if (secTotal > 0)
                     {
                         pv.Progress = (secDownloaded * 100 / secTotal > 100 ? 100 : secDownloaded * 100 / secTotal);
@@ -244,44 +244,23 @@ namespace partialdownloadgui.Components
                         pv.Progress = 0;
                     }
                     progressViewItems.Add(pv);
+                    if (total > 0)
+                    {
+                        long downloadedSquares = secDownloaded * 200 / total;
+                        long pendingSquares = secTotal * 200 / total - downloadedSquares;
+                        for (long i = 0; i < downloadedSquares; i++)
+                        {
+                            sb.Append('\u2593');
+                        }
+                        for (long i = 0; i < pendingSquares; i++)
+                        {
+                            sb.Append('\u2591');
+                        }
+                    }
                     ds = ds.NextSection;
                 }
                 while (ds != null);
-
-                sc.RegisterBytes(totalDownloaded);
-                long total = download.SummarySection.Total;
-                ProgressView pvTotal = new();
-                pvTotal.Total = total;
-                pvTotal.BytesDownloaded = totalDownloaded;
-                pvTotal.StatusImage = "downarrow";
-                pvTotal.Section = "Overall " + Util.getShortFileSize(sc.GetSpeed()) + "/sec";
-                pvTotal.Size = Util.getShortFileSize(total);
-                if (total > 0)
-                {
-                    pvTotal.Progress = (totalDownloaded * 100 / total > 100 ? 100 : totalDownloaded * 100 / total);
-                }
-                else
-                {
-                    pvTotal.Progress = 0;
-                }
-                progressViewItems.Insert(0, pvTotal);
-
-                if (total <= 0) return string.Empty;
-
-                StringBuilder sb = new();
-                for (int i = 1; i < progressViewItems.Count; i++)
-                {
-                    long downloadedSquares = progressViewItems[i].BytesDownloaded * 200 / total;
-                    long pendingSquares = progressViewItems[i].Total * 200 / total - downloadedSquares;
-                    for (long j = 0; j < downloadedSquares; j++)
-                    {
-                        sb.Append('\u2593');
-                    }
-                    for (long j = 0; j < pendingSquares; j++)
-                    {
-                        sb.Append('\u2591');
-                    }
-                }
+                download.SummarySection.BytesDownloaded = totalDownloaded;
                 return sb.ToString();
             }
         }
