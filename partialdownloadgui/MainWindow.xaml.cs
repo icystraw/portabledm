@@ -102,7 +102,7 @@ namespace partialdownloadgui
             }
             txtUrl.Text = ds.Url;
 
-            scheduler = new(ds.Url, ds.Start, ds.End);
+            scheduler = new(ds);
             StartDownloadThread();
 
             SetOptionControlsState(false);

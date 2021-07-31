@@ -39,14 +39,10 @@ namespace partialdownloadgui.Components
             }
         }
 
-        public Scheduler(string url, long start, long end)
+        public Scheduler(DownloadSection ds)
         {
             sections = new();
-            DownloadSection firstSection = new();
-            firstSection.Start = start;
-            firstSection.End = end;
-            firstSection.Url = url;
-            sections.Add(firstSection);
+            sections.Add(ds);
         }
 
         public Scheduler(List<DownloadSection> sections)
