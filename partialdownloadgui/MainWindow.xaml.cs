@@ -483,6 +483,11 @@ namespace partialdownloadgui
             if (IsDownloadingFinished())
             {
                 btnPauseResume.IsEnabled = false;
+                txtStatus.Text = "Download finished.";
+            }
+            else
+            {
+                txtStatus.Text = "Press Resume button to resume download.";
             }
         }
 
