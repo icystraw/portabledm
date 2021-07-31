@@ -227,8 +227,6 @@ namespace partialdownloadgui.Components
                     int httpStatusCode = (int)ds.HttpStatusCode;
                     totalDownloaded += secDownloaded;
                     ProgressView pv = new();
-                    pv.Total = secTotal;
-                    pv.BytesDownloaded = secDownloaded;
                     pv.Section = "HTTP Response: " + httpStatusCode;
                     pv.Size = Util.getShortFileSize(secTotal);
                     if (status == DownloadStatus.Downloading || status == DownloadStatus.PrepareToDownload) pv.StatusImage = "downloading";
