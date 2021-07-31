@@ -278,7 +278,7 @@ namespace partialdownloadgui.Components
                     else if (request.StartsWith("GET /") && request.Contains(" HTTP"))
                     {
                         string base64Url = request.Substring(5, request.IndexOf(" HTTP") - 5);
-                        Process.Start(AppDomain.CurrentDomain.FriendlyName, base64Url);
+                        Process.Start(AppDomain.CurrentDomain.FriendlyName, "/download " + base64Url);
                     }
                     client.Close();
                 }

@@ -471,6 +471,11 @@ namespace partialdownloadgui
                 ClearDownload();
             }
             if (!LoadConfigFile()) return;
+            prepareWindowStateAfterLoadingConfigFile();
+        }
+
+        private void prepareWindowStateAfterLoadingConfigFile()
+        {
             ShowDownloadStatus();
             txtUrl.Text = scheduler.Sections[0].Url;
             if (!string.IsNullOrEmpty(scheduler.Sections[0].UserName) && !string.IsNullOrEmpty(scheduler.Sections[0].Password))
@@ -493,10 +498,9 @@ namespace partialdownloadgui
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            string[] args = Environment.GetCommandLineArgs();
-            if (args.Length == 2)
+            if (App.Args.Length == 3 && App.Args[1] == "/download")
             {
-                txtUrl.Text = Util.convertFromBase64(args[1]);
+                txtUrl.Text = Util.convertFromBase64(App.Args[2]);
                 Activate();
                 this.Topmost = true;
                 this.Topmost = false;
@@ -504,6 +508,20 @@ namespace partialdownloadgui
             if (!string.IsNullOrEmpty(App.AppSettings.DownloadFolder))
             {
                 btnBrowse.Content = App.AppSettings.DownloadFolder;
+            }
+            if (App.Args.Length == 2)
+            {
+                try
+                {
+                    scheduler = new Scheduler(App.Args[1]);
+                    configFile = App.Args[1];
+                }
+                catch
+                {
+                    scheduler = null;
+                    return;
+                }
+                prepareWindowStateAfterLoadingConfigFile();
             }
         }
 
