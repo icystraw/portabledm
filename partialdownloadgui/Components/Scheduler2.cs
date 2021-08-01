@@ -363,10 +363,12 @@ namespace partialdownloadgui.Components
 
         public void Stop(bool cancel)
         {
-            if (!IsDownloading()) return;
-            this.downloadStopFlag = true;
-            downloadThread.Join();
-            this.downloadStopFlag = false;
+            if (IsDownloading())
+            {
+                this.downloadStopFlag = true;
+                downloadThread.Join();
+                this.downloadStopFlag = false;
+            }
             if (cancel) CleanTempFiles();
         }
 

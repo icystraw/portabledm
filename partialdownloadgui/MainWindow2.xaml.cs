@@ -38,7 +38,7 @@ namespace partialdownloadgui
                 Scheduler2 s = new(d);
                 ProgressView pv = s.GetDownloadStatusView();
                 downloadViews.Add(pv.DownloadView);
-                schedulers.Add(new(d));
+                schedulers.Add(s);
             }
         }
 
@@ -139,18 +139,6 @@ namespace partialdownloadgui
             return null;
         }
 
-        private void RemoveFromDownloadView(Guid id)
-        {
-            foreach (DownloadView dv in downloadViews)
-            {
-                if (dv.Id == id)
-                {
-                    downloadViews.Remove(dv);
-                    return;
-                }
-            }
-        }
-
         private void AddDownload(string url)
         {
             AddEditDownload ad = new();
@@ -212,7 +200,7 @@ namespace partialdownloadgui
             }
             s.Stop(true);
             schedulers.Remove(s);
-            RemoveFromDownloadView(s.Download.SummarySection.Id);
+            downloadViews.Remove(dv);
         }
 
         private void Window_Closed(object sender, EventArgs e)
