@@ -14,7 +14,7 @@ namespace partialdownloadgui.Components
         private DownloadSection downloadSection;
         private Thread downloadThread;
 
-        private bool downloadStopFlag;
+        private bool downloadStopFlag = false;
         private Exception exDownload;
         public Exception ExDownload { get => exDownload; }
         public DownloadSection DownloadSection
@@ -41,7 +41,6 @@ namespace partialdownloadgui.Components
 
         public Downloader(DownloadSection section)
         {
-            this.downloadStopFlag = false;
             this.DownloadSection = section;
         }
 
@@ -50,6 +49,7 @@ namespace partialdownloadgui.Components
             if (!IsBusy()) return;
             this.downloadStopFlag = true;
             if (downloadThread != null && downloadThread.IsAlive) downloadThread.Join();
+            this.downloadStopFlag = false;
         }
 
         public bool IsBusy()
@@ -166,7 +166,6 @@ namespace partialdownloadgui.Components
                 if (this.downloadStopFlag)
                 {
                     response.Dispose();
-                    this.downloadStopFlag = false;
                     this.downloadSection.DownloadStatus = DownloadStatus.Stopped;
                     return;
                 }
@@ -193,7 +192,6 @@ namespace partialdownloadgui.Components
                         streamFile.Close();
                         streamHttp.Close();
                         response.Dispose();
-                        this.downloadStopFlag = false;
                         if (currentEnd >= 0 && this.downloadSection.BytesDownloaded >= (currentEnd - this.downloadSection.Start + 1))
                         {
                             this.downloadSection.DownloadStatus = DownloadStatus.Finished;
