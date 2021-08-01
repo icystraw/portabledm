@@ -79,7 +79,76 @@ namespace partialdownloadgui
 
         private void btnOk_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            if (!isNew)
+            {
+                download.NoDownloader = cbThreads.SelectedIndex - 1;
+                download.SetCredentials(txtUsername.Text, txtPassword.Password);
+                this.DialogResult = true;
+                this.Close();
+                return;
+            }
+            if (string.Empty == txtUrl.Text.Trim())
+            {
+                MessageBox.Show("URL is empty.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            if (!txtUrl.Text.Trim().StartsWith("http", StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show("URL should be an HTTP address (starts with 'http').", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            if (string.IsNullOrEmpty(download.DownloadFolder))
+            {
+                MessageBox.Show("Please select a location for your downloaded file.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            long start = 0, end = 0;
+            try
+            {
+                start = Convert.ToInt64(txtRangeFrom.Text.Trim());
+                end = Convert.ToInt64(txtRangeTo.Text.Trim());
+                if (start < 0 || end < 0)
+                {
+                    MessageBox.Show("Please specify positive numbers for download range.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                if (end > 0 && end < start)
+                {
+                    MessageBox.Show("Incorrect download range.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                if (end == 0) end = (-1);
+            }
+            catch
+            {
+                MessageBox.Show("Please specify numbers for download range.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            DownloadSection ds = new();
+            ds.Url = txtUrl.Text.Trim();
+            ds.Start = start;
+            ds.End = end;
+            ds.UserName = txtUsername.Text;
+            ds.Password = txtPassword.Password;
+            try
+            {
+                Util.downloadPreprocess(ds);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return;
+            }
+            if (ds.DownloadStatus == DownloadStatus.DownloadError)
+            {
+                MessageBox.Show("Error occurred. Server response code was: " + ds.HttpStatusCode);
+                return;
+            }
+            download.SummarySection = ds;
+            download.Sections.Add(download.SummarySection.Clone());
+            this.DialogResult = true;
+            this.Close();
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
