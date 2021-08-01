@@ -238,8 +238,7 @@ namespace partialdownloadgui.Components
                     long secTotal = ds.Total, secDownloaded = ds.BytesDownloaded;
                     totalDownloaded += secDownloaded;
                     sv.Size = Util.getShortFileSize(secTotal);
-                    if (secTotal > 0) sv.Progress = (secDownloaded * 100 / secTotal > 100 ? 100 : secDownloaded * 100 / secTotal);
-                    else sv.Progress = 0;
+                    sv.Progress = Util.getProgress(secDownloaded, secTotal);
                     pv.SectionViews.Add(sv);
                     if (total > 0)
                     {
@@ -256,8 +255,7 @@ namespace partialdownloadgui.Components
             pv.ProgressBar = sb.ToString();
             sc.RegisterBytes(totalDownloaded);
             pv.DownloadView.Speed = Util.getShortFileSize(sc.GetSpeed()) + "/sec";
-            if (total > 0) pv.DownloadView.Progress = (totalDownloaded * 100 / total > 100 ? 100 : totalDownloaded * 100 / total);
-            else pv.DownloadView.Progress = 0;
+            pv.DownloadView.Progress = Util.getProgress(totalDownloaded, total);
 
             return pv;
         }

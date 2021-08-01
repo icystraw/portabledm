@@ -30,6 +30,12 @@ namespace partialdownloadgui.Components
             }
         }
 
+        public static long getProgress(long downloaded, long total)
+        {
+            if (total > 0) return (downloaded * 100 / total > 100 ? 100 : downloaded * 100 / total);
+            else return 0;
+        }
+
         public static string removeInvalidCharFromFileName(string fileName)
         {
             if (string.IsNullOrEmpty(fileName)) return string.Empty;
