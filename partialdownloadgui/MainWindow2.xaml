@@ -16,7 +16,7 @@
                 <Button Name="btnDelete" Click="btnDelete_Click">Delete</Button>
                 <CheckBox Name="chkShutdown">Shut down after downloads finish</CheckBox>
             </WrapPanel>
-            <ListView Name="lstDownloads">
+            <ListView Name="lstDownloads" SelectionChanged="lstDownloads_SelectionChanged">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding="{Binding Path=FileName}" Header="File" />

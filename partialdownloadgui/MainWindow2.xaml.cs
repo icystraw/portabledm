@@ -216,5 +216,15 @@ namespace partialdownloadgui
         {
             UpdateDownloadsStatus();
         }
+
+        private void lstDownloads_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (null == lstDownloads.SelectedItem)
+            {
+                lstSections.ItemsSource = null;
+                return;
+            }
+            UpdateDownloadsStatus();
+        }
     }
 }
