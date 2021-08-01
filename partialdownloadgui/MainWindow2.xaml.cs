@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -66,6 +67,7 @@ namespace partialdownloadgui
 
         private void UpdateDownloadsStatus()
         {
+            bool bJustFinished = false;
             foreach (Scheduler2 s in schedulers)
             {
                 ProgressView pv = s.GetDownloadStatusView();
@@ -75,6 +77,11 @@ namespace partialdownloadgui
                     {
                         dv.Progress = pv.DownloadView.Progress;
                         dv.Speed = pv.DownloadView.Speed;
+                        // if there is a download that has just completed
+                        if (dv.Status == DownloadStatus.Downloading.ToString() && pv.DownloadView.Status == DownloadStatus.Finished.ToString())
+                        {
+                            bJustFinished = true;
+                        }
                         dv.Status = pv.DownloadView.Status;
                         if ((lstDownloads.SelectedItem as DownloadView) == dv)
                         {
@@ -85,6 +92,19 @@ namespace partialdownloadgui
                     }
                 }
             }
+            if (bJustFinished && chkShutdown.IsChecked == true && !IsBusy())
+            {
+                Process.Start("shutdown.exe", "/s");
+            }
+        }
+
+        private bool IsBusy()
+        {
+            foreach (Scheduler2 s in schedulers)
+            {
+                if (s.IsDownloading()) return true;
+            }
+            return false;
         }
 
         private void DrawProgress(string progress)
@@ -131,9 +151,10 @@ namespace partialdownloadgui
             }
         }
 
-        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        private void AddDownload(string url)
         {
             AddEditDownload ad = new();
+            ad.Url = url;
             if (ad.ShowDialog() == true)
             {
                 Scheduler2 s = new(ad.Download);
@@ -142,6 +163,11 @@ namespace partialdownloadgui
                 downloadViews.Add(pv.DownloadView);
                 s.Start();
             }
+        }
+
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            AddDownload(string.Empty);
         }
 
         private void btnEdit_Click(object sender, RoutedEventArgs e)
@@ -210,6 +236,13 @@ namespace partialdownloadgui
             catch { }
             ResetDownloadsListView();
             timer.Start();
+            if (App.Args.Length == 3 && App.Args[1] == "/download")
+            {
+                Activate();
+                this.Topmost = true;
+                this.Topmost = false;
+                AddDownload(Util.convertFromBase64(App.Args[2]));
+            }
         }
 
         private void Timer_Tick(object sender, EventArgs e)

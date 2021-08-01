@@ -335,21 +335,8 @@ namespace partialdownloadgui.Components
             }
         }
 
-        public bool IsDownloadFinished()
+        private void CleanTempFiles()
         {
-            if (download.SummarySection.DownloadStatus == DownloadStatus.Finished) return true;
-            return false;
-        }
-
-        public bool IsDownloading()
-        {
-            if (downloadThread != null && downloadThread.IsAlive) return true;
-            return false;
-        }
-
-        public void CleanTempFiles()
-        {
-            if (IsDownloading()) return;
             try
             {
                 foreach (DownloadSection ds in download.Sections)
@@ -360,6 +347,18 @@ namespace partialdownloadgui.Components
             catch
             {
             }
+        }
+
+        public bool IsDownloadFinished()
+        {
+            if (download.SummarySection.DownloadStatus == DownloadStatus.Finished) return true;
+            return false;
+        }
+
+        public bool IsDownloading()
+        {
+            if (downloadThread != null && downloadThread.IsAlive) return true;
+            return false;
         }
 
         public void Stop(bool cancel)

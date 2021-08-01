@@ -1,19 +1,8 @@
 ﻿using partialdownloadgui.Components;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace partialdownloadgui
 {
@@ -29,6 +18,7 @@ namespace partialdownloadgui
 
         private Download download;
         private bool isNew = true;
+        private string url;
 
         public Download Download
         {
@@ -39,6 +29,8 @@ namespace partialdownloadgui
                 download = value;
             }
         }
+
+        public string Url { get => url; set => url = value; }
 
         private void BrowseForDownloadedFile()
         {
@@ -169,6 +161,10 @@ namespace partialdownloadgui
                 }
                 download.NoDownloader = cbThreads.SelectedIndex + 1;
                 download.SummarySection = new();
+                if (!string.IsNullOrEmpty(this.url))
+                {
+                    txtUrl.Text = this.url;
+                }
             }
             else
             {
