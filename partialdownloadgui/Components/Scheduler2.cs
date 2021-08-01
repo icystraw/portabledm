@@ -203,6 +203,7 @@ namespace partialdownloadgui.Components
 
         private void ProcessSections()
         {
+            if (download.SummarySection.DownloadStatus == DownloadStatus.Finished) return;
             CancelOtherSectionsIf200SectionExists();
             CreateNewSectionIfFeasible();
             TryDownloadingAllUnfinishedSections();
@@ -220,6 +221,7 @@ namespace partialdownloadgui.Components
         {
             ProgressView pv = new();
             pv.DownloadId = download.SummarySection.Id;
+            pv.DownloadView.Id = download.SummarySection.Id;
             pv.DownloadView.FileName = Util.getDownloadFileNameFromDownloadSection(download.SummarySection);
             pv.DownloadView.Size = Util.getShortFileSize(download.SummarySection.Total);
             pv.DownloadView.Status = GetDownloadStatus().ToString();
@@ -277,6 +279,8 @@ namespace partialdownloadgui.Components
             if (download.Sections.Count == 0) return;
             // make sure the download cannot continue
             if (!IsDownloadHalted()) return;
+            // is download already finished?
+            if (download.SummarySection.DownloadStatus == DownloadStatus.Finished) return;
 
             DownloadSection ds = download.Sections[0];
             Stream streamDest = null, streamSection = null;
@@ -369,6 +373,8 @@ namespace partialdownloadgui.Components
 
         public void Start()
         {
+            if (download.SummarySection.DownloadStatus == DownloadStatus.Finished) return;
+            if (IsDownloading()) return;
             sc = new();
             this.downloadStopFlag = false;
             downloadThread = new(new ThreadStart(DownloadThreadProc));

@@ -1,16 +1,11 @@
-﻿using System;
+﻿using partialdownloadgui.Components;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace partialdownloadgui
 {
@@ -22,26 +17,204 @@ namespace partialdownloadgui
         public MainWindow2()
         {
             InitializeComponent();
+            schedulers = new();
+            downloadViews = new();
+
+            timer = new DispatcherTimer();
+            timer.Tick += Timer_Tick;
+            timer.Interval = new TimeSpan(0, 0, 1);
+        }
+
+        private List<Scheduler2> schedulers;
+        private ObservableCollection<DownloadView> downloadViews;
+        private DispatcherTimer timer;
+
+        private void LoadSchedulers()
+        {
+            List<Download> downloads = Util.retrieveDownloadsFromFile();
+            foreach (Download d in downloads)
+            {
+                Scheduler2 s = new(d);
+                ProgressView pv = s.GetDownloadStatusView();
+                downloadViews.Add(pv.DownloadView);
+                schedulers.Add(new(d));
+            }
+        }
+
+        private void ResetDownloadsListView()
+        {
+            lstDownloads.ItemsSource = downloadViews;
+        }
+
+        private void StopAllDownloads()
+        {
+            foreach (Scheduler2 s in schedulers)
+            {
+                s.Stop(false);
+            }
+        }
+
+        private void SaveDownloadsToFile()
+        {
+            List<Download> downloads = new();
+            foreach (Scheduler2 s in schedulers)
+            {
+                downloads.Add(s.Download);
+            }
+            Util.saveDownloadsToFile(downloads);
+        }
+
+        private void UpdateDownloadsStatus()
+        {
+            foreach (Scheduler2 s in schedulers)
+            {
+                ProgressView pv = s.GetDownloadStatusView();
+                foreach (DownloadView dv in downloadViews)
+                {
+                    if (dv.Id == pv.DownloadId)
+                    {
+                        dv.Progress = pv.DownloadView.Progress;
+                        dv.Speed = pv.DownloadView.Speed;
+                        dv.Status = pv.DownloadView.Status;
+                        if ((lstDownloads.SelectedItem as DownloadView) == dv)
+                        {
+                            lstSections.ItemsSource = pv.SectionViews;
+                            DrawProgress(pv.ProgressBar);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void DrawProgress(string progress)
+        {
+            wpProgress.Children.Clear();
+            for (int i = 0; i < progress.Length; i++)
+            {
+                Rectangle r = new();
+                RenderOptions.SetEdgeMode(r, EdgeMode.Aliased);
+                r.Height = 10;
+                if (progress[i] == '\u2593')
+                {
+                    r.Fill = Brushes.Green;
+                }
+                else
+                {
+                    r.Fill = Brushes.LightGray;
+                }
+                wpProgress.Children.Add(r);
+            }
+        }
+
+        private Scheduler2 FindSchedulerById(Guid id)
+        {
+            foreach (Scheduler2 s in schedulers)
+            {
+                if (s.Download.SummarySection.Id == id)
+                {
+                    return s;
+                }
+            }
+            return null;
+        }
+
+        private void RemoveFromDownloadView(Guid id)
+        {
+            foreach (DownloadView dv in downloadViews)
+            {
+                if (dv.Id == id)
+                {
+                    downloadViews.Remove(dv);
+                    return;
+                }
+            }
         }
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
+            AddEditDownload ad = new();
+            if (ad.ShowDialog() == true)
+            {
+                Scheduler2 s = new(ad.Download);
+                ProgressView pv = s.GetDownloadStatusView();
+                schedulers.Add(s);
+                downloadViews.Add(pv.DownloadView);
+                s.Start();
+            }
+        }
 
+        private void btnEdit_Click(object sender, RoutedEventArgs e)
+        {
+            DownloadView dv = lstDownloads.SelectedItem as DownloadView;
+            if (null == dv) return;
+            Scheduler2 s = FindSchedulerById(dv.Id);
+            if (s != null)
+            {
+                if (s.IsDownloading()) s.Stop(false);
+
+                AddEditDownload ad = new();
+                ad.Download = s.Download;
+                ad.ShowDialog();
+            }
         }
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
-
+            DownloadView dv = lstDownloads.SelectedItem as DownloadView;
+            if (null == dv) return;
+            Scheduler2 s = FindSchedulerById(dv.Id);
+            if (s != null) s.Start();
         }
 
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
-
+            DownloadView dv = lstDownloads.SelectedItem as DownloadView;
+            if (null == dv) return;
+            Scheduler2 s = FindSchedulerById(dv.Id);
+            if (s != null) s.Stop(false);
         }
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
+            DownloadView dv = lstDownloads.SelectedItem as DownloadView;
+            if (null == dv) return;
+            Scheduler2 s = FindSchedulerById(dv.Id);
+            if (!s.IsDownloadFinished())
+            {
+                if (MessageBox.Show("Download is not finished. Do you want to delete?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No) return;
+            }
+            s.Stop(true);
+            schedulers.Remove(s);
+            RemoveFromDownloadView(s.Download.SummarySection.Id);
+        }
 
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            timer.Stop();
+            StopAllDownloads();
+            try
+            {
+                SaveDownloadsToFile();
+                Util.saveAppSettingsToFile();
+            }
+            catch { }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                LoadSchedulers();
+            }
+            catch { }
+            ResetDownloadsListView();
+            timer.Start();
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            UpdateDownloadsStatus();
         }
     }
 }

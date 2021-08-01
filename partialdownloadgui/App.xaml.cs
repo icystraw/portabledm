@@ -32,7 +32,7 @@ namespace partialdownloadgui
             {
                 appSettings = new();
             }
-            MainWindow mw = new();
+            MainWindow2 mw = new();
             mw.Show();
         }
     }

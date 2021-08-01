@@ -1,9 +1,11 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace partialdownloadgui.Components
 {
     public class DownloadView : INotifyPropertyChanged
     {
+        private Guid id;
         private string fileName;
         private string size;
         private long progress;
@@ -39,6 +41,8 @@ namespace partialdownloadgui.Components
                 OnPropertyChanged(nameof(Status));
             }
         }
+
+        public Guid Id { get => id; set => id = value; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

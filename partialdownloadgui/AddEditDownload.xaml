@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:partialdownloadgui"
         mc:Ignorable="d"
-        Title="AddEditDownload" Height="350" Width="600">
+        Title="Add/Edit Download" Height="350" Width="600" Loaded="Window_Loaded">
     <StackPanel>
         <GroupBox Header="Options" Margin="5">
             <StackPanel>
@@ -82,10 +82,10 @@
                     </StackPanel>
                 </GroupBox>
                 <WrapPanel HorizontalAlignment="Center">
-                    <Button Name="btnOk" Margin="5" Width="40" Background="White">
+                    <Button Name="btnOk" Margin="5" Width="40" Background="White" Click="btnOk_Click">
                         <Image Source="pack://application:,,,/Images/go.png" Margin="3" />
                     </Button>
-                    <Button Name="btnCancel" Margin="5" Width="40" Background="White">
+                    <Button Name="btnCancel" Margin="5" Width="40" Background="White" Click="btnCancel_Click">
                         <Image Source="pack://application:,,,/Images/go.png" Margin="3" />
                     </Button>
                 </WrapPanel>

@@ -5,11 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:partialdownloadgui"
         mc:Ignorable="d"
-        Title="MainWindow2" Height="400" Width="800">
+        Title="MainWindow2" Height="400" Width="800" Closed="Window_Closed" Loaded="Window_Loaded">
     <UniformGrid Rows="1" Columns="2">
         <DockPanel>
             <WrapPanel HorizontalAlignment="Center" DockPanel.Dock="Top">
-                <Button Name="btnAdd" Click="btnAdd_Click">Add/Edit</Button>
+                <Button Name="btnAdd" Click="btnAdd_Click">Add</Button>
+                <Button Name="btnEdit" Click="btnEdit_Click">Edit</Button>
                 <Button Name="btnStart" Click="btnStart_Click">Start</Button>
                 <Button Name="btnStop" Click="btnStop_Click">Stop</Button>
                 <Button Name="btnDelete" Click="btnDelete_Click">Delete</Button>
