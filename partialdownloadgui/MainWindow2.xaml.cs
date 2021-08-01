@@ -23,5 +23,25 @@ namespace partialdownloadgui
         {
             InitializeComponent();
         }
+
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnStart_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnStop_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
