@@ -174,7 +174,7 @@ namespace partialdownloadgui.Components
             }
         }
 
-        private void CancelOtherSectionsIf200SectionExists()
+        private bool CancelOtherSectionsIf200SectionExists()
         {
             for (int i = 0; i < download.Sections.Count; i++)
             {
@@ -184,9 +184,10 @@ namespace partialdownloadgui.Components
                 {
                     StopDownloadExcept(download.Sections[i]);
                     CancelSectionsExcept(download.Sections[i]);
-                    return;
+                    return true;
                 }
             }
+            return false;
         }
 
         private void TryDownloadingAllUnfinishedSections()
@@ -204,7 +205,7 @@ namespace partialdownloadgui.Components
         private void ProcessSections()
         {
             if (download.SummarySection.DownloadStatus == DownloadStatus.Finished) return;
-            CancelOtherSectionsIf200SectionExists();
+            if (CancelOtherSectionsIf200SectionExists()) return;
             CreateNewSectionIfFeasible();
             TryDownloadingAllUnfinishedSections();
         }
