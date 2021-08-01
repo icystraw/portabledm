@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -207,60 +208,58 @@ namespace partialdownloadgui.Components
             TryDownloadingAllUnfinishedSections();
         }
 
-        public string GetDownloadStatus(out List<ProgressView> view)
+        private DownloadStatus GetDownloadStatus()
         {
-            List<ProgressView> progressViewItems = new();
-            view = progressViewItems;
+            if (exMessage != null) return DownloadStatus.DownloadError;
+            if (IsDownloading()) return DownloadStatus.Downloading;
+            if (IsDownloadFinished()) return DownloadStatus.Finished;
+            return DownloadStatus.Stopped;
+        }
+
+        public ProgressView GetDownloadStatusView()
+        {
+            ProgressView pv = new();
+            pv.DownloadId = download.SummarySection.Id;
+            pv.DownloadView.FileName = Util.getDownloadFileNameFromDownloadSection(download.SummarySection);
+            pv.DownloadView.Size = Util.getShortFileSize(download.SummarySection.Total);
+            pv.DownloadView.Status = GetDownloadStatus().ToString();
+
+            long total = download.SummarySection.Total;
+            long totalDownloaded = 0;
+            StringBuilder sb = new();
             lock (sectionsLock)
             {
-                if (download.Sections.Count == 0) return string.Empty;
-
                 DownloadSection ds = download.Sections[0];
-                long total = download.SummarySection.Total;
-                long totalDownloaded = 0;
-                StringBuilder sb = new();
                 do
                 {
-                    long secTotal = ds.Total;
-                    long secDownloaded = ds.BytesDownloaded;
-                    DownloadStatus status = ds.DownloadStatus;
-                    int httpStatusCode = (int)ds.HttpStatusCode;
+                    SectionView sv = new();
+                    sv.Description = ds.HttpStatusCode.ToString();
+                    sv.Status = ds.DownloadStatus.ToString();
+                    long secTotal = ds.Total, secDownloaded = ds.BytesDownloaded;
                     totalDownloaded += secDownloaded;
-                    ProgressView pv = new();
-                    pv.Section = "HTTP Response: " + httpStatusCode;
-                    pv.Size = Util.getShortFileSize(secTotal);
-                    if (status == DownloadStatus.Downloading || status == DownloadStatus.PrepareToDownload) pv.StatusImage = "downloading";
-                    else if (status == DownloadStatus.DownloadError) pv.StatusImage = "error";
-                    else if (status == DownloadStatus.Finished) pv.StatusImage = "finished";
-                    else pv.StatusImage = string.Empty;
-                    if (secTotal > 0)
-                    {
-                        pv.Progress = (secDownloaded * 100 / secTotal > 100 ? 100 : secDownloaded * 100 / secTotal);
-                    }
-                    else
-                    {
-                        pv.Progress = 0;
-                    }
-                    progressViewItems.Add(pv);
+                    sv.Size = Util.getShortFileSize(secTotal);
+                    if (secTotal > 0) sv.Progress = (secDownloaded * 100 / secTotal > 100 ? 100 : secDownloaded * 100 / secTotal);
+                    else sv.Progress = 0;
+                    pv.SectionViews.Add(sv);
                     if (total > 0)
                     {
                         long downloadedSquares = secDownloaded * 200 / total;
                         long pendingSquares = secTotal * 200 / total - downloadedSquares;
-                        for (long i = 0; i < downloadedSquares; i++)
-                        {
-                            sb.Append('\u2593');
-                        }
-                        for (long i = 0; i < pendingSquares; i++)
-                        {
-                            sb.Append('\u2591');
-                        }
+                        for (long i = 0; i < downloadedSquares; i++) sb.Append('\u2593');
+                        for (long i = 0; i < pendingSquares; i++) sb.Append('\u2591');
                     }
                     ds = ds.NextSection;
                 }
                 while (ds != null);
-                download.SummarySection.BytesDownloaded = totalDownloaded;
-                return sb.ToString();
             }
+            download.SummarySection.BytesDownloaded = totalDownloaded;
+            pv.ProgressBar = sb.ToString();
+            sc.RegisterBytes(totalDownloaded);
+            pv.DownloadView.Speed = Util.getShortFileSize(sc.GetSpeed()) + "/sec";
+            if (total > 0) pv.DownloadView.Progress = (totalDownloaded * 100 / total > 100 ? 100 : totalDownloaded * 100 / total);
+            else pv.DownloadView.Progress = 0;
+
+            return pv;
         }
 
         private bool IsDownloadHalted()
@@ -289,15 +288,7 @@ namespace partialdownloadgui.Components
             {
                 if (!string.IsNullOrEmpty(download.DownloadFolder) && Directory.Exists(download.DownloadFolder))
                 {
-                    string fileNameOnly;
-                    if (!string.IsNullOrEmpty(ds.SuggestedName))
-                    {
-                        fileNameOnly = Util.removeInvalidCharFromFileName(ds.SuggestedName);
-                    }
-                    else
-                    {
-                        fileNameOnly = Util.getFileName(ds.Url);
-                    }
+                    string fileNameOnly = Util.getDownloadFileNameFromDownloadSection(ds);
                     fileNameWithPath = Path.Combine(download.DownloadFolder, fileNameOnly);
                     if (File.Exists(fileNameWithPath))
                     {
@@ -404,6 +395,7 @@ namespace partialdownloadgui.Components
             {
                 JoinSectionsToFile();
                 CleanTempFiles();
+                this.exMessage = null;
             }
             catch (Exception ex)
             {

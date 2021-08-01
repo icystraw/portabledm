@@ -268,6 +268,18 @@ namespace partialdownloadgui.Components
             }
         }
 
+        public static string getDownloadFileNameFromDownloadSection(DownloadSection ds)
+        {
+            if (!string.IsNullOrEmpty(ds.SuggestedName))
+            {
+                return removeInvalidCharFromFileName(ds.SuggestedName);
+            }
+            else
+            {
+                return getFileName(ds.Url);
+            }
+        }
+
         public static void startTcpServer()
         {
             TcpListener server = new(IPAddress.Parse("127.0.0.1"), listenPort);

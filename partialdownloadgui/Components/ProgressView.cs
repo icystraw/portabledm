@@ -1,19 +1,25 @@
-﻿namespace partialdownloadgui.Components
+﻿using System;
+using System.Collections.Generic;
+
+namespace partialdownloadgui.Components
 {
     public class ProgressView
     {
-        private string section;
-        private string size;
-        private long progress;
-        private long total;
-        private long bytesDownloaded;
-        private string statusImage;
+        private Guid downloadId;
+        private DownloadView downloadView;
+        private List<SectionView> sectionViews;
+        private string progressBar;
 
-        public string Section { get => section; set => section = value; }
-        public string Size { get => size; set => size = value; }
-        public long Progress { get => progress; set => progress = value; }
-        public long Total { get => total; set => total = value; }
-        public long BytesDownloaded { get => bytesDownloaded; set => bytesDownloaded = value; }
-        public string StatusImage { get => statusImage; set => statusImage = value; }
+        public Guid DownloadId { get => downloadId; set => downloadId = value; }
+        public DownloadView DownloadView { get => downloadView; set => downloadView = value; }
+        public List<SectionView> SectionViews { get => sectionViews; set => sectionViews = value; }
+        public string ProgressBar { get => progressBar; set => progressBar = value; }
+
+        public ProgressView()
+        {
+            downloadView = new();
+            sectionViews = new();
+            progressBar = string.Empty;
+        }
     }
 }

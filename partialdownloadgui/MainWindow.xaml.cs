@@ -273,7 +273,7 @@ namespace partialdownloadgui
         {
             if (null == scheduler) return;
 
-            List<ProgressView> pvList;
+            List<SectionView> pvList;
             string status = scheduler.GetDownloadStatus(out pvList);
             lstProgress.ItemsSource = pvList;
             DrawProgress(status);

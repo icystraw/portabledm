@@ -176,16 +176,16 @@
                                         <Image.Style>
                                             <Style TargetType="Image">
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding StatusImage}" Value="downloading">
+                                                    <DataTrigger Binding="{Binding Status}" Value="downloading">
                                                         <Setter Property="Source" Value="pack://application:,,,/Images/right-arrow.png"/>
                                                     </DataTrigger>
-                                                    <DataTrigger Binding="{Binding StatusImage}" Value="error">
+                                                    <DataTrigger Binding="{Binding Status}" Value="error">
                                                         <Setter Property="Source" Value="pack://application:,,,/Images/error.png"/>
                                                     </DataTrigger>
-                                                    <DataTrigger Binding="{Binding StatusImage}" Value="finished">
+                                                    <DataTrigger Binding="{Binding Status}" Value="finished">
                                                         <Setter Property="Source" Value="pack://application:,,,/Images/finished.png"/>
                                                     </DataTrigger>
-                                                    <DataTrigger Binding="{Binding StatusImage}" Value="downarrow">
+                                                    <DataTrigger Binding="{Binding Status}" Value="downarrow">
                                                         <Setter Property="Source" Value="pack://application:,,,/Images/down-arrow.png"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
@@ -195,7 +195,7 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=Section}" Header="Section" Width="120"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Description}" Header="Section" Width="120"/>
                         <GridViewColumn DisplayMemberBinding="{Binding Path=Size}" Header="Size" Width="100"/>
                         <GridViewColumn Header="Progress" Width="180">
                             <GridViewColumn.CellTemplate>

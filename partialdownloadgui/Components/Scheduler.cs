@@ -200,9 +200,9 @@ namespace partialdownloadgui.Components
         }
 
         // this method will be called by a different thread
-        public string GetDownloadStatus(out List<ProgressView> view)
+        public string GetDownloadStatus(out List<SectionView> view)
         {
-            List<ProgressView> progressViewItems = new();
+            List<SectionView> progressViewItems = new();
             view = progressViewItems;
             lock (sectionsLock)
             {
@@ -220,14 +220,14 @@ namespace partialdownloadgui.Components
                     int httpStatusCode = (int)ds.HttpStatusCode;
                     total += secTotal;
                     totalDownloaded += secDownloaded;
-                    ProgressView pv = new();
+                    SectionView pv = new();
                     pv.Total = secTotal;
                     pv.BytesDownloaded = secDownloaded;
-                    if (status == DownloadStatus.Downloading || status == DownloadStatus.PrepareToDownload) pv.StatusImage = "downloading";
-                    else if (status == DownloadStatus.DownloadError) pv.StatusImage = "error";
-                    else if (status == DownloadStatus.Finished) pv.StatusImage = "finished";
-                    else pv.StatusImage = string.Empty;
-                    pv.Section = "Section " + sectionIndex.ToString() + "(" + httpStatusCode + ")";
+                    if (status == DownloadStatus.Downloading || status == DownloadStatus.PrepareToDownload) pv.Status = "downloading";
+                    else if (status == DownloadStatus.DownloadError) pv.Status = "error";
+                    else if (status == DownloadStatus.Finished) pv.Status = "finished";
+                    else pv.Status = string.Empty;
+                    pv.Description = "Section " + sectionIndex.ToString() + "(" + httpStatusCode + ")";
                     sectionIndex++;
                     pv.Size = Util.getShortFileSize(secTotal);
                     if (secTotal > 0)
@@ -244,11 +244,11 @@ namespace partialdownloadgui.Components
                 while (ds != null);
 
                 sc.RegisterBytes(totalDownloaded);
-                ProgressView pvTotal = new();
+                SectionView pvTotal = new();
                 pvTotal.Total = total;
                 pvTotal.BytesDownloaded = totalDownloaded;
-                pvTotal.StatusImage = "downarrow";
-                pvTotal.Section = "Overall " + Util.getShortFileSize(sc.GetSpeed()) + "/sec";
+                pvTotal.Status = "downarrow";
+                pvTotal.Description = "Overall " + Util.getShortFileSize(sc.GetSpeed()) + "/sec";
                 pvTotal.Size = Util.getShortFileSize(total);
                 if (total > 0)
                 {
