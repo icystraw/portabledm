@@ -106,24 +106,41 @@ namespace partialdownloadgui
             btnDelete.IsEnabled = false;
             btnOpenFolder.IsEnabled = false;
 
+            mnuEdit.IsEnabled = false;
+            mnuStart.IsEnabled = false;
+            mnuStop.IsEnabled = false;
+            mnuDelete.IsEnabled = false;
+            mnuOpenFolder.IsEnabled = false;
+
             DownloadView dv = lstDownloads.SelectedItem as DownloadView;
             if (null == dv) return;
 
             btnDelete.IsEnabled = true;
             btnOpenFolder.IsEnabled = true;
+
+            mnuDelete.IsEnabled = true;
+            mnuOpenFolder.IsEnabled = true;
             if (dv.Status == DownloadStatus.DownloadError)
             {
                 btnEdit.IsEnabled = true;
                 btnStart.IsEnabled = true;
+
+                mnuEdit.IsEnabled = true;
+                mnuStart.IsEnabled = true;
             }
             if (dv.Status == DownloadStatus.Downloading)
             {
                 btnStop.IsEnabled = true;
+
+                mnuStop.IsEnabled = true;
             }
             if (dv.Status == DownloadStatus.Stopped)
             {
                 btnEdit.IsEnabled = true;
                 btnStart.IsEnabled = true;
+
+                mnuEdit.IsEnabled = true;
+                mnuStart.IsEnabled = true;
             }
         }
 
@@ -193,9 +210,9 @@ namespace partialdownloadgui
             DownloadView dv = lstDownloads.SelectedItem as DownloadView;
             if (null == dv) return;
             Scheduler2 s = FindSchedulerById(dv.Id);
-            if (s.IsDownloadFinished()) return;
             if (s != null)
             {
+                if (s.IsDownloadFinished()) return;
                 if (s.IsDownloading()) s.Stop(false);
 
                 AddEditDownload ad = new();
@@ -226,13 +243,16 @@ namespace partialdownloadgui
             DownloadView dv = lstDownloads.SelectedItem as DownloadView;
             if (null == dv) return;
             Scheduler2 s = FindSchedulerById(dv.Id);
-            if (!s.IsDownloadFinished())
+            if (s != null)
             {
-                if (MessageBox.Show("Download is not finished. Do you want to delete?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No) return;
+                if (!s.IsDownloadFinished())
+                {
+                    if (MessageBox.Show("Download is not finished. Do you want to delete?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No) return;
+                }
+                s.Stop(true);
+                schedulers.Remove(s);
+                downloadViews.Remove(dv);
             }
-            s.Stop(true);
-            schedulers.Remove(s);
-            downloadViews.Remove(dv);
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -296,7 +316,32 @@ namespace partialdownloadgui
             DownloadView dv = lstDownloads.SelectedItem as DownloadView;
             if (null == dv) return;
             Scheduler2 s = FindSchedulerById(dv.Id);
-            Process.Start("explorer.exe", s.Download.DownloadFolder);
+            if (s != null) Process.Start("explorer.exe", s.Download.DownloadFolder);
+        }
+
+        private void mnuOpenFolder_Click(object sender, RoutedEventArgs e)
+        {
+            btnOpenFolder_Click(sender, e);
+        }
+
+        private void mnuStart_Click(object sender, RoutedEventArgs e)
+        {
+            btnStart_Click(sender, e);
+        }
+
+        private void mnuStop_Click(object sender, RoutedEventArgs e)
+        {
+            btnStop_Click(sender, e);
+        }
+
+        private void mnuEdit_Click(object sender, RoutedEventArgs e)
+        {
+            btnEdit_Click(sender, e);
+        }
+
+        private void mnuDelete_Click(object sender, RoutedEventArgs e)
+        {
+            btnDelete_Click(sender, e);
         }
     }
 }
