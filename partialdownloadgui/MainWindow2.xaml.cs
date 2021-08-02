@@ -103,6 +103,20 @@ namespace partialdownloadgui
             DrawProgress(pv.ProgressBar);
             txtUrl.Content = pv.DownloadView.Url;
             txtDownloadFolder.Content = pv.DownloadView.DownloadFolder;
+            int http206SecCount = 0;
+            foreach (SectionView sv in pv.SectionViews)
+            {
+                if (sv.Description == System.Net.HttpStatusCode.OK)
+                {
+                    txtResumability.Content = "NOT RESUMABLE";
+                    txtResumability.Foreground = Brushes.Red;
+                    return;
+                }
+                if (sv.Description == System.Net.HttpStatusCode.PartialContent) http206SecCount++;
+            }
+            if (http206SecCount == pv.SectionViews.Count) txtResumability.Content = "Yes";
+            else txtResumability.Content = "Not Sure";
+            txtResumability.Foreground = Brushes.Blue;
         }
 
         private void UpdateControlsStatus()
@@ -289,13 +303,6 @@ namespace partialdownloadgui
             lstDownloads.ItemsSource = downloadViews;
             UpdateControlsStatus();
             timer.Start();
-            if (App.Args.Length == 3 && App.Args[1] == "/download")
-            {
-                Activate();
-                this.Topmost = true;
-                this.Topmost = false;
-                AddDownload(Util.convertFromBase64(App.Args[2]));
-            }
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -353,6 +360,16 @@ namespace partialdownloadgui
         private void mnuDelete_Click(object sender, RoutedEventArgs e)
         {
             btnDelete_Click(sender, e);
+        }
+
+        private void chkBrowserDownload_Unchecked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void chkBrowserDownload_Checked(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

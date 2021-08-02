@@ -64,8 +64,11 @@
                 </Button>
             </WrapPanel>
             <Expander Header="Other options" DockPanel.Dock="Bottom" Margin="5">
-                <GroupBox Header="Post-download" Margin="5">
-                    <CheckBox Name="chkShutdown" Margin="5">Shut down computer after downloads finish (if the current user has shut down rights)</CheckBox>
+                <GroupBox Margin="5">
+                    <StackPanel Margin="5">
+                        <CheckBox Name="chkShutdown">Shut down computer after active downloads finish (if the current user has shut down rights)</CheckBox>
+                        <CheckBox Name="chkBrowserDownload" Unchecked="chkBrowserDownload_Unchecked" Checked="chkBrowserDownload_Checked">Take over download from browser (need to install browser extension)</CheckBox>
+                    </StackPanel>
                 </GroupBox>
             </Expander>
             <GroupBox Header="Current Downloads" Margin="5">
@@ -140,6 +143,10 @@
                     <WrapPanel>
                         <Label>Folder:</Label>
                         <Label Name="txtDownloadFolder"></Label>
+                    </WrapPanel>
+                    <WrapPanel>
+                        <Label>Ability to resume:</Label>
+                        <Label Name="txtResumability" />
                     </WrapPanel>
                 </StackPanel>
             </GroupBox>

@@ -233,7 +233,7 @@ namespace partialdownloadgui.Components
                 do
                 {
                     SectionView sv = new();
-                    sv.Description = ds.HttpStatusCode.ToString();
+                    sv.Description = ds.HttpStatusCode;
                     sv.Status = ds.DownloadStatus;
                     long secTotal = ds.Total, secDownloaded = ds.BytesDownloaded;
                     totalDownloaded += secDownloaded;
