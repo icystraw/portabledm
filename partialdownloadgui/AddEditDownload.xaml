@@ -33,7 +33,7 @@
                 </DockPanel>
                 <GroupBox Header="Multi-threading">
                     <WrapPanel>
-                        <Label Content="Maximum number of download thread:" />
+                        <Label Content="Maximum no. of download thread (too many can affect web browsing):" />
                         <ComboBox Width="50" Name="cbThreads">
                             <ComboBoxItem>1</ComboBoxItem>
                             <ComboBoxItem>2</ComboBoxItem>
@@ -48,7 +48,7 @@
                         </ComboBox>
                     </WrapPanel>
                 </GroupBox>
-                <GroupBox Header="Advanced Options">
+                <GroupBox Header="Advanced Options (leave as-is if not sure)">
                     <StackPanel>
                         <GroupBox Header="Partial Download">
                             <WrapPanel>
