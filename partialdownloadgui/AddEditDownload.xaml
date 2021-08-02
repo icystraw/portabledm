@@ -82,10 +82,10 @@
                     </StackPanel>
                 </GroupBox>
                 <WrapPanel HorizontalAlignment="Center">
-                    <Button Name="btnOk" Margin="5" Width="40" Background="White" Click="btnOk_Click">
+                    <Button Name="btnOk" Margin="5" Width="40" Background="White" Click="btnOk_Click" IsDefault="True">
                         <Image Source="pack://application:,,,/Images/go.png" Margin="3" />
                     </Button>
-                    <Button Name="btnCancel" Margin="5" Width="40" Background="White" Click="btnCancel_Click">
+                    <Button Name="btnCancel" Margin="5" Width="40" Background="White" Click="btnCancel_Click" IsCancel="True">
                         <Image Source="pack://application:,,,/Images/cancel.png" Margin="3" />
                     </Button>
                 </WrapPanel>
