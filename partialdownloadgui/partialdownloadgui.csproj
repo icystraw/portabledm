@@ -9,6 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Remove="Images\cancel.png" />
 		<None Remove="Images\download.png" />
 		<None Remove="Images\error.png" />
 		<None Remove="Images\finished.png" />
@@ -20,6 +21,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Resource Include="Images\cancel.png" />
 		<Resource Include="Images\download.png" />
 		<Resource Include="Images\error.png" />
 		<Resource Include="Images\finished.png" />

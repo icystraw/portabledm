@@ -164,6 +164,7 @@ namespace partialdownloadgui
             DownloadView dv = lstDownloads.SelectedItem as DownloadView;
             if (null == dv) return;
             Scheduler2 s = FindSchedulerById(dv.Id);
+            if (s.IsDownloadFinished()) return;
             if (s != null)
             {
                 if (s.IsDownloading()) s.Stop(false);
@@ -247,6 +248,14 @@ namespace partialdownloadgui
                 return;
             }
             UpdateDownloadsStatus();
+        }
+
+        private void btnOpenFolder_Click(object sender, RoutedEventArgs e)
+        {
+            DownloadView dv = lstDownloads.SelectedItem as DownloadView;
+            if (null == dv) return;
+            Scheduler2 s = FindSchedulerById(dv.Id);
+            Process.Start("explorer.exe", s.Download.DownloadFolder);
         }
     }
 }

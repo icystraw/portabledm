@@ -86,11 +86,10 @@
                         <Image Source="pack://application:,,,/Images/go.png" Margin="3" />
                     </Button>
                     <Button Name="btnCancel" Margin="5" Width="40" Background="White" Click="btnCancel_Click">
-                        <Image Source="pack://application:,,,/Images/go.png" Margin="3" />
+                        <Image Source="pack://application:,,,/Images/cancel.png" Margin="3" />
                     </Button>
                 </WrapPanel>
             </StackPanel>
         </GroupBox>
-
     </StackPanel>
 </Window>
