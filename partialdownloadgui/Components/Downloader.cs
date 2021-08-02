@@ -36,6 +36,8 @@ namespace partialdownloadgui.Components
                 return true;
             };
             client = new(h);
+            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("*/*"));
+            client.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36");
         }
 
         public Downloader(DownloadSection section)
@@ -98,7 +100,7 @@ namespace partialdownloadgui.Components
         private void DownloadThreadProc()
         {
             HttpRequestMessage request = new(HttpMethod.Get, this.downloadSection.Url);
-
+            request.Headers.Referrer = request.RequestUri;
             long? endParam = (this.downloadSection.End >= 0 ? this.downloadSection.End : null);
             if (this.downloadSection.BytesDownloaded > 0)
             {

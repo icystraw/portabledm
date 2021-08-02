@@ -163,6 +163,7 @@ namespace partialdownloadgui.Components
                 ds.Start = 0;
             }
             HttpRequestMessage request = new(HttpMethod.Get, ds.Url);
+            request.Headers.Referrer = request.RequestUri;
             long? endParam = (ds.End >= 0 ? ds.End : null);
             request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(ds.Start, endParam);
             if (!string.IsNullOrEmpty(ds.UserName) && !string.IsNullOrEmpty(ds.Password))
