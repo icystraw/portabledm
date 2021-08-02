@@ -39,14 +39,10 @@ namespace partialdownloadgui
             {
                 Scheduler2 s = new(d);
                 ProgressView pv = s.GetDownloadStatusView();
+                progressViews.Add(pv);
                 downloadViews.Add(pv.DownloadView);
                 schedulers.Add(s);
             }
-        }
-
-        private void ResetDownloadsListView()
-        {
-            lstDownloads.ItemsSource = downloadViews;
         }
 
         private void StopAllDownloads()
@@ -99,6 +95,35 @@ namespace partialdownloadgui
             if (bJustFinished && chkShutdown.IsChecked == true && !IsBusy())
             {
                 Process.Start("shutdown.exe", "/s");
+            }
+        }
+
+        private void UpdateControlsStatus()
+        {
+            btnEdit.IsEnabled = false;
+            btnStart.IsEnabled = false;
+            btnStop.IsEnabled = false;
+            btnDelete.IsEnabled = false;
+            btnOpenFolder.IsEnabled = false;
+
+            DownloadView dv = lstDownloads.SelectedItem as DownloadView;
+            if (null == dv) return;
+
+            btnDelete.IsEnabled = true;
+            btnOpenFolder.IsEnabled = true;
+            if (dv.Status == DownloadStatus.DownloadError)
+            {
+                btnEdit.IsEnabled = true;
+                btnStart.IsEnabled = true;
+            }
+            if (dv.Status == DownloadStatus.Downloading)
+            {
+                btnStop.IsEnabled = true;
+            }
+            if (dv.Status == DownloadStatus.Stopped)
+            {
+                btnEdit.IsEnabled = true;
+                btnStart.IsEnabled = true;
             }
         }
 
@@ -174,6 +199,7 @@ namespace partialdownloadgui
                 if (s.IsDownloading()) s.Stop(false);
 
                 AddEditDownload ad = new();
+                ad.Owner = this;
                 ad.Download = s.Download;
                 ad.ShowDialog();
             }
@@ -228,7 +254,8 @@ namespace partialdownloadgui
                 LoadSchedulers();
             }
             catch { }
-            ResetDownloadsListView();
+            lstDownloads.ItemsSource = downloadViews;
+            UpdateControlsStatus();
             timer.Start();
             if (App.Args.Length == 3 && App.Args[1] == "/download")
             {
@@ -242,10 +269,12 @@ namespace partialdownloadgui
         private void Timer_Tick(object sender, EventArgs e)
         {
             UpdateDownloadsStatus();
+            UpdateControlsStatus();
         }
 
         private void lstDownloads_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
+            UpdateControlsStatus();
             DownloadView dv = lstDownloads.SelectedItem as DownloadView;
             if (null == dv)
             {
@@ -257,6 +286,7 @@ namespace partialdownloadgui
                 if (pv.DownloadId == dv.Id)
                 {
                     lstSections.ItemsSource = pv.SectionViews;
+                    DrawProgress(pv.ProgressBar);
                 }
             }
         }

@@ -96,7 +96,7 @@
                             </GridViewColumn>
                             <GridViewColumn DisplayMemberBinding="{Binding Path=FileName}" Header="File" Width="100" />
                             <GridViewColumn DisplayMemberBinding="{Binding Path=Size}" Header="Size" Width="100" />
-                            <GridViewColumn Header="Progress" Width="120">
+                            <GridViewColumn Header="Progress" Width="130">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <ProgressBar Minimum="0" Maximum="100" Value="{Binding Path=Progress}" Width="110" Height="10"></ProgressBar>
