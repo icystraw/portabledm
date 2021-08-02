@@ -137,16 +137,16 @@
             <GroupBox Header="More Details" DockPanel.Dock="Top" Margin="5" Name="gbMoreDetails">
                 <StackPanel Margin="5">
                     <WrapPanel>
-                        <Label>URL:</Label>
-                        <Label Name="txtUrl"></Label>
+                        <TextBlock Margin="2">URL:</TextBlock>
+                        <TextBlock Name="txtUrl" TextWrapping="Wrap" Margin="2"></TextBlock>
                     </WrapPanel>
                     <WrapPanel>
-                        <Label>Folder:</Label>
-                        <Label Name="txtDownloadFolder"></Label>
+                        <TextBlock Margin="2">Folder:</TextBlock>
+                        <TextBlock Margin="2" Name="txtDownloadFolder" TextWrapping="Wrap"></TextBlock>
                     </WrapPanel>
                     <WrapPanel>
-                        <Label>Ability to resume:</Label>
-                        <Label Name="txtResumability" />
+                        <TextBlock Margin="2">Ability to resume:</TextBlock>
+                        <TextBlock Margin="2" Name="txtResumability" />
                     </WrapPanel>
                 </StackPanel>
             </GroupBox>

@@ -101,21 +101,21 @@ namespace partialdownloadgui
         {
             lstSections.ItemsSource = pv.SectionViews;
             DrawProgress(pv.ProgressBar);
-            txtUrl.Content = pv.DownloadView.Url;
-            txtDownloadFolder.Content = pv.DownloadView.DownloadFolder;
+            txtUrl.Text = pv.DownloadView.Url;
+            txtDownloadFolder.Text = pv.DownloadView.DownloadFolder;
             int http206SecCount = 0;
             foreach (SectionView sv in pv.SectionViews)
             {
                 if (sv.Description == System.Net.HttpStatusCode.OK)
                 {
-                    txtResumability.Content = "NOT RESUMABLE";
+                    txtResumability.Text = "NOT RESUMABLE";
                     txtResumability.Foreground = Brushes.Red;
                     return;
                 }
                 if (sv.Description == System.Net.HttpStatusCode.PartialContent) http206SecCount++;
             }
-            if (http206SecCount == pv.SectionViews.Count) txtResumability.Content = "Yes";
-            else txtResumability.Content = "Not Sure";
+            if (http206SecCount == pv.SectionViews.Count) txtResumability.Text = "Yes";
+            else txtResumability.Text = "Not Sure";
             txtResumability.Foreground = Brushes.Blue;
         }
 
