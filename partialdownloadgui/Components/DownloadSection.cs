@@ -50,6 +50,7 @@ namespace partialdownloadgui.Components
             this.id = Guid.NewGuid();
             this.fileName = Util.appDataDirectory + this.id.ToString();
             this.bytesDownloaded = 0;
+            this.error = string.Empty;
         }
 
         private Guid id;
@@ -65,6 +66,7 @@ namespace partialdownloadgui.Components
         private string password;
         private DownloadSection nextSection;
         private Guid nextSectionId;
+        private string error;
 
         [JsonIgnore]
         public long Total
@@ -89,5 +91,6 @@ namespace partialdownloadgui.Components
         public string SuggestedName { get => suggestedName; set => suggestedName = value; }
         public string UserName { get => userName; set => userName = value; }
         public string Password { get => password; set => password = value; }
+        public string Error { get => error; set => error = value; }
     }
 }

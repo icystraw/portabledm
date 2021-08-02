@@ -142,6 +142,7 @@ namespace partialdownloadgui
         private void AddDownload(string url)
         {
             AddEditDownload ad = new();
+            ad.Owner = this;
             ad.Url = url;
             if (ad.ShowDialog() == true)
             {

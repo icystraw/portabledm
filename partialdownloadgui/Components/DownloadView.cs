@@ -11,6 +11,7 @@ namespace partialdownloadgui.Components
         private long progress;
         private string speed;
         private DownloadStatus status;
+        private string error;
 
         public string FileName { get => fileName; set => fileName = value; }
         public string Size { get => size; set => size = value; }
@@ -43,6 +44,15 @@ namespace partialdownloadgui.Components
         }
 
         public Guid Id { get => id; set => id = value; }
+        public string Error
+        {
+            get => error;
+            set
+            {
+                error = value;
+                OnPropertyChanged(nameof(Error));
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

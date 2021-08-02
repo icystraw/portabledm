@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:partialdownloadgui"
         mc:Ignorable="d"
-        Title="Add/Edit Download" Height="350" Width="600" Loaded="Window_Loaded">
+        Title="Add/Edit Download" Width="600" Loaded="Window_Loaded" SizeToContent="Height" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
     <StackPanel>
         <GroupBox Header="Options" Margin="5">
             <StackPanel>

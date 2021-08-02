@@ -15,8 +15,7 @@ namespace partialdownloadgui.Components
         private Thread downloadThread;
 
         private bool downloadStopFlag = false;
-        private Exception exDownload;
-        public Exception ExDownload { get => exDownload; }
+
         public DownloadSection DownloadSection
         {
             get => downloadSection;
@@ -87,7 +86,7 @@ namespace partialdownloadgui.Components
 
             this.downloadSection.DownloadStatus = DownloadStatus.PrepareToDownload;
             this.downloadSection.HttpStatusCode = 0;
-            this.exDownload = null;
+            this.downloadSection.Error = string.Empty;
             if (this.downloadSection.Start < 0 && this.downloadSection.End < 0)
             {
                 this.downloadSection.Start = 0;
@@ -126,7 +125,7 @@ namespace partialdownloadgui.Components
                 if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.PartialContent)
                 {
                     response.Dispose();
-                    this.exDownload = new Exception("HTTP status is not 200 or 206.");
+                    this.downloadSection.Error = "HTTP status is not 200 or 206.";
                     this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
                     return;
                 }
@@ -156,7 +155,7 @@ namespace partialdownloadgui.Components
                     else
                     {
                         response.Dispose();
-                        this.exDownload = new Exception("HTTP ContentLength missing.");
+                        this.downloadSection.Error = "HTTP ContentLength missing.";
                         this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
                         return;
                     }
@@ -217,7 +216,7 @@ namespace partialdownloadgui.Components
                 if (streamFile != null) streamFile.Close();
                 if (streamHttp != null) streamHttp.Close();
                 if (response != null) response.Dispose();
-                this.exDownload = ex;
+                this.downloadSection.Error = ex.Message;
                 this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
             }
         }

@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace partialdownloadgui.Components
 {
@@ -39,8 +35,6 @@ namespace partialdownloadgui.Components
                 download.NoDownloader = value;
             }
         }
-
-        public Exception ExMessage { get => exMessage; }
 
         public Scheduler2(Download d)
         {
@@ -226,6 +220,7 @@ namespace partialdownloadgui.Components
             pv.DownloadView.FileName = Util.getDownloadFileNameFromDownloadSection(download.SummarySection);
             pv.DownloadView.Size = Util.getShortFileSize(download.SummarySection.Total);
             pv.DownloadView.Status = GetDownloadStatus();
+            pv.DownloadView.Error = this.exMessage == null ? string.Empty : this.exMessage.Message;
 
             long total = download.SummarySection.Total;
             long totalDownloaded = 0;
@@ -242,6 +237,7 @@ namespace partialdownloadgui.Components
                     totalDownloaded += secDownloaded;
                     sv.Size = Util.getShortFileSize(secTotal);
                     sv.Progress = Util.getProgress(secDownloaded, secTotal);
+                    sv.Error = ds.Error;
                     pv.SectionViews.Add(sv);
                     if (total > 0)
                     {

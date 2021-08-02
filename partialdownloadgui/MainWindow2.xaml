@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:partialdownloadgui"
         mc:Ignorable="d"
-        Title="HTTP Download Manager" Background="#FFF5F6F7" Height="350" Width="900" Closed="Window_Closed" Loaded="Window_Loaded">
+        Title="HTTP Download Manager" Background="#FFF5F6F7" Height="350" Width="1000" Closed="Window_Closed" Loaded="Window_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
@@ -36,6 +36,7 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn DisplayMemberBinding="{Binding Path=Speed}" Header="Speed" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=Error}" Header="Message" />
                         </GridView>
                     </ListView.View>
                 </ListView>
@@ -43,7 +44,7 @@
         </DockPanel>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"></GridSplitter>
         <DockPanel Grid.Column="2">
-            <GroupBox Header="Overall Progress" DockPanel.Dock="Bottom" Margin="5">
+            <GroupBox Header="Download Progress" DockPanel.Dock="Bottom" Margin="5">
                 <UniformGrid Rows="1" Name="wpProgress" Margin="5" />
             </GroupBox>
             <GroupBox Header="Download Sessions" Margin="5">
@@ -82,10 +83,10 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=Error}" Header="Message" Width="80" />
                         </GridView>
                     </ListView.View>
                 </ListView>
-
             </GroupBox>
         </DockPanel>
     </Grid>

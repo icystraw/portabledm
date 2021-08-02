@@ -200,6 +200,7 @@ namespace partialdownloadgui.Components
                 if (ds.HttpStatusCode != HttpStatusCode.OK && ds.HttpStatusCode != HttpStatusCode.PartialContent)
                 {
                     response.Dispose();
+                    ds.Error = "HTTP status is not 200 or 206.";
                     ds.DownloadStatus = DownloadStatus.DownloadError;
                     return;
                 }
@@ -225,6 +226,7 @@ namespace partialdownloadgui.Components
                     else
                     {
                         response.Dispose();
+                        ds.Error = "HTTP ContentLength missing.";
                         ds.DownloadStatus = DownloadStatus.DownloadError;
                         return;
                     }
@@ -236,8 +238,9 @@ namespace partialdownloadgui.Components
                 response.Dispose();
                 ds.DownloadStatus = DownloadStatus.Stopped;
             }
-            catch
+            catch (Exception ex)
             {
+                ds.Error = ex.Message;
                 ds.DownloadStatus = DownloadStatus.DownloadError;
                 throw;
             }
