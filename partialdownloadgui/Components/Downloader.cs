@@ -71,17 +71,17 @@ namespace partialdownloadgui.Components
             if (this.downloadSection.DownloadStatus == DownloadStatus.Finished) return;
             if (this.downloadSection.Start < 0 && this.downloadSection.End >= 0)
             {
-                this.downloadSection.DownloadStatus = DownloadStatus.ParameterError;
+                this.downloadSection.DownloadStatus = DownloadStatus.LogicalErrorOrCancelled;
                 return;
             }
             if (this.downloadSection.Start >= 0 && this.downloadSection.End >= 0 && this.downloadSection.Start > this.downloadSection.End)
             {
-                this.downloadSection.DownloadStatus = DownloadStatus.ParameterError;
+                this.downloadSection.DownloadStatus = DownloadStatus.LogicalErrorOrCancelled;
                 return;
             }
             if (string.IsNullOrEmpty(this.downloadSection.Url) || string.IsNullOrEmpty(this.downloadSection.FileName))
             {
-                this.downloadSection.DownloadStatus = DownloadStatus.ParameterError;
+                this.downloadSection.DownloadStatus = DownloadStatus.LogicalErrorOrCancelled;
                 return;
             }
 
@@ -126,6 +126,7 @@ namespace partialdownloadgui.Components
                 if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.PartialContent)
                 {
                     response.Dispose();
+                    this.exDownload = new Exception("HTTP status is not 200 or 206.");
                     this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
                     return;
                 }
@@ -155,6 +156,7 @@ namespace partialdownloadgui.Components
                     else
                     {
                         response.Dispose();
+                        this.exDownload = new Exception("HTTP ContentLength missing.");
                         this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
                         return;
                     }

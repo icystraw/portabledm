@@ -78,7 +78,7 @@ namespace partialdownloadgui
                         dv.Progress = pv.DownloadView.Progress;
                         dv.Speed = pv.DownloadView.Speed;
                         // if there is a download that has just completed
-                        if (dv.Status == DownloadStatus.Downloading.ToString() && pv.DownloadView.Status == DownloadStatus.Finished.ToString())
+                        if (dv.Status == DownloadStatus.Downloading && pv.DownloadView.Status == DownloadStatus.Finished)
                         {
                             bJustFinished = true;
                         }

@@ -10,7 +10,7 @@ namespace partialdownloadgui.Components
         private string size;
         private long progress;
         private string speed;
-        private string status;
+        private DownloadStatus status;
 
         public string FileName { get => fileName; set => fileName = value; }
         public string Size { get => size; set => size = value; }
@@ -32,7 +32,7 @@ namespace partialdownloadgui.Components
                 OnPropertyChanged(nameof(Speed));
             }
         }
-        public string Status
+        public DownloadStatus Status
         {
             get => status;
             set

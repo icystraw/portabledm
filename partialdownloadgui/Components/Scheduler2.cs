@@ -86,7 +86,7 @@ namespace partialdownloadgui.Components
         {
             foreach (DownloadSection section in download.Sections)
             {
-                if (section != ds) section.DownloadStatus = DownloadStatus.ParameterError;
+                if (section != ds) section.DownloadStatus = DownloadStatus.LogicalErrorOrCancelled;
             }
         }
 
@@ -225,7 +225,7 @@ namespace partialdownloadgui.Components
             pv.DownloadView.Id = download.SummarySection.Id;
             pv.DownloadView.FileName = Util.getDownloadFileNameFromDownloadSection(download.SummarySection);
             pv.DownloadView.Size = Util.getShortFileSize(download.SummarySection.Total);
-            pv.DownloadView.Status = GetDownloadStatus().ToString();
+            pv.DownloadView.Status = GetDownloadStatus();
 
             long total = download.SummarySection.Total;
             long totalDownloaded = 0;
@@ -237,7 +237,7 @@ namespace partialdownloadgui.Components
                 {
                     SectionView sv = new();
                     sv.Description = ds.HttpStatusCode.ToString();
-                    sv.Status = ds.DownloadStatus.ToString();
+                    sv.Status = ds.DownloadStatus;
                     long secTotal = ds.Total, secDownloaded = ds.BytesDownloaded;
                     totalDownloaded += secDownloaded;
                     sv.Size = Util.getShortFileSize(secTotal);

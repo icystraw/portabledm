@@ -5,10 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:partialdownloadgui"
         mc:Ignorable="d"
-        Title="MainWindow2" Height="400" Width="800" Closed="Window_Closed" Loaded="Window_Loaded">
-    <UniformGrid Rows="1" Columns="2">
-        <DockPanel>
-            <WrapPanel HorizontalAlignment="Center" DockPanel.Dock="Top">
+        Title="HTTP Download Manager" Background="#FFF5F6F7" Height="350" Width="900" Closed="Window_Closed" Loaded="Window_Loaded">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="5"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.Column="0">
+            <WrapPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="5">
                 <Button Name="btnAdd" Click="btnAdd_Click">Add</Button>
                 <Button Name="btnEdit" Click="btnEdit_Click">Edit</Button>
                 <Button Name="btnStart" Click="btnStart_Click">Start</Button>
@@ -16,64 +21,72 @@
                 <Button Name="btnDelete" Click="btnDelete_Click">Delete</Button>
                 <CheckBox Name="chkShutdown">Shut down after downloads finish</CheckBox>
             </WrapPanel>
-            <ListView Name="lstDownloads" SelectionChanged="lstDownloads_SelectionChanged">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=FileName}" Header="File" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=Size}" Header="Size" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=Status}" Header="Status" />
-                        <GridViewColumn Header="Progress" Width="120">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <ProgressBar Minimum="0" Maximum="100" Value="{Binding Path=Progress}" Width="110" Height="10"></ProgressBar>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=Speed}" Header="Speed" />
-                    </GridView>
-                </ListView.View>
-            </ListView>
+            <GroupBox Header="Current Downloads" Margin="5">
+                <ListView Name="lstDownloads" SelectionChanged="lstDownloads_SelectionChanged" Margin="5">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=FileName}" Header="File" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=Size}" Header="Size" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=Status}" Header="Status" />
+                            <GridViewColumn Header="Progress" Width="120">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ProgressBar Minimum="0" Maximum="100" Value="{Binding Path=Progress}" Width="110" Height="10"></ProgressBar>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=Speed}" Header="Speed" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </GroupBox>
         </DockPanel>
-        <DockPanel>
-            <UniformGrid Rows="1" Name="wpProgress" DockPanel.Dock="Bottom" />
-            <ListView Name="lstSections">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Width="30">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Image>
-                                        <Image.Style>
-                                            <Style TargetType="Image">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Status}" Value="Downloading">
-                                                        <Setter Property="Source" Value="pack://application:,,,/Images/right-arrow.png"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Status}" Value="DownloadError">
-                                                        <Setter Property="Source" Value="pack://application:,,,/Images/error.png"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Status}" Value="Finished">
-                                                        <Setter Property="Source" Value="pack://application:,,,/Images/finished.png"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Image.Style>
-                                    </Image>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=Description}" Header="Section" Width="120"/>
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=Size}" Header="Size" Width="80"/>
-                        <GridViewColumn Header="Progress" Width="120">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <ProgressBar Minimum="0" Maximum="100" Value="{Binding Path=Progress}" Width="110" Height="3"></ProgressBar>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                    </GridView>
-                </ListView.View>
-            </ListView>
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"></GridSplitter>
+        <DockPanel Grid.Column="2">
+            <GroupBox Header="Overall Progress" DockPanel.Dock="Bottom" Margin="5">
+                <UniformGrid Rows="1" Name="wpProgress" Margin="5" />
+            </GroupBox>
+            <GroupBox Header="Download Sessions" Margin="5">
+                <ListView Name="lstSections" Margin="5">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="30">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image>
+                                            <Image.Style>
+                                                <Style TargetType="Image">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Status}" Value="Downloading">
+                                                            <Setter Property="Source" Value="pack://application:,,,/Images/right-arrow.png"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}" Value="DownloadError">
+                                                            <Setter Property="Source" Value="pack://application:,,,/Images/error.png"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}" Value="Finished">
+                                                            <Setter Property="Source" Value="pack://application:,,,/Images/finished.png"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=Description}" Header="Section" Width="120"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=Size}" Header="Size" Width="80"/>
+                            <GridViewColumn Header="Progress" Width="120">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ProgressBar Minimum="0" Maximum="100" Value="{Binding Path=Progress}" Width="110" Height="3"></ProgressBar>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+            </GroupBox>
         </DockPanel>
-    </UniformGrid>
+    </Grid>
 </Window>

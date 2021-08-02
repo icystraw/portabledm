@@ -113,33 +113,6 @@ namespace partialdownloadgui.Components
             App.AppSettings = JsonSerializer.Deserialize<ApplicationSettings>(jsonString);
         }
 
-        public static void saveSectionsToFile(List<DownloadSection> sections, string fileName)
-        {
-            if (null == sections || sections.Count == 0) return;
-            string jsonString = JsonSerializer.Serialize(sections);
-            File.WriteAllText(fileName, jsonString);
-        }
-
-        public static List<DownloadSection> retrieveSectionsFromFile(string fileName)
-        {
-            string jsonString = File.ReadAllText(fileName);
-            List<DownloadSection> ret = JsonSerializer.Deserialize<List<DownloadSection>>(jsonString);
-            if (null == ret) return null;
-            // rebuild section chain
-            for (int i = 0; i < ret.Count; i++)
-            {
-                for (int j = 0; j < ret.Count; j++)
-                {
-                    if (ret[j].Id == ret[i].NextSectionId)
-                    {
-                        ret[i].NextSection = ret[j];
-                        break;
-                    }
-                }
-            }
-            return ret;
-        }
-
         public static void saveDownloadsToFile(List<Download> downloads)
         {
             if (null == downloads) return;
@@ -174,17 +147,17 @@ namespace partialdownloadgui.Components
         {
             if (ds.Start < 0 && ds.End >= 0)
             {
-                ds.DownloadStatus = DownloadStatus.ParameterError;
+                ds.DownloadStatus = DownloadStatus.LogicalErrorOrCancelled;
                 return;
             }
             if (ds.Start >= 0 && ds.End >= 0 && ds.Start > ds.End)
             {
-                ds.DownloadStatus = DownloadStatus.ParameterError;
+                ds.DownloadStatus = DownloadStatus.LogicalErrorOrCancelled;
                 return;
             }
             if (string.IsNullOrEmpty(ds.Url))
             {
-                ds.DownloadStatus = DownloadStatus.ParameterError;
+                ds.DownloadStatus = DownloadStatus.LogicalErrorOrCancelled;
                 return;
             }
             ds.HttpStatusCode = 0;
