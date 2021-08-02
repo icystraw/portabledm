@@ -109,10 +109,13 @@
                             </GridViewColumn>
                             <GridViewColumn DisplayMemberBinding="{Binding Path=FileName}" Header="File Name" Width="100" />
                             <GridViewColumn DisplayMemberBinding="{Binding Path=Size}" Header="Size" Width="100" />
-                            <GridViewColumn Header="Progress" Width="130">
+                            <GridViewColumn Header="Progress" Width="150">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ProgressBar Minimum="0" Maximum="100" Value="{Binding Path=Progress}" Width="110" Height="10"></ProgressBar>
+                                        <WrapPanel>
+                                            <ProgressBar Minimum="0" Maximum="100" Value="{Binding Path=Progress}" Width="100" Height="10"></ProgressBar>
+                                            <TextBlock Text="{Binding Path=Progress, StringFormat={}{0}%}"></TextBlock>
+                                        </WrapPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
@@ -135,12 +138,8 @@
                         <Label Name="txtUrl"></Label>
                     </WrapPanel>
                     <WrapPanel>
-                        <Label>Download Folder:</Label>
+                        <Label>Folder:</Label>
                         <Label Name="txtDownloadFolder"></Label>
-                    </WrapPanel>
-                    <WrapPanel>
-                        <Label>Progress:</Label>
-                        <Label Name="txtProgress"></Label>
                     </WrapPanel>
                 </StackPanel>
             </GroupBox>

@@ -103,7 +103,6 @@ namespace partialdownloadgui
             DrawProgress(pv.ProgressBar);
             txtUrl.Content = pv.DownloadView.Url;
             txtDownloadFolder.Content = pv.DownloadView.DownloadFolder;
-            txtProgress.Content = pv.DownloadView.Progress.ToString() + "% completed.";
         }
 
         private void UpdateControlsStatus()
