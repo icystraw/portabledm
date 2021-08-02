@@ -10,24 +10,30 @@
 
 	<ItemGroup>
 		<None Remove="Images\cancel.png" />
+		<None Remove="Images\delete.png" />
 		<None Remove="Images\download.png" />
 		<None Remove="Images\error.png" />
 		<None Remove="Images\finished.png" />
 		<None Remove="Images\go.png" />
 		<None Remove="Images\new-document.png" />
+		<None Remove="Images\openfolder.png" />
 		<None Remove="Images\pause.png" />
+		<None Remove="Images\pencil.png" />
 		<None Remove="Images\play.png" />
 		<None Remove="Images\right-arrow.png" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Resource Include="Images\cancel.png" />
+		<Resource Include="Images\delete.png" />
 		<Resource Include="Images\download.png" />
 		<Resource Include="Images\error.png" />
 		<Resource Include="Images\finished.png" />
 		<Resource Include="Images\go.png" />
 		<Resource Include="Images\new-document.png" />
+		<Resource Include="Images\openfolder.png" />
 		<Resource Include="Images\pause.png" />
+		<Resource Include="Images\pencil.png" />
 		<Resource Include="Images\play.png" />
 		<Resource Include="Images\right-arrow.png" />
 	</ItemGroup>

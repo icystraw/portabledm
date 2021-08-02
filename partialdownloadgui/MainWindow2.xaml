@@ -14,21 +14,88 @@
         </Grid.ColumnDefinitions>
         <DockPanel Grid.Column="0">
             <WrapPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="5">
-                <Button Name="btnAdd" Click="btnAdd_Click">Add</Button>
-                <Button Name="btnEdit" Click="btnEdit_Click">Edit</Button>
-                <Button Name="btnStart" Click="btnStart_Click">Start</Button>
-                <Button Name="btnStop" Click="btnStop_Click">Stop</Button>
-                <Button Name="btnDelete" Click="btnDelete_Click">Delete</Button>
-                <Button Name="btnOpenFolder" Click="btnOpenFolder_Click">Open Folder</Button>
-                <CheckBox Name="chkShutdown">Shut down after downloads finish</CheckBox>
+                <Button Name="btnAdd" Click="btnAdd_Click" Margin="5" Width="40" Background="White">
+                    <Image Source="pack://application:,,,/Images/new-document.png" Margin="3" />
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <TextBlock>Create a new download.</TextBlock>
+                        </ToolTip>
+                    </Button.ToolTip>
+                </Button>
+                <Button Name="btnEdit" Click="btnEdit_Click" Margin="5" Width="40" Background="White">
+                    <Image Source="pack://application:,,,/Images/pencil.png" Margin="3" />
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <TextBlock>Edit selected download.</TextBlock>
+                        </ToolTip>
+                    </Button.ToolTip>
+                </Button>
+                <Button Name="btnStart" Click="btnStart_Click" Margin="5" Width="40" Background="White">
+                    <Image Source="pack://application:,,,/Images/play.png" Margin="3" />
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <TextBlock>Start selected download.</TextBlock>
+                        </ToolTip>
+                    </Button.ToolTip>
+                </Button>
+                <Button Name="btnStop" Click="btnStop_Click" Margin="5" Width="40" Background="White">
+                    <Image Source="pack://application:,,,/Images/pause.png" Margin="3" />
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <TextBlock>Pause selected download.</TextBlock>
+                        </ToolTip>
+                    </Button.ToolTip>
+                </Button>
+                <Button Name="btnDelete" Click="btnDelete_Click" Margin="5" Width="40" Background="White">
+                    <Image Source="pack://application:,,,/Images/delete.png" Margin="3" />
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <TextBlock>Delete selected download.</TextBlock>
+                        </ToolTip>
+                    </Button.ToolTip>
+                </Button>
+                <Button Name="btnOpenFolder" Click="btnOpenFolder_Click" Margin="5" Width="40" Background="White">
+                    <Image Source="pack://application:,,,/Images/openfolder.png" Margin="3" />
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <TextBlock>Open download folder of selected download in Windows Explorer.</TextBlock>
+                        </ToolTip>
+                    </Button.ToolTip>
+                </Button>
             </WrapPanel>
+            <CheckBox Name="chkShutdown" DockPanel.Dock="Top" Margin="5">Shut down computer after downloads finish</CheckBox>
             <GroupBox Header="Current Downloads" Margin="5">
                 <ListView Name="lstDownloads" SelectionChanged="lstDownloads_SelectionChanged" Margin="5">
                     <ListView.View>
                         <GridView>
+                            <GridViewColumn Width="30">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image>
+                                            <Image.Style>
+                                                <Style TargetType="Image">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Status}" Value="Downloading">
+                                                            <Setter Property="Source" Value="pack://application:,,,/Images/right-arrow.png"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}" Value="DownloadError">
+                                                            <Setter Property="Source" Value="pack://application:,,,/Images/error.png"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}" Value="Finished">
+                                                            <Setter Property="Source" Value="pack://application:,,,/Images/finished.png"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}" Value="Stopped">
+                                                            <Setter Property="Source" Value="pack://application:,,,/Images/pause.png"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                             <GridViewColumn DisplayMemberBinding="{Binding Path=FileName}" Header="File" Width="100" />
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=Size}" Header="Size" Width="80" />
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=Status}" Header="Status" Width="80" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=Size}" Header="Size" Width="100" />
                             <GridViewColumn Header="Progress" Width="120">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
@@ -36,7 +103,7 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=Speed}" Header="Speed" Width="80" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=Speed}" Header="Speed" Width="100" />
                             <GridViewColumn DisplayMemberBinding="{Binding Path=Error}" Header="Message" />
                         </GridView>
                     </ListView.View>

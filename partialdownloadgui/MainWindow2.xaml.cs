@@ -20,6 +20,7 @@ namespace partialdownloadgui
             InitializeComponent();
             schedulers = new();
             downloadViews = new();
+            progressViews = new();
 
             timer = new DispatcherTimer();
             timer.Tick += Timer_Tick;
@@ -28,6 +29,7 @@ namespace partialdownloadgui
 
         private List<Scheduler2> schedulers;
         private ObservableCollection<DownloadView> downloadViews;
+        private List<ProgressView> progressViews;
         private DispatcherTimer timer;
 
         private void LoadSchedulers()
@@ -68,9 +70,11 @@ namespace partialdownloadgui
         private void UpdateDownloadsStatus()
         {
             bool bJustFinished = false;
+            progressViews = new();
             foreach (Scheduler2 s in schedulers)
             {
                 ProgressView pv = s.GetDownloadStatusView();
+                progressViews.Add(pv);
                 foreach (DownloadView dv in downloadViews)
                 {
                     if (dv.Id == pv.DownloadId)
@@ -242,12 +246,19 @@ namespace partialdownloadgui
 
         private void lstDownloads_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            if (null == lstDownloads.SelectedItem)
+            DownloadView dv = lstDownloads.SelectedItem as DownloadView;
+            if (null == dv)
             {
                 lstSections.ItemsSource = null;
                 return;
             }
-            UpdateDownloadsStatus();
+            foreach (ProgressView pv in progressViews)
+            {
+                if (pv.DownloadId == dv.Id)
+                {
+                    lstSections.ItemsSource = pv.SectionViews;
+                }
+            }
         }
 
         private void btnOpenFolder_Click(object sender, RoutedEventArgs e)
