@@ -59,7 +59,7 @@ namespace partialdownloadgui.Components
         public static string getShortFileSize(long fileSize)
         {
             decimal size = fileSize;
-            if (size <= 0) return "0";
+            if (size <= 0) return "0B";
             if (size > 1073741824)
             {
                 size = size / 1073741824m;

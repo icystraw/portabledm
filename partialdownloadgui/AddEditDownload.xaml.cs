@@ -176,7 +176,7 @@ namespace partialdownloadgui
                 txtUsername.Text = download.SummarySection.UserName;
                 txtPassword.Password = download.SummarySection.Password;
 
-                txtUrl.IsEnabled = false;
+                txtUrl.IsReadOnly = true;
                 txtRangeFrom.IsEnabled = false;
                 txtRangeTo.IsEnabled = false;
             }

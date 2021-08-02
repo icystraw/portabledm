@@ -8,7 +8,7 @@
         Title="HTTP Download Manager" Background="#FFF5F6F7" Height="450" Width="1000" Closed="Window_Closed" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="600"></ColumnDefinition>
             <ColumnDefinition Width="5"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
@@ -26,9 +26,9 @@
                 <ListView Name="lstDownloads" SelectionChanged="lstDownloads_SelectionChanged" Margin="5">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=FileName}" Header="File" />
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=Size}" Header="Size" />
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=Status}" Header="Status" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=FileName}" Header="File" Width="100" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=Size}" Header="Size" Width="80" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=Status}" Header="Status" Width="80" />
                             <GridViewColumn Header="Progress" Width="120">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
@@ -36,7 +36,7 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=Speed}" Header="Speed" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=Speed}" Header="Speed" Width="80" />
                             <GridViewColumn DisplayMemberBinding="{Binding Path=Error}" Header="Message" />
                         </GridView>
                     </ListView.View>
@@ -75,7 +75,7 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=Description}" Header="Section" Width="120"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=Description}" Header="Section" Width="100"/>
                             <GridViewColumn DisplayMemberBinding="{Binding Path=Size}" Header="Size" Width="80"/>
                             <GridViewColumn Header="Progress" Width="120">
                                 <GridViewColumn.CellTemplate>
@@ -84,7 +84,7 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=Error}" Header="Message" Width="80" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=Error}" Header="Message" />
                         </GridView>
                     </ListView.View>
                 </ListView>
