@@ -76,7 +76,7 @@
                                                 <Style TargetType="Image">
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding Status}" Value="Downloading">
-                                                            <Setter Property="Source" Value="pack://application:,,,/Images/right-arrow.png"/>
+                                                            <Setter Property="Source" Value="pack://application:,,,/Images/play.png"/>
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding Status}" Value="DownloadError">
                                                             <Setter Property="Source" Value="pack://application:,,,/Images/error.png"/>
@@ -127,7 +127,7 @@
                                                 <Style TargetType="Image">
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding Status}" Value="Downloading">
-                                                            <Setter Property="Source" Value="pack://application:,,,/Images/right-arrow.png"/>
+                                                            <Setter Property="Source" Value="pack://application:,,,/Images/play.png"/>
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding Status}" Value="DownloadError">
                                                             <Setter Property="Source" Value="pack://application:,,,/Images/error.png"/>
