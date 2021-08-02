@@ -63,7 +63,11 @@
                     </Button.ToolTip>
                 </Button>
             </WrapPanel>
-            <CheckBox Name="chkShutdown" DockPanel.Dock="Top" Margin="5">Shut down computer after downloads finish</CheckBox>
+            <Expander Header="Other options" DockPanel.Dock="Bottom" Margin="5">
+                <GroupBox Header="Post-download" Margin="5">
+                    <CheckBox Name="chkShutdown" Margin="5">Shut down computer after downloads finish (if the current user has shut down rights)</CheckBox>
+                </GroupBox>
+            </Expander>
             <GroupBox Header="Current Downloads" Margin="5">
                 <ListView Name="lstDownloads" SelectionChanged="lstDownloads_SelectionChanged" Margin="5">
                     <ListView.ContextMenu>
@@ -103,7 +107,7 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=FileName}" Header="File" Width="100" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=FileName}" Header="File Name" Width="100" />
                             <GridViewColumn DisplayMemberBinding="{Binding Path=Size}" Header="Size" Width="100" />
                             <GridViewColumn Header="Progress" Width="130">
                                 <GridViewColumn.CellTemplate>
@@ -121,8 +125,24 @@
         </DockPanel>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"></GridSplitter>
         <DockPanel Grid.Column="2">
-            <GroupBox Header="Download Progress" DockPanel.Dock="Bottom" Margin="5">
+            <GroupBox Header="Section Progress" DockPanel.Dock="Bottom" Margin="5">
                 <UniformGrid Rows="1" Name="wpProgress" Margin="5" />
+            </GroupBox>
+            <GroupBox Header="More Details" DockPanel.Dock="Top" Margin="5" Name="gbMoreDetails">
+                <StackPanel Margin="5">
+                    <WrapPanel>
+                        <Label>URL:</Label>
+                        <Label Name="txtUrl"></Label>
+                    </WrapPanel>
+                    <WrapPanel>
+                        <Label>Download Folder:</Label>
+                        <Label Name="txtDownloadFolder"></Label>
+                    </WrapPanel>
+                    <WrapPanel>
+                        <Label>Progress:</Label>
+                        <Label Name="txtProgress"></Label>
+                    </WrapPanel>
+                </StackPanel>
             </GroupBox>
             <GroupBox Header="Download Sessions" Margin="5">
                 <ListView Name="lstSections" Margin="5">
@@ -153,10 +173,10 @@
                             </GridViewColumn>
                             <GridViewColumn DisplayMemberBinding="{Binding Path=Description}" Header="Section" Width="100"/>
                             <GridViewColumn DisplayMemberBinding="{Binding Path=Size}" Header="Size" Width="80"/>
-                            <GridViewColumn Header="Progress" Width="120">
+                            <GridViewColumn Header="Progress" Width="100">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ProgressBar Minimum="0" Maximum="100" Value="{Binding Path=Progress}" Width="110" Height="3"></ProgressBar>
+                                        <ProgressBar Minimum="0" Maximum="100" Value="{Binding Path=Progress}" Width="80" Height="3"></ProgressBar>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>

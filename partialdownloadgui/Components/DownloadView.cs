@@ -6,8 +6,10 @@ namespace partialdownloadgui.Components
     public class DownloadView : INotifyPropertyChanged
     {
         private Guid id;
+        private string url;
         private string fileName;
         private string size;
+        private string downloadFolder;
         private long progress;
         private string speed;
         private DownloadStatus status;
@@ -53,6 +55,9 @@ namespace partialdownloadgui.Components
                 OnPropertyChanged(nameof(Error));
             }
         }
+
+        public string Url { get => url; set => url = value; }
+        public string DownloadFolder { get => downloadFolder; set => downloadFolder = value; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

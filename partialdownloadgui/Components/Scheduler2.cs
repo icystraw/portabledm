@@ -216,6 +216,8 @@ namespace partialdownloadgui.Components
         {
             ProgressView pv = new();
             pv.DownloadId = download.SummarySection.Id;
+            pv.DownloadView.Url = download.SummarySection.Url;
+            pv.DownloadView.DownloadFolder = download.DownloadFolder;
             pv.DownloadView.Id = download.SummarySection.Id;
             pv.DownloadView.FileName = Util.getDownloadFileNameFromDownloadSection(download.SummarySection);
             pv.DownloadView.Size = Util.getShortFileSize(download.SummarySection.Total);

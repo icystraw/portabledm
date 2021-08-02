@@ -85,8 +85,7 @@ namespace partialdownloadgui
                         dv.Status = pv.DownloadView.Status;
                         if ((lstDownloads.SelectedItem as DownloadView) == dv)
                         {
-                            lstSections.ItemsSource = pv.SectionViews;
-                            DrawProgress(pv.ProgressBar);
+                            ShowDownloadProgress(pv);
                         }
                         break;
                     }
@@ -98,8 +97,19 @@ namespace partialdownloadgui
             }
         }
 
+        private void ShowDownloadProgress(ProgressView pv)
+        {
+            lstSections.ItemsSource = pv.SectionViews;
+            DrawProgress(pv.ProgressBar);
+            txtUrl.Content = pv.DownloadView.Url;
+            txtDownloadFolder.Content = pv.DownloadView.DownloadFolder;
+            txtProgress.Content = pv.DownloadView.Progress.ToString() + "% completed.";
+        }
+
         private void UpdateControlsStatus()
         {
+            gbMoreDetails.Visibility = Visibility.Collapsed;
+
             btnEdit.IsEnabled = false;
             btnStart.IsEnabled = false;
             btnStop.IsEnabled = false;
@@ -114,6 +124,8 @@ namespace partialdownloadgui
 
             DownloadView dv = lstDownloads.SelectedItem as DownloadView;
             if (null == dv) return;
+
+            gbMoreDetails.Visibility = Visibility.Visible;
 
             btnDelete.IsEnabled = true;
             btnOpenFolder.IsEnabled = true;
@@ -305,8 +317,7 @@ namespace partialdownloadgui
             {
                 if (pv.DownloadId == dv.Id)
                 {
-                    lstSections.ItemsSource = pv.SectionViews;
-                    DrawProgress(pv.ProgressBar);
+                    ShowDownloadProgress(pv);
                 }
             }
         }
