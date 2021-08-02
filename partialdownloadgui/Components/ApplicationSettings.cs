@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace partialdownloadgui.Components
+﻿namespace partialdownloadgui.Components
 {
     public class ApplicationSettings
     {

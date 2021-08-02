@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
-using System.Net.Sockets;
-using System.Diagnostics;
 
 namespace partialdownloadgui.Components
 {
