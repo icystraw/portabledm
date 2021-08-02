@@ -1,5 +1,6 @@
 ﻿using partialdownloadgui.Components;
 using System;
+using System.Threading;
 using System.Windows;
 
 namespace partialdownloadgui
@@ -21,6 +22,12 @@ namespace partialdownloadgui
             if (args.Length == 2 && args[1] == "/startserver")
             {
                 Util.startTcpServer();
+                Application.Current.Shutdown();
+                return;
+            }
+            Mutex mutex = new(true, "{8F6F0AC4-B9A1-45fd-A8CF-72F04E6BDE8F}");
+            if (!mutex.WaitOne(0, true))
+            {
                 Application.Current.Shutdown();
                 return;
             }
