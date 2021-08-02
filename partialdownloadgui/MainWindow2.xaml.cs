@@ -172,6 +172,7 @@ namespace partialdownloadgui
                 Rectangle r = new();
                 RenderOptions.SetEdgeMode(r, EdgeMode.Aliased);
                 r.Height = 10;
+                r.Width = 10;
                 if (progress[i] == '\u2593')
                 {
                     r.Fill = Brushes.Green;

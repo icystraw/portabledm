@@ -129,7 +129,7 @@
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"></GridSplitter>
         <DockPanel Grid.Column="2">
             <GroupBox Header="Section Progress" DockPanel.Dock="Bottom" Margin="5">
-                <UniformGrid Rows="1" Name="wpProgress" Margin="5" />
+                <WrapPanel Name="wpProgress" Margin="5" />
             </GroupBox>
             <GroupBox Header="More Details" DockPanel.Dock="Top" Margin="5" Name="gbMoreDetails">
                 <StackPanel Margin="5">
