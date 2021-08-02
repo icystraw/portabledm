@@ -15,7 +15,6 @@ namespace partialdownloadgui.Components
         public static readonly string appDataDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\partialdownloadgui\\";
         public static readonly string settingsFileName = "settings.json";
         public static readonly string downloadsFileName = "downloads.json";
-        public static readonly Int32 listenPort = 13000;
 
         public static string convertFromBase64(string base64String)
         {
@@ -260,64 +259,6 @@ namespace partialdownloadgui.Components
             {
                 return getFileName(ds.Url);
             }
-        }
-
-        public static void startTcpServer()
-        {
-            TcpListener server = new(IPAddress.Parse("127.0.0.1"), listenPort);
-            try
-            {
-                server.Start();
-            }
-            catch
-            {
-                return;
-            }
-
-            while (true)
-            {
-                TcpClient client = null;
-                try
-                {
-                    // Perform a blocking call to accept requests.
-                    // You could also use server.AcceptSocket() here.
-                    client = server.AcceptTcpClient();
-
-                    int i;
-                    byte[] bytes = new byte[2048];
-                    StringBuilder sb = new();
-                    string request, response;
-                    NetworkStream stream = client.GetStream();
-                    // Loop to receive all the data sent by the client.
-                    while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
-                    {
-                        // Translate data bytes to a ASCII string.
-                        sb.Append(Encoding.ASCII.GetString(bytes, 0, i));
-                        if (!stream.DataAvailable) break;
-                    }
-                    request = sb.ToString();
-                    response = "HTTP/1.1 403 Forbidden\r\nDate: " + DateTime.Now.ToUniversalTime().ToString("R") + "\r\n\r\n";
-                    byte[] msg = Encoding.ASCII.GetBytes(response);
-                    stream.Write(msg, 0, msg.Length);
-                    if (request.Contains("__SERVER_STOP"))
-                    {
-                        client.Close();
-                        break;
-                    }
-                    else if (request.StartsWith("GET /") && request.Contains(" HTTP"))
-                    {
-                        string base64Url = request.Substring(5, request.IndexOf(" HTTP") - 5);
-                        Process.Start(AppDomain.CurrentDomain.FriendlyName, "/download " + base64Url);
-                    }
-                    client.Close();
-                }
-                catch
-                {
-                    client.Close();
-                    continue;
-                }
-            }
-            server.Stop();
         }
     }
 }

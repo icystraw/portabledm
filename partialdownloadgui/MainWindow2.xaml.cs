@@ -226,6 +226,14 @@ namespace partialdownloadgui
             }
         }
 
+        private void SeeIfThereIsDownloadFromBrowser()
+        {
+            if (string.IsNullOrEmpty(TcpServer.DownloadUrl)) return;
+            string downloadUrl = TcpServer.DownloadUrl;
+            TcpServer.DownloadUrl = string.Empty;
+            AddDownload(downloadUrl);
+        }
+
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             AddDownload(string.Empty);
@@ -284,6 +292,7 @@ namespace partialdownloadgui
         private void Window_Closed(object sender, EventArgs e)
         {
             timer.Stop();
+            TcpServer.Stop();
             StopAllDownloads();
             try
             {
@@ -302,6 +311,7 @@ namespace partialdownloadgui
             catch { }
             lstDownloads.ItemsSource = downloadViews;
             UpdateControlsStatus();
+            if (App.AppSettings.StartTcpServer) chkBrowserDownload.IsChecked = true;
             timer.Start();
         }
 
@@ -309,6 +319,7 @@ namespace partialdownloadgui
         {
             UpdateDownloadsStatus();
             UpdateControlsStatus();
+            SeeIfThereIsDownloadFromBrowser();
         }
 
         private void lstDownloads_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -364,12 +375,14 @@ namespace partialdownloadgui
 
         private void chkBrowserDownload_Unchecked(object sender, RoutedEventArgs e)
         {
-
+            App.AppSettings.StartTcpServer = false;
+            TcpServer.Stop();
         }
 
         private void chkBrowserDownload_Checked(object sender, RoutedEventArgs e)
         {
-
+            App.AppSettings.StartTcpServer = true;
+            TcpServer.Start();
         }
     }
 }
