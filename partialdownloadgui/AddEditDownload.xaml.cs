@@ -165,6 +165,14 @@ namespace partialdownloadgui
                 {
                     txtUrl.Text = this.url;
                 }
+                else if (Clipboard.ContainsText())
+                {
+                    string clipboardText = Clipboard.GetText();
+                    if (clipboardText.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                    {
+                        txtUrl.Text = clipboardText;
+                    }
+                }
             }
             else
             {
