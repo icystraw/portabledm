@@ -347,6 +347,7 @@ namespace partialdownloadgui
             lstDownloads.ItemsSource = downloadViews;
             UpdateControlsStatus();
             if (App.AppSettings.StartTcpServer) chkBrowserDownload.IsChecked = true;
+            if (App.AppSettings.MinimizeToSystemTray) chkMinimizeToTray.IsChecked = true;
             timer.Start();
         }
 
