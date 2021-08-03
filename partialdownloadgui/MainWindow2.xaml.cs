@@ -25,6 +25,12 @@ namespace partialdownloadgui
             timer = new DispatcherTimer();
             timer.Tick += Timer_Tick;
             timer.Interval = new TimeSpan(0, 0, 1);
+
+            if (App.AppSettings.MainWindowWidth > 0 && App.AppSettings.MainWindowHeight > 0)
+            {
+                this.Width = App.AppSettings.MainWindowWidth;
+                this.Height = App.AppSettings.MainWindowHeight;
+            }
         }
 
         private List<Scheduler2> schedulers;
@@ -402,6 +408,8 @@ namespace partialdownloadgui
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            App.AppSettings.MainWindowWidth = this.Width;
+            App.AppSettings.MainWindowHeight = this.Height;
             if (IsBusy())
             {
                 if (MessageBox.Show("Downloads are running. Do you want to exit? Please note if there are downloads that are not resumable, you would have to start over again next time.", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
