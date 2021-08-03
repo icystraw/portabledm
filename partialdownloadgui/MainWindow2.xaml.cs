@@ -401,5 +401,20 @@ namespace partialdownloadgui
         {
             Clipboard.SetText(txtUrl.Text);
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            foreach (Scheduler2 s in schedulers)
+            {
+                if (s.IsDownloading())
+                {
+                    if (MessageBox.Show("Downloads are running. Do you want to exit? Please note if there are downloads that are not resumable, you would have to start over again next time.", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+                    {
+                        e.Cancel = true;
+                    }
+                    return;
+                }
+            }
+        }
     }
 }
