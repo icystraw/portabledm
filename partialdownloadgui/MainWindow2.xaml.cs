@@ -18,6 +18,11 @@ namespace partialdownloadgui
         public MainWindow2()
         {
             InitializeComponent();
+            notifyIcon = new();
+            notifyIcon.Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/Images/decrease.ico")).Stream);
+            notifyIcon.Text = "Portable HTTP Download Manager";
+            notifyIcon.Click += NotifyIcon_Click;
+
             schedulers = new();
             downloadViews = new();
             progressViews = new();
@@ -37,6 +42,7 @@ namespace partialdownloadgui
         private ObservableCollection<DownloadView> downloadViews;
         private List<ProgressView> progressViews;
         private DispatcherTimer timer;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
 
         private void LoadSchedulers()
         {
@@ -418,6 +424,35 @@ namespace partialdownloadgui
                 }
                 return;
             }
+        }
+
+        private void chkMinimizeToTray_Unchecked(object sender, RoutedEventArgs e)
+        {
+            App.AppSettings.MinimizeToSystemTray = false;
+        }
+
+        private void chkMinimizeToTray_Checked(object sender, RoutedEventArgs e)
+        {
+            App.AppSettings.MinimizeToSystemTray = true;
+        }
+
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Minimized)
+            {
+                if (App.AppSettings.MinimizeToSystemTray)
+                {
+                    this.ShowInTaskbar = false;
+                    notifyIcon.Visible = true;
+                }
+            }
+        }
+
+        private void NotifyIcon_Click(object sender, EventArgs e)
+        {
+            WindowState = WindowState.Normal;
+            notifyIcon.Visible = false;
+            this.ShowInTaskbar = true;
         }
     }
 }
