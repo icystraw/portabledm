@@ -103,19 +103,16 @@ namespace partialdownloadgui
             DrawProgress(pv.ProgressBar);
             txtUrl.Text = pv.DownloadView.Url;
             txtDownloadFolder.Text = pv.DownloadView.DownloadFolder;
-            int http206SecCount = 0;
             foreach (SectionView sv in pv.SectionViews)
             {
-                if (sv.Description == System.Net.HttpStatusCode.OK)
+                if (sv.Description != 0 && sv.Description != System.Net.HttpStatusCode.PartialContent)
                 {
-                    txtResumability.Text = "NOT RESUMABLE";
+                    txtResumability.Text = "NOT RESUMABLE!";
                     txtResumability.Foreground = Brushes.Red;
                     return;
                 }
-                if (sv.Description == System.Net.HttpStatusCode.PartialContent) http206SecCount++;
             }
-            if (http206SecCount == pv.SectionViews.Count) txtResumability.Text = "Yes";
-            else txtResumability.Text = "Not Sure";
+            txtResumability.Text = "Yes";
             txtResumability.Foreground = Brushes.Blue;
         }
 
@@ -128,6 +125,7 @@ namespace partialdownloadgui
             btnStop.IsEnabled = false;
             btnDelete.IsEnabled = false;
             btnOpenFolder.IsEnabled = false;
+            btnOpenFolder2.IsEnabled = false;
 
             mnuEdit.IsEnabled = false;
             mnuStart.IsEnabled = false;
@@ -142,6 +140,7 @@ namespace partialdownloadgui
 
             btnDelete.IsEnabled = true;
             btnOpenFolder.IsEnabled = true;
+            btnOpenFolder2.IsEnabled = true;
 
             mnuDelete.IsEnabled = true;
             mnuOpenFolder.IsEnabled = true;
@@ -269,7 +268,20 @@ namespace partialdownloadgui
             DownloadView dv = lstDownloads.SelectedItem as DownloadView;
             if (null == dv) return;
             Scheduler2 s = FindSchedulerById(dv.Id);
-            if (s != null) s.Stop(false);
+            if (s != null)
+            {
+                if (!s.IsDownloadResumable())
+                {
+                    if (MessageBox.Show("This download is not resumable. Do you still want to stop it?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    {
+                        s.Stop(false);
+                    }
+                }
+                else
+                {
+                    s.Stop(false);
+                }
+            }
         }
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
@@ -383,6 +395,11 @@ namespace partialdownloadgui
         {
             App.AppSettings.StartTcpServer = true;
             TcpServer.Start();
+        }
+
+        private void btnCopyToClipboard_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(txtUrl.Text);
         }
     }
 }

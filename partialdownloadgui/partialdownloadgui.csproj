@@ -10,6 +10,7 @@
 
 	<ItemGroup>
 		<None Remove="Images\cancel.png" />
+		<None Remove="Images\clipboard.png" />
 		<None Remove="Images\delete.png" />
 		<None Remove="Images\download.png" />
 		<None Remove="Images\error.png" />
@@ -24,6 +25,7 @@
 
 	<ItemGroup>
 		<Resource Include="Images\cancel.png" />
+		<Resource Include="Images\clipboard.png" />
 		<Resource Include="Images\delete.png" />
 		<Resource Include="Images\download.png" />
 		<Resource Include="Images\error.png" />

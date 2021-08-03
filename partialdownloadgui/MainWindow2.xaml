@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:partialdownloadgui"
         mc:Ignorable="d"
-        Title="HTTP Download Manager" Background="#FFF5F6F7" Height="450" Width="1000" Closed="Window_Closed" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen">
+        Title="Portable HTTP Download Manager" Background="#FFF5F6F7" Height="450" Width="1000" Closed="Window_Closed" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="600"></ColumnDefinition>
@@ -75,11 +75,31 @@
                 <ListView Name="lstDownloads" SelectionChanged="lstDownloads_SelectionChanged" Margin="5">
                     <ListView.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="Open Download Folder" Name="mnuOpenFolder" Click="mnuOpenFolder_Click"></MenuItem>
-                            <MenuItem Header="Start" Name="mnuStart" Click="mnuStart_Click"></MenuItem>
-                            <MenuItem Header="Stop" Name="mnuStop" Click="mnuStop_Click"></MenuItem>
-                            <MenuItem Header="Edit" Name="mnuEdit" Click="mnuEdit_Click"></MenuItem>
-                            <MenuItem Header="Delete" Name="mnuDelete" Click="mnuDelete_Click"></MenuItem>
+                            <MenuItem Header="Open Download Folder" Name="mnuOpenFolder" Click="mnuOpenFolder_Click">
+                                <MenuItem.Icon>
+                                    <Image Source="pack://application:,,,/Images/openfolder.png"></Image>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Start" Name="mnuStart" Click="mnuStart_Click">
+                                <MenuItem.Icon>
+                                    <Image Source="pack://application:,,,/Images/play.png" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Stop" Name="mnuStop" Click="mnuStop_Click">
+                                <MenuItem.Icon>
+                                    <Image Source="pack://application:,,,/Images/pause.png"></Image>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Edit" Name="mnuEdit" Click="mnuEdit_Click">
+                                <MenuItem.Icon>
+                                    <Image Source="pack://application:,,,/Images/pencil.png"></Image>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Delete" Name="mnuDelete" Click="mnuDelete_Click">
+                                <MenuItem.Icon>
+                                    <Image Source="pack://application:,,,/Images/delete.png"></Image>
+                                </MenuItem.Icon>
+                            </MenuItem>
                         </ContextMenu>
                     </ListView.ContextMenu>
                     <ListView.View>
@@ -137,10 +157,26 @@
             <GroupBox Header="More Details" DockPanel.Dock="Top" Margin="5" Name="gbMoreDetails">
                 <StackPanel Margin="5">
                     <WrapPanel>
+                        <Button Name="btnCopyToClipboard" Width="20" Margin="2" Click="btnCopyToClipboard_Click">
+                            <Image Source="pack://application:,,,/Images/clipboard.png" />
+                            <Button.ToolTip>
+                                <ToolTip>
+                                    <TextBlock>Copy download URL to Windows clipboard.</TextBlock>
+                                </ToolTip>
+                            </Button.ToolTip>
+                        </Button>
                         <TextBlock Margin="2">URL:</TextBlock>
                         <TextBlock Name="txtUrl" TextWrapping="Wrap" Margin="2"></TextBlock>
                     </WrapPanel>
                     <WrapPanel>
+                        <Button Name="btnOpenFolder2" Click="btnOpenFolder_Click" Width="20" Margin="2">
+                            <Image Source="pack://application:,,,/Images/openfolder.png" />
+                            <Button.ToolTip>
+                                <ToolTip>
+                                    <TextBlock>Open download folder of selected download in Windows Explorer.</TextBlock>
+                                </ToolTip>
+                            </Button.ToolTip>
+                        </Button>
                         <TextBlock Margin="2">Folder:</TextBlock>
                         <TextBlock Margin="2" Name="txtDownloadFolder" TextWrapping="Wrap"></TextBlock>
                     </WrapPanel>

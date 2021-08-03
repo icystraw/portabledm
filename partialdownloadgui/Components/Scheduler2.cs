@@ -360,6 +360,21 @@ namespace partialdownloadgui.Components
             return false;
         }
 
+        public bool IsDownloadResumable()
+        {
+            lock (sectionsLock)
+            {
+                foreach (DownloadSection ds in download.Sections)
+                {
+                    if (ds.HttpStatusCode != 0 && ds.HttpStatusCode != System.Net.HttpStatusCode.PartialContent)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
         public void Stop(bool cancel)
         {
             if (IsDownloading())
