@@ -154,7 +154,7 @@
             <GroupBox Header="Section Progress" DockPanel.Dock="Bottom" Margin="5">
                 <WrapPanel Name="wpProgress" Margin="5" />
             </GroupBox>
-            <GroupBox Header="More Details" DockPanel.Dock="Top" Margin="5" Name="gbMoreDetails">
+            <GroupBox Header="More Details" DockPanel.Dock="Top" Margin="5">
                 <StackPanel Margin="5">
                     <WrapPanel>
                         <Button Name="btnCopyToClipboard" Width="20" Margin="2" Click="btnCopyToClipboard_Click">

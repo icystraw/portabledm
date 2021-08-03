@@ -83,10 +83,6 @@ namespace partialdownloadgui
                             bJustFinished = true;
                         }
                         dv.Status = pv.DownloadView.Status;
-                        if ((lstDownloads.SelectedItem as DownloadView) == dv)
-                        {
-                            ShowDownloadProgress(pv);
-                        }
                         break;
                     }
                 }
@@ -118,8 +114,6 @@ namespace partialdownloadgui
 
         private void UpdateControlsStatus()
         {
-            gbMoreDetails.Visibility = Visibility.Collapsed;
-
             btnEdit.IsEnabled = false;
             btnStart.IsEnabled = false;
             btnStop.IsEnabled = false;
@@ -134,9 +128,25 @@ namespace partialdownloadgui
             mnuOpenFolder.IsEnabled = false;
 
             DownloadView dv = lstDownloads.SelectedItem as DownloadView;
-            if (null == dv) return;
-
-            gbMoreDetails.Visibility = Visibility.Visible;
+            if (null == dv)
+            {
+                txtUrl.Text = string.Empty;
+                txtDownloadFolder.Text = string.Empty;
+                txtResumability.Text = string.Empty;
+                lstSections.ItemsSource = null;
+                wpProgress.Children.Clear();
+                return;
+            }
+            else
+            {
+                foreach (ProgressView pv in progressViews)
+                {
+                    if (pv.DownloadId == dv.Id)
+                    {
+                        ShowDownloadProgress(pv);
+                    }
+                }
+            }
 
             btnDelete.IsEnabled = true;
             btnOpenFolder.IsEnabled = true;
@@ -220,6 +230,7 @@ namespace partialdownloadgui
                 Scheduler2 s = new(ad.Download);
                 ProgressView pv = s.GetDownloadStatusView();
                 schedulers.Add(s);
+                progressViews.Add(pv);
                 downloadViews.Add(pv.DownloadView);
                 s.Start();
             }
@@ -337,19 +348,6 @@ namespace partialdownloadgui
         private void lstDownloads_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             UpdateControlsStatus();
-            DownloadView dv = lstDownloads.SelectedItem as DownloadView;
-            if (null == dv)
-            {
-                lstSections.ItemsSource = null;
-                return;
-            }
-            foreach (ProgressView pv in progressViews)
-            {
-                if (pv.DownloadId == dv.Id)
-                {
-                    ShowDownloadProgress(pv);
-                }
-            }
         }
 
         private void btnOpenFolder_Click(object sender, RoutedEventArgs e)
@@ -404,16 +402,13 @@ namespace partialdownloadgui
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            foreach (Scheduler2 s in schedulers)
+            if (IsBusy())
             {
-                if (s.IsDownloading())
+                if (MessageBox.Show("Downloads are running. Do you want to exit? Please note if there are downloads that are not resumable, you would have to start over again next time.", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                 {
-                    if (MessageBox.Show("Downloads are running. Do you want to exit? Please note if there are downloads that are not resumable, you would have to start over again next time.", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
-                    {
-                        e.Cancel = true;
-                    }
-                    return;
+                    e.Cancel = true;
                 }
+                return;
             }
         }
     }
