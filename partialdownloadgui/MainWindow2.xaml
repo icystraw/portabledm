@@ -142,7 +142,7 @@
                                                     <TextBlock Text="{Binding Path=Progress}"></TextBlock>
                                                     <TextBlock Text="% completed"></TextBlock>
                                                 </WrapPanel>
-                                                <ProgressBar Minimum="0" Maximum="100" Value="{Binding Path=Progress}" Width="250" Height="15" Margin="2"></ProgressBar>
+                                                <ProgressBar Minimum="0" Maximum="100" Value="{Binding Path=Progress}" Width="250" Height="5" Margin="2"></ProgressBar>
                                                 <WrapPanel Margin="2">
                                                     <TextBlock Text="{Binding Path=Speed}"></TextBlock>
                                                     <TextBlock Text="{Binding Path=Error}" Foreground="Red" Margin="10,0,0,0"></TextBlock>
@@ -159,10 +159,10 @@
         </DockPanel>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="#FFF2F5FC"></GridSplitter>
         <DockPanel Grid.Column="2">
-            <GroupBox Header="Section Progress" DockPanel.Dock="Bottom" Margin="5">
+            <GroupBox Header="Progress" DockPanel.Dock="Bottom" Margin="5">
                 <WrapPanel Name="wpProgress" Margin="5" />
             </GroupBox>
-            <GroupBox Header="More Details" DockPanel.Dock="Top" Margin="5">
+            <GroupBox Header="Details" DockPanel.Dock="Top" Margin="5">
                 <StackPanel Margin="5">
                     <WrapPanel>
                         <Button Name="btnCopyToClipboard" Width="25" Margin="2" Click="btnCopyToClipboard_Click" Style="{DynamicResource RoundCorner}">
@@ -194,7 +194,7 @@
                     </WrapPanel>
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="Download Sessions" Margin="5">
+            <GroupBox Header="Sessions" Margin="5">
                 <ListView Name="lstSections" Margin="5">
                     <ListView.View>
                         <GridView>

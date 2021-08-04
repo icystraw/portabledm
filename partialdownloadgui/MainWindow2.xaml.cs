@@ -205,12 +205,14 @@ namespace partialdownloadgui
             for (int i = 0; i < progress.Length; i++)
             {
                 Rectangle r = new();
-                RenderOptions.SetEdgeMode(r, EdgeMode.Aliased);
                 r.Height = 10;
                 r.Width = 10;
+                r.RadiusX = 3;
+                r.RadiusY = 3;
+                r.Margin = new Thickness(1);
                 if (progress[i] == '\u2593')
                 {
-                    r.Fill = Brushes.Green;
+                    r.Fill = Brushes.LightSeaGreen;
                 }
                 else
                 {
