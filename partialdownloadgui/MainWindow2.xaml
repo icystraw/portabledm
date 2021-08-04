@@ -8,7 +8,7 @@
         Title="Portable HTTP Download Manager" Background="#FFF5F6F7" Height="450" Width="1000" Closed="Window_Closed" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen" Closing="Window_Closing" StateChanged="Window_StateChanged">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="600"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition Width="5"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
@@ -105,46 +105,53 @@
                     </ListView.ContextMenu>
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Width="30">
+                            <GridView.ColumnHeaderContainerStyle>
+                                <Style>
+                                    <Setter Property="FrameworkElement.Visibility" Value="Collapsed"></Setter>
+                                </Style>
+                            </GridView.ColumnHeaderContainerStyle>
+                            <GridViewColumn>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Image>
-                                            <Image.Style>
-                                                <Style TargetType="Image">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding Status}" Value="Downloading">
-                                                            <Setter Property="Source" Value="pack://application:,,,/Images/play.png"/>
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding Status}" Value="DownloadError">
-                                                            <Setter Property="Source" Value="pack://application:,,,/Images/error.png"/>
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding Status}" Value="Finished">
-                                                            <Setter Property="Source" Value="pack://application:,,,/Images/finished.png"/>
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding Status}" Value="Stopped">
-                                                            <Setter Property="Source" Value="pack://application:,,,/Images/pause.png"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Image.Style>
-                                        </Image>
+                                        <DockPanel>
+                                            <Image DockPanel.Dock="Left" Width="30" Margin="5">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Downloading">
+                                                                <Setter Property="Source" Value="pack://application:,,,/Images/play.png"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}" Value="DownloadError">
+                                                                <Setter Property="Source" Value="pack://application:,,,/Images/error.png"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Finished">
+                                                                <Setter Property="Source" Value="pack://application:,,,/Images/finished.png"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Stopped">
+                                                                <Setter Property="Source" Value="pack://application:,,,/Images/pause.png"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Path=FileName}" FontSize="14" FontWeight="Bold"></TextBlock>
+                                                <WrapPanel Margin="2">
+                                                    <TextBlock Text="{Binding Path=Size}"></TextBlock>
+                                                    <TextBlock Text=", "></TextBlock>
+                                                    <TextBlock Text="{Binding Path=Progress}"></TextBlock>
+                                                    <TextBlock Text="% completed"></TextBlock>
+                                                </WrapPanel>
+                                                <ProgressBar Minimum="0" Maximum="100" Value="{Binding Path=Progress}" Width="250" Height="15" Margin="2"></ProgressBar>
+                                                <WrapPanel Margin="2">
+                                                    <TextBlock Text="{Binding Path=Speed}"></TextBlock>
+                                                    <TextBlock Text="{Binding Path=Error}" Foreground="Red" Margin="10,0,0,0"></TextBlock>
+                                                </WrapPanel>
+                                            </StackPanel>
+                                        </DockPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=FileName}" Header="File Name" Width="100" />
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=Size}" Header="Size" Width="100" />
-                            <GridViewColumn Header="Progress" Width="150">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <WrapPanel>
-                                            <ProgressBar Minimum="0" Maximum="100" Value="{Binding Path=Progress}" Width="100" Height="10"></ProgressBar>
-                                            <TextBlock Text="{Binding Path=Progress, StringFormat={}{0}%}"></TextBlock>
-                                        </WrapPanel>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=Speed}" Header="Speed" Width="100" />
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=Error}" Header="Message" />
                         </GridView>
                     </ListView.View>
                 </ListView>
