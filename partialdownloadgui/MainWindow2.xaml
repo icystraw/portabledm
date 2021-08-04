@@ -66,8 +66,8 @@
             <Expander Header="Other options" DockPanel.Dock="Bottom" Margin="5">
                 <GroupBox Margin="5">
                     <StackPanel Margin="5">
-                        <CheckBox Name="chkShutdown">Shut down computer after active downloads finish (if the current user has shut down rights)</CheckBox>
-                        <CheckBox Name="chkBrowserDownload" Unchecked="chkBrowserDownload_Unchecked" Checked="chkBrowserDownload_Checked">Take over download from browser (need to install browser extension)</CheckBox>
+                        <CheckBox Name="chkShutdown">Shut down computer after active downloads finish</CheckBox>
+                        <CheckBox Name="chkBrowserDownload" Unchecked="chkBrowserDownload_Unchecked" Checked="chkBrowserDownload_Checked">Take over download from browser (needs browser extension)</CheckBox>
                         <CheckBox Name="chkMinimizeToTray" Unchecked="chkMinimizeToTray_Unchecked" Checked="chkMinimizeToTray_Checked">Minimize to system tray</CheckBox>
                     </StackPanel>
                 </GroupBox>
@@ -181,7 +181,7 @@
                             <Image Source="pack://application:,,,/Images/openfolder.png" />
                             <Button.ToolTip>
                                 <ToolTip>
-                                    <TextBlock>Open download folder of selected download in Windows Explorer.</TextBlock>
+                                    <TextBlock>Open this folder in Windows Explorer.</TextBlock>
                                 </ToolTip>
                             </Button.ToolTip>
                         </Button>
