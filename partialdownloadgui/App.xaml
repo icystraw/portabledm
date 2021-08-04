@@ -16,7 +16,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Grid Name="grid">
-                            <Border Name="border" CornerRadius="2" BorderBrush="#FFCFDAFF" Background="#FFA9BDFF" BorderThickness="1" Padding="5">
+                            <Border Name="border" CornerRadius="2" BorderBrush="#FFCFDAFF" Background="#FFCFDAFF" BorderThickness="1" Padding="5">
                                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"></ContentPresenter>
                             </Border>
                         </Grid>
@@ -25,7 +25,7 @@
                                 <Setter Property="Background" TargetName="border" Value="#FF7F9DFF"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="BorderBrush" TargetName="border" Value="LightGreen"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="LightSeaGreen"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Opacity" TargetName="grid" Value="0.25"/>
