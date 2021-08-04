@@ -74,7 +74,7 @@
                             </Button.ToolTip>
                         </Button>
                     </StackPanel>
-                    <ListView Name="lstDownloads" SelectionChanged="lstDownloads_SelectionChanged" Margin="5">
+                    <ListView Name="lstDownloads" SelectionChanged="lstDownloads_SelectionChanged" MouseDoubleClick="lstDownloads_MouseDoubleClick" Margin="5">
                         <ListView.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Open Download Folder" Name="mnuOpenFolder" Click="mnuOpenFolder_Click">
@@ -198,6 +198,11 @@
             </GroupBox>
             <GroupBox Header="Sessions" Margin="5">
                 <ListView Name="lstSections" Margin="5">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Focusable" Value="false"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Width="30">

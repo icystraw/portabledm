@@ -457,5 +457,10 @@ namespace partialdownloadgui
             notifyIcon.Visible = false;
             this.ShowInTaskbar = true;
         }
+
+        private void lstDownloads_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            btnOpenFolder_Click(this, null);
+        }
     }
 }
