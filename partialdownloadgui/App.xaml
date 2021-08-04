@@ -16,16 +16,16 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Grid Name="grid">
-                            <Border Name="border" CornerRadius="2" BorderBrush="#FFCFDAFF" Background="#FFCFDAFF" BorderThickness="1" Padding="5">
+                            <Border Name="border" CornerRadius="2" BorderBrush="#FFCFDAFF" Background="#FF7F9DFF" BorderThickness="1" Padding="5">
                                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"></ContentPresenter>
                             </Border>
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" TargetName="border" Value="#FF7F9DFF"/>
+                                <Setter Property="Background" TargetName="border" Value="#FF6589FF"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="BorderBrush" TargetName="border" Value="LightSeaGreen"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="#FF6589FF"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Opacity" TargetName="grid" Value="0.25"/>

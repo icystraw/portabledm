@@ -22,7 +22,7 @@
                     </StackPanel>
                 </GroupBox>
             </Expander>
-            <GroupBox Header="Current Downloads" Margin="5">
+            <GroupBox Header="Downloads" Margin="5">
                 <DockPanel>
                     <StackPanel Orientation="Horizontal" Margin="5" DockPanel.Dock="Top">
                         <Button Name="btnAdd" Click="btnAdd_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
