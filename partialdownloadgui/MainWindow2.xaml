@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:partialdownloadgui"
         mc:Ignorable="d"
-        Title="Portable HTTP Download Manager" Background="#FFF5F6F7" Height="450" Width="1000" Closed="Window_Closed" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen" Closing="Window_Closing" StateChanged="Window_StateChanged">
+        Title="Portable HTTP Download Manager" Background="#FFF2F5FC" Height="450" Width="1000" Closed="Window_Closed" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen" Closing="Window_Closing" StateChanged="Window_StateChanged">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
@@ -14,48 +14,48 @@
         </Grid.ColumnDefinitions>
         <DockPanel Grid.Column="0">
             <WrapPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="5">
-                <Button Name="btnAdd" Click="btnAdd_Click" Margin="5" Width="40">
-                    <Image Source="pack://application:,,,/Images/new-document.png" Margin="3" />
+                <Button Name="btnAdd" Click="btnAdd_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
+                    <Image Source="pack://application:,,,/Images/new-document.png" />
                     <Button.ToolTip>
                         <ToolTip>
                             <TextBlock>Create a new download.</TextBlock>
                         </ToolTip>
                     </Button.ToolTip>
                 </Button>
-                <Button Name="btnEdit" Click="btnEdit_Click" Margin="5" Width="40">
-                    <Image Source="pack://application:,,,/Images/pencil.png" Margin="3" />
+                <Button Name="btnEdit" Click="btnEdit_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
+                    <Image Source="pack://application:,,,/Images/pencil.png" />
                     <Button.ToolTip>
                         <ToolTip>
                             <TextBlock>Edit selected download.</TextBlock>
                         </ToolTip>
                     </Button.ToolTip>
                 </Button>
-                <Button Name="btnStart" Click="btnStart_Click" Margin="5" Width="40">
-                    <Image Source="pack://application:,,,/Images/play.png" Margin="3" />
+                <Button Name="btnStart" Click="btnStart_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
+                    <Image Source="pack://application:,,,/Images/play.png" />
                     <Button.ToolTip>
                         <ToolTip>
                             <TextBlock>Start selected download.</TextBlock>
                         </ToolTip>
                     </Button.ToolTip>
                 </Button>
-                <Button Name="btnStop" Click="btnStop_Click" Margin="5" Width="40">
-                    <Image Source="pack://application:,,,/Images/pause.png" Margin="3" />
+                <Button Name="btnStop" Click="btnStop_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
+                    <Image Source="pack://application:,,,/Images/pause.png" />
                     <Button.ToolTip>
                         <ToolTip>
                             <TextBlock>Pause selected download.</TextBlock>
                         </ToolTip>
                     </Button.ToolTip>
                 </Button>
-                <Button Name="btnDelete" Click="btnDelete_Click" Margin="5" Width="40">
-                    <Image Source="pack://application:,,,/Images/delete.png" Margin="3" />
+                <Button Name="btnDelete" Click="btnDelete_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
+                    <Image Source="pack://application:,,,/Images/delete.png" />
                     <Button.ToolTip>
                         <ToolTip>
                             <TextBlock>Delete selected download.</TextBlock>
                         </ToolTip>
                     </Button.ToolTip>
                 </Button>
-                <Button Name="btnOpenFolder" Click="btnOpenFolder_Click" Margin="5" Width="40">
-                    <Image Source="pack://application:,,,/Images/openfolder.png" Margin="3" />
+                <Button Name="btnOpenFolder" Click="btnOpenFolder_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
+                    <Image Source="pack://application:,,,/Images/openfolder.png" />
                     <Button.ToolTip>
                         <ToolTip>
                             <TextBlock>Open download folder of selected download in Windows Explorer.</TextBlock>
@@ -157,7 +157,7 @@
                 </ListView>
             </GroupBox>
         </DockPanel>
-        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"></GridSplitter>
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="#FFF2F5FC"></GridSplitter>
         <DockPanel Grid.Column="2">
             <GroupBox Header="Section Progress" DockPanel.Dock="Bottom" Margin="5">
                 <WrapPanel Name="wpProgress" Margin="5" />
@@ -165,7 +165,7 @@
             <GroupBox Header="More Details" DockPanel.Dock="Top" Margin="5">
                 <StackPanel Margin="5">
                     <WrapPanel>
-                        <Button Name="btnCopyToClipboard" Width="20" Margin="2" Click="btnCopyToClipboard_Click">
+                        <Button Name="btnCopyToClipboard" Width="25" Margin="2" Click="btnCopyToClipboard_Click" Style="{DynamicResource RoundCorner}">
                             <Image Source="pack://application:,,,/Images/clipboard.png" />
                             <Button.ToolTip>
                                 <ToolTip>
@@ -177,7 +177,7 @@
                         <TextBlock Name="txtUrl" TextWrapping="Wrap" Margin="2"></TextBlock>
                     </WrapPanel>
                     <WrapPanel>
-                        <Button Name="btnOpenFolder2" Click="btnOpenFolder_Click" Width="20" Margin="2">
+                        <Button Name="btnOpenFolder2" Click="btnOpenFolder_Click" Width="25" Margin="2" Style="{DynamicResource RoundCorner}">
                             <Image Source="pack://application:,,,/Images/openfolder.png" />
                             <Button.ToolTip>
                                 <ToolTip>
