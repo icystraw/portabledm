@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:partialdownloadgui"
         mc:Ignorable="d"
-        Title="Add/Edit Download" Width="600" Loaded="Window_Loaded" SizeToContent="Height" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+        Title="Add/Edit Download" Background="#FFF5F6F7" Width="600" Loaded="Window_Loaded" SizeToContent="Height" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
     <StackPanel>
         <GroupBox Header="Options" Margin="5">
             <StackPanel>
@@ -21,15 +21,7 @@
                 </DockPanel>
                 <DockPanel Margin="0,5,0,0">
                     <Label Content="Save to folder:" DockPanel.Dock="Left"></Label>
-                    <Button Name="btnOpenDownloadFolder" Background="White" Width="25" DockPanel.Dock="Right" Click="btnOpenDownloadFolder_Click">
-                        <Image Source="pack://application:,,,/Images/download.png" />
-                        <Button.ToolTip>
-                            <ToolTip>
-                                <TextBlock>Open download folder in Windows Explorer.</TextBlock>
-                            </ToolTip>
-                        </Button.ToolTip>
-                    </Button>
-                    <Button Name="btnBrowse" Content="Choose location..." Click="btnBrowse_Click" Background="White" Margin="0,0,5,0"></Button>
+                    <Button Name="btnBrowse" Content="Choose location..." Click="btnBrowse_Click" Margin="0,0,5,0"></Button>
                 </DockPanel>
                 <GroupBox Header="Multi-threading">
                     <WrapPanel>
@@ -82,10 +74,10 @@
                     </StackPanel>
                 </GroupBox>
                 <WrapPanel HorizontalAlignment="Center">
-                    <Button Name="btnOk" Margin="5" Width="40" Background="White" Click="btnOk_Click" IsDefault="True">
+                    <Button Name="btnOk" Margin="5" Width="40" Click="btnOk_Click" IsDefault="True">
                         <Image Source="pack://application:,,,/Images/go.png" Margin="3" />
                     </Button>
-                    <Button Name="btnCancel" Margin="5" Width="40" Background="White" Click="btnCancel_Click" IsCancel="True">
+                    <Button Name="btnCancel" Margin="5" Width="40" Click="btnCancel_Click" IsCancel="True">
                         <Image Source="pack://application:,,,/Images/cancel.png" Margin="3" />
                     </Button>
                 </WrapPanel>

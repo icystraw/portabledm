@@ -1,6 +1,5 @@
 ﻿using partialdownloadgui.Components;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Windows;
 
@@ -48,19 +47,6 @@ namespace partialdownloadgui
                 btnBrowse.Content = dlg.SelectedPath;
                 download.DownloadFolder = dlg.SelectedPath;
                 App.AppSettings.DownloadFolder = dlg.SelectedPath;
-            }
-        }
-
-        private void btnOpenDownloadFolder_Click(object sender, RoutedEventArgs e)
-        {
-            if (!string.IsNullOrEmpty(download.DownloadFolder))
-            {
-                Process.Start("explorer.exe", download.DownloadFolder);
-                return;
-            }
-            if (!string.IsNullOrEmpty(App.AppSettings.DownloadFolder))
-            {
-                Process.Start("explorer.exe", App.AppSettings.DownloadFolder);
             }
         }
 

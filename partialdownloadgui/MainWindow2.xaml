@@ -14,7 +14,7 @@
         </Grid.ColumnDefinitions>
         <DockPanel Grid.Column="0">
             <WrapPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="5">
-                <Button Name="btnAdd" Click="btnAdd_Click" Margin="5" Width="40" Background="White">
+                <Button Name="btnAdd" Click="btnAdd_Click" Margin="5" Width="40">
                     <Image Source="pack://application:,,,/Images/new-document.png" Margin="3" />
                     <Button.ToolTip>
                         <ToolTip>
@@ -22,7 +22,7 @@
                         </ToolTip>
                     </Button.ToolTip>
                 </Button>
-                <Button Name="btnEdit" Click="btnEdit_Click" Margin="5" Width="40" Background="White">
+                <Button Name="btnEdit" Click="btnEdit_Click" Margin="5" Width="40">
                     <Image Source="pack://application:,,,/Images/pencil.png" Margin="3" />
                     <Button.ToolTip>
                         <ToolTip>
@@ -30,7 +30,7 @@
                         </ToolTip>
                     </Button.ToolTip>
                 </Button>
-                <Button Name="btnStart" Click="btnStart_Click" Margin="5" Width="40" Background="White">
+                <Button Name="btnStart" Click="btnStart_Click" Margin="5" Width="40">
                     <Image Source="pack://application:,,,/Images/play.png" Margin="3" />
                     <Button.ToolTip>
                         <ToolTip>
@@ -38,7 +38,7 @@
                         </ToolTip>
                     </Button.ToolTip>
                 </Button>
-                <Button Name="btnStop" Click="btnStop_Click" Margin="5" Width="40" Background="White">
+                <Button Name="btnStop" Click="btnStop_Click" Margin="5" Width="40">
                     <Image Source="pack://application:,,,/Images/pause.png" Margin="3" />
                     <Button.ToolTip>
                         <ToolTip>
@@ -46,7 +46,7 @@
                         </ToolTip>
                     </Button.ToolTip>
                 </Button>
-                <Button Name="btnDelete" Click="btnDelete_Click" Margin="5" Width="40" Background="White">
+                <Button Name="btnDelete" Click="btnDelete_Click" Margin="5" Width="40">
                     <Image Source="pack://application:,,,/Images/delete.png" Margin="3" />
                     <Button.ToolTip>
                         <ToolTip>
@@ -54,7 +54,7 @@
                         </ToolTip>
                     </Button.ToolTip>
                 </Button>
-                <Button Name="btnOpenFolder" Click="btnOpenFolder_Click" Margin="5" Width="40" Background="White">
+                <Button Name="btnOpenFolder" Click="btnOpenFolder_Click" Margin="5" Width="40">
                     <Image Source="pack://application:,,,/Images/openfolder.png" Margin="3" />
                     <Button.ToolTip>
                         <ToolTip>
