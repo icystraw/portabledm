@@ -165,7 +165,7 @@ namespace partialdownloadgui.Components
                 }
                 if (response.Content.Headers.ContentDisposition != null && !string.IsNullOrEmpty(response.Content.Headers.ContentDisposition.FileName))
                 {
-                    this.downloadSection.SuggestedName = response.Content.Headers.ContentDisposition.FileName;
+                    if (string.IsNullOrEmpty(this.downloadSection.SuggestedName)) this.downloadSection.SuggestedName = response.Content.Headers.ContentDisposition.FileName;
                 }
                 if (this.downloadStopFlag)
                 {

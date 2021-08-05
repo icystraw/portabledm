@@ -231,7 +231,7 @@ namespace partialdownloadgui.Components
                 }
                 if (response.Content.Headers.ContentDisposition != null && !string.IsNullOrEmpty(response.Content.Headers.ContentDisposition.FileName))
                 {
-                    ds.SuggestedName = response.Content.Headers.ContentDisposition.FileName;
+                    if (string.IsNullOrEmpty(ds.SuggestedName)) ds.SuggestedName = response.Content.Headers.ContentDisposition.FileName;
                 }
                 response.Dispose();
                 ds.DownloadStatus = DownloadStatus.Stopped;
