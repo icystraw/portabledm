@@ -33,14 +33,6 @@
                                 </ToolTip>
                             </Button.ToolTip>
                         </Button>
-                        <Button Name="btnAddYT" Click="btnAddYT_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
-                            <Image Source="pack://application:,,,/Images/new-document.png" />
-                            <Button.ToolTip>
-                                <ToolTip>
-                                    <TextBlock>Create a new Youtube video download.</TextBlock>
-                                </ToolTip>
-                            </Button.ToolTip>
-                        </Button>
                         <Button Name="btnEdit" Click="btnEdit_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
                             <Image Source="pack://application:,,,/Images/pencil.png" />
                             <Button.ToolTip>
