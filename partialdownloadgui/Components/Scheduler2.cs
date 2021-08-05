@@ -243,10 +243,8 @@ namespace partialdownloadgui.Components
                     pv.SectionViews.Add(sv);
                     if (total > 0)
                     {
-                        decimal downloadedSquares = (decimal)secDownloaded * 200m / (decimal)total;
-                        decimal pendingSquares = (decimal)secTotal * 200m / (decimal)total - (decimal)downloadedSquares;
-                        downloadedSquares = Math.Round(downloadedSquares, MidpointRounding.AwayFromZero);
-                        pendingSquares = Math.Round(pendingSquares, MidpointRounding.AwayFromZero);
+                        long downloadedSquares = secDownloaded * 200 / total;
+                        long pendingSquares = secTotal * 200 / total - downloadedSquares;
                         for (long i = 0; i < downloadedSquares; i++) sb.Append('\u2593');
                         for (long i = 0; i < pendingSquares; i++) sb.Append('\u2591');
                     }

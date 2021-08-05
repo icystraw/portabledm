@@ -228,7 +228,7 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=Description}" Header="Section" Width="100"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=HttpStatusCode}" Header="Section" Width="100"/>
                             <GridViewColumn DisplayMemberBinding="{Binding Path=Size}" Header="Size" Width="80"/>
                             <GridViewColumn Header="Progress" Width="100">
                                 <GridViewColumn.CellTemplate>

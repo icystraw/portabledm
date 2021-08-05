@@ -29,7 +29,12 @@ namespace partialdownloadgui.Components
 
         public static decimal getProgress(long downloaded, long total)
         {
-            if (total > 0) return Math.Round((decimal)downloaded * 100m / (decimal)total, 1, MidpointRounding.AwayFromZero);
+            if (total > 0)
+            {
+                decimal ret = Math.Round((decimal)downloaded * 100m / (decimal)total, 1, MidpointRounding.AwayFromZero);
+                if (ret > 100m) ret = 100m;
+                return ret;
+            }
             else return 0m;
         }
 
