@@ -463,5 +463,21 @@ namespace partialdownloadgui
         {
             btnOpenFolder_Click(this, null);
         }
+
+        private void btnAddYT_Click(object sender, RoutedEventArgs e)
+        {
+            YTDownload ad = new();
+            ad.Owner = this;
+            ad.ShowDialog();
+            foreach (Download d in ad.Downloads)
+            {
+                Scheduler2 s = new(d);
+                ProgressView pv = s.GetDownloadStatusView();
+                schedulers.Add(s);
+                progressViews.Add(pv);
+                downloadViews.Add(pv.DownloadView);
+                s.Start();
+            }
+        }
     }
 }

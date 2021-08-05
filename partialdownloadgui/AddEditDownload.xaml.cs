@@ -146,7 +146,6 @@ namespace partialdownloadgui
                     btnBrowse.Content = download.DownloadFolder;
                 }
                 download.NoDownloader = cbThreads.SelectedIndex + 1;
-                download.SummarySection = new();
                 if (!string.IsNullOrEmpty(this.url))
                 {
                     txtUrl.Text = this.url;

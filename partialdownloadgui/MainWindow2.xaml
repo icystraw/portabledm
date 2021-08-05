@@ -33,6 +33,14 @@
                                 </ToolTip>
                             </Button.ToolTip>
                         </Button>
+                        <Button Name="btnAddYT" Click="btnAddYT_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
+                            <Image Source="pack://application:,,,/Images/new-document.png" />
+                            <Button.ToolTip>
+                                <ToolTip>
+                                    <TextBlock>Create a new Youtube video download.</TextBlock>
+                                </ToolTip>
+                            </Button.ToolTip>
+                        </Button>
                         <Button Name="btnEdit" Click="btnEdit_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
                             <Image Source="pack://application:,,,/Images/pencil.png" />
                             <Button.ToolTip>
@@ -143,7 +151,7 @@
                                                         <TextBlock Text="{Binding Path=Progress}"></TextBlock>
                                                         <TextBlock Text="% completed"></TextBlock>
                                                     </WrapPanel>
-                                                    <ProgressBar Minimum="0" Maximum="100" Value="{Binding Path=Progress}" Width="250" Height="5" Margin="2"></ProgressBar>
+                                                    <ProgressBar HorizontalAlignment="Left" Minimum="0" Maximum="100" Value="{Binding Path=Progress}" Width="250" Height="5" Margin="2"></ProgressBar>
                                                     <WrapPanel Margin="2">
                                                         <TextBlock Text="{Binding Path=Speed}"></TextBlock>
                                                         <TextBlock Text="{Binding Path=Error}" Foreground="Red" Margin="10,0,0,0"></TextBlock>

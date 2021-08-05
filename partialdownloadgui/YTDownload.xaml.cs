@@ -1,18 +1,8 @@
 ﻿using partialdownloadgui.Components;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace partialdownloadgui
 {
@@ -72,12 +62,43 @@ namespace partialdownloadgui
             }
             if (videos.Count > 0) btnDownload.IsEnabled = true;
             else btnDownload.IsEnabled = false;
-            File.Delete(ytSection.FileName);
+            //File.Delete(ytSection.FileName);
         }
 
         private void btnDownload_Click(object sender, RoutedEventArgs e)
         {
-
+            foreach (CheckBox cb in spChkContainer.Children)
+            {
+                if (cb != null && cb.IsChecked == true)
+                {
+                    YoutubeVideo video = cb.Tag as YoutubeVideo;
+                    DownloadSection ds = new();
+                    ds.Url = video.url;
+                    ds.End = (-1);
+                    ds.SuggestedName = Util.removeInvalidCharFromFileName(this.Title + YoutubeUtil.GetFileName(video));
+                    try
+                    {
+                        Util.downloadPreprocess(ds);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.ToString());
+                        continue;
+                    }
+                    if (ds.DownloadStatus == DownloadStatus.DownloadError)
+                    {
+                        MessageBox.Show("Error occurred. Server response code was: " + ds.HttpStatusCode);
+                        continue;
+                    }
+                    Download d = new();
+                    d.DownloadFolder = App.AppSettings.DownloadFolder;
+                    d.NoDownloader = 5;
+                    d.SummarySection = ds;
+                    d.Sections.Add(d.SummarySection.Clone());
+                    downloads.Add(d);
+                }
+            }
+            this.Close();
         }
     }
 }

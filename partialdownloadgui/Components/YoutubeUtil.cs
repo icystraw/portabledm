@@ -89,5 +89,27 @@ namespace partialdownloadgui.Components
         {
             return JsonSerializer.Deserialize<List<YoutubeVideo>>(json);
         }
+
+        public static string GetFileName(YoutubeVideo video)
+        {
+            StringBuilder sb = new();
+            if (!string.IsNullOrEmpty(video.qualityLabel))
+            {
+                sb.Append('(');
+                sb.Append(video.qualityLabel);
+                sb.Append(')');
+            }
+            if (!string.IsNullOrEmpty(video.audioQuality))
+            {
+                sb.Append('(');
+                sb.Append(video.audioQuality);
+                sb.Append(')');
+            }
+            sb.Append('.');
+            if (video.mimeType.Contains("mp4")) sb.Append("mp4");
+            else sb.Append("webm");
+
+            return sb.ToString();
+        }
     }
 }

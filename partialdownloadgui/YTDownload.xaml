@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:partialdownloadgui"
         mc:Ignorable="d"
-        Title="Add Youtube Download" Width="600" WindowStartupLocation="CenterOwner" Background="#FFF2F5FC" ShowInTaskbar="True" SizeToContent="Height" ResizeMode="NoResize">
+        Title="Add Youtube Download" Width="600" WindowStartupLocation="CenterOwner" Background="#FFF2F5FC" ShowInTaskbar="False" SizeToContent="Height" ResizeMode="NoResize">
     <StackPanel>
         <TextBox Name="txtUrl"></TextBox>
         <StackPanel Name="spChkContainer"></StackPanel>

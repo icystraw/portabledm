@@ -29,8 +29,7 @@ namespace partialdownloadgui
             {
                 appSettings = new();
             }
-            YTDownload mw = new();
-            //MainWindow2 mw = new();
+            MainWindow2 mw = new();
             mw.Show();
         }
     }
