@@ -184,14 +184,26 @@ namespace partialdownloadgui.Components
                         ds.HttpStatusCode == HttpStatusCode.TemporaryRedirect ||
                         ds.HttpStatusCode == HttpStatusCode.PermanentRedirect)
                     {
-                        if (response.Content.Headers.ContentLocation != null)
+                        request = new();
+                        if (response.Headers.Location != null)
+                        {
+                            request.RequestUri = response.Headers.Location;
+                        }
+                        else if (response.Content.Headers.ContentLocation != null)
                         {
                             request.RequestUri = response.Content.Headers.ContentLocation;
-                            ds.Url = request.RequestUri.AbsoluteUri;
-                            response = Downloader.Client.Send(request, HttpCompletionOption.ResponseHeadersRead);
-                            ds.HttpStatusCode = response.StatusCode;
                         }
                         else break;
+                        request.Headers.Referrer = request.RequestUri;
+                        request.Method = HttpMethod.Get;
+                        request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(ds.Start, endParam);
+                        if (!string.IsNullOrEmpty(ds.UserName) && !string.IsNullOrEmpty(ds.Password))
+                        {
+                            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes(ds.UserName + ':' + ds.Password)));
+                        }
+                        ds.Url = request.RequestUri.AbsoluteUri;
+                        response = Downloader.Client.Send(request, HttpCompletionOption.ResponseHeadersRead);
+                        ds.HttpStatusCode = response.StatusCode;
                     }
                     else break;
                 }
