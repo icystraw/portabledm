@@ -16,7 +16,15 @@ namespace partialdownloadgui.Components
         private string error;
 
         public string FileName { get => fileName; set => fileName = value; }
-        public string Size { get => size; set => size = value; }
+        public string Size
+        {
+            get => size;
+            set
+            {
+                size = value;
+                OnPropertyChanged(nameof(Size));
+            }
+        }
         public long Progress
         {
             get => progress;

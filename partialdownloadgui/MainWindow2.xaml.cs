@@ -87,6 +87,7 @@ namespace partialdownloadgui
                 {
                     if (dv.Id == pv.DownloadId)
                     {
+                        dv.Size = pv.DownloadView.Size;
                         dv.Progress = pv.DownloadView.Progress;
                         dv.Speed = pv.DownloadView.Speed;
                         // if there is a download that has just completed

@@ -302,10 +302,12 @@ namespace partialdownloadgui.Components
                     throw new DirectoryNotFoundException("Download folder is not present.");
                 }
                 streamDest = File.OpenWrite(fileNameWithPath);
+                long totalFileSize = 0;
                 while (true)
                 {
                     if (ds.DownloadStatus == DownloadStatus.Finished)
                     {
+                        totalFileSize += ds.Total;
                         streamSection = File.OpenRead(ds.FileName);
                         long bytesRead = 0;
                         while (true)
@@ -325,6 +327,10 @@ namespace partialdownloadgui.Components
                     else break;
                 }
                 streamDest.Close();
+                if (download.SummarySection.Start == 0 && download.SummarySection.End < 0 && download.SummarySection.HttpStatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    download.SummarySection.End = totalFileSize - 1;
+                }
                 download.SummarySection.DownloadStatus = DownloadStatus.Finished;
             }
             finally

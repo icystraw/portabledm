@@ -185,12 +185,13 @@ namespace partialdownloadgui.Components
                 }
                 this.downloadSection.DownloadStatus = DownloadStatus.Downloading;
                 int bytesRead = streamHttp.Read(buffer, 0, 1048576);
+                long currentEnd = this.downloadSection.End;
                 while (bytesRead > 0)
                 {
                     streamFile.Write(buffer, 0, bytesRead);
                     this.downloadSection.BytesDownloaded += bytesRead;
-                    // End can be reduced by Scheduler thread. Keep a copy of current value.
-                    long currentEnd = this.downloadSection.End;
+                    // End can be reduced by Scheduler thread.
+                    currentEnd = this.downloadSection.End;
                     if (this.downloadStopFlag)
                     {
                         streamFile.Close();
@@ -212,6 +213,10 @@ namespace partialdownloadgui.Components
                 streamFile.Close();
                 streamHttp.Close();
                 response.Dispose();
+                if (currentEnd < 0 && this.downloadSection.Start == 0 && this.downloadSection.HttpStatusCode == HttpStatusCode.OK)
+                {
+                    this.downloadSection.End = this.downloadSection.BytesDownloaded - 1;
+                }
                 this.downloadSection.DownloadStatus = DownloadStatus.Finished;
             }
             catch (Exception ex)
