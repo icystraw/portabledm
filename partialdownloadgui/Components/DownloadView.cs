@@ -10,7 +10,7 @@ namespace partialdownloadgui.Components
         private string fileName;
         private string size;
         private string downloadFolder;
-        private long progress;
+        private decimal progress;
         private string speed;
         private DownloadStatus status;
         private string error;
@@ -25,7 +25,7 @@ namespace partialdownloadgui.Components
                 OnPropertyChanged(nameof(Size));
             }
         }
-        public long Progress
+        public decimal Progress
         {
             get => progress;
             set

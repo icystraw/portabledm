@@ -27,10 +27,10 @@ namespace partialdownloadgui.Components
             }
         }
 
-        public static long getProgress(long downloaded, long total)
+        public static decimal getProgress(long downloaded, long total)
         {
-            if (total > 0) return (downloaded * 100 / total > 100 ? 100 : downloaded * 100 / total);
-            else return 0;
+            if (total > 0) return Math.Round((decimal)downloaded * 100m / (decimal)total, 1, MidpointRounding.AwayFromZero);
+            else return 0m;
         }
 
         public static string removeInvalidCharFromFileName(string fileName)

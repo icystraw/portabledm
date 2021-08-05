@@ -114,7 +114,7 @@ namespace partialdownloadgui
             txtDownloadFolder.Text = pv.DownloadView.DownloadFolder;
             foreach (SectionView sv in pv.SectionViews)
             {
-                if (sv.Description != 0 && sv.Description != System.Net.HttpStatusCode.PartialContent)
+                if (sv.HttpStatusCode != 0 && sv.HttpStatusCode != System.Net.HttpStatusCode.PartialContent)
                 {
                     txtResumability.Text = "NOT RESUMABLE!";
                     txtResumability.Foreground = Brushes.Red;
