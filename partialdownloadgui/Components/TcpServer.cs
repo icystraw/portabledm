@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace partialdownloadgui.Components
@@ -12,11 +13,11 @@ namespace partialdownloadgui.Components
     {
         private static readonly int listenPort = 13000;
         private static string downloadUrl;
-        private static Stack<string> youtubeUrls = new(5);
+        private static Queue<string> youtubeUrls = new();
         private static Thread serverThread;
 
         public static string DownloadUrl { get => downloadUrl; set => downloadUrl = value; }
-        public static Stack<string> YoutubeUrls { get => youtubeUrls; set => youtubeUrls = value; }
+        public static Queue<string> YoutubeUrls { get => youtubeUrls; set => youtubeUrls = value; }
 
         public static void Start()
         {
@@ -88,8 +89,14 @@ namespace partialdownloadgui.Components
                         string url = Util.convertFromBase64(base64Url);
                         if (url.Contains("googlevideo.com/videoplayback"))
                         {
-                            // bypass the initial congestion window
-                            if (!url.Contains("initcwndbps")) youtubeUrls.Push(url);
+                            string newUrl = Regex.Replace(url, @"(\brange=[^&]*&|[\?&]range=[^&]*$)", string.Empty);
+                            newUrl = Regex.Replace(newUrl, @"(\brn=[^&]*&|[\?&]rn=[^&]*$)", string.Empty);
+                            newUrl = Regex.Replace(newUrl, @"(\brbuf=[^&]*&|[\?&]rbuf=[^&]*$)", string.Empty);
+                            if (!youtubeUrls.Contains(newUrl))
+                            {
+                                if (youtubeUrls.Count >= 10) youtubeUrls.Dequeue();
+                                youtubeUrls.Enqueue(newUrl);
+                            }
                         }
                         else downloadUrl = url;
                     }

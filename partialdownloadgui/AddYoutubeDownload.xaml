@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:partialdownloadgui"
         mc:Ignorable="d"
-        Title="AddYoutubeDownload" Background="#FFF2F5FC" Width="600" ShowInTaskbar="False" SizeToContent="Height" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Loaded="Window_Loaded">
+        Title="Add Youtube Download" Background="#FFF2F5FC" Width="600" ShowInTaskbar="False" SizeToContent="Height" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Loaded="Window_Loaded">
     <StackPanel>
         <GroupBox Header="Options" Margin="5">
             <StackPanel>
@@ -17,7 +17,7 @@
                 </DockPanel>
                 <GroupBox Header="Multi-threading">
                     <WrapPanel>
-                        <Label Content="Maximum no. of download thread (too many can affect web browsing):" />
+                        <Label Content="Max no. of download thread for each file (too many can affect web browsing):" />
                         <ComboBox Width="50" Name="cbThreads">
                             <ComboBoxItem>1</ComboBoxItem>
                             <ComboBoxItem>2</ComboBoxItem>

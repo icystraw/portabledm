@@ -1,18 +1,12 @@
 ﻿using partialdownloadgui.Components;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+using System.Web;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace partialdownloadgui
 {
@@ -36,7 +30,26 @@ namespace partialdownloadgui
             {
                 btnBrowse.Content = App.AppSettings.DownloadFolder;
             }
-            // to do
+            if (TcpServer.YoutubeUrls.Count == 0) return;
+            string[] urls = TcpServer.YoutubeUrls.ToArray();
+            foreach (string url in urls)
+            {
+                NameValueCollection parameters = HttpUtility.ParseQueryString(new Uri(url).Query);
+                YoutubeVideo v = new();
+                if (parameters.Get("mime") != null) v.MimeType = parameters.Get("mime");
+                else v.MimeType = string.Empty;
+                try
+                {
+                    if (parameters.Get("clen") != null) v.ContentLength = Convert.ToInt64(parameters.Get("clen"));
+                }
+                catch { }
+                v.Url = url;
+
+                CheckBox cb = new();
+                cb.Tag = v;
+                cb.Content = v.MimeType + ", " + Util.getShortFileSize(v.ContentLength);
+                spVideos.Children.Add(cb);
+            }
         }
 
         private void BrowseForDownloadedFiles()
