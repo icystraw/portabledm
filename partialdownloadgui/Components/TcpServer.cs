@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
@@ -11,9 +12,11 @@ namespace partialdownloadgui.Components
     {
         private static readonly int listenPort = 13000;
         private static string downloadUrl;
+        private static Stack<string> youtubeUrls = new(5);
         private static Thread serverThread;
 
         public static string DownloadUrl { get => downloadUrl; set => downloadUrl = value; }
+        public static Stack<string> YoutubeUrls { get => youtubeUrls; set => youtubeUrls = value; }
 
         public static void Start()
         {
@@ -82,7 +85,13 @@ namespace partialdownloadgui.Components
                     else if (request.StartsWith("GET /") && request.Contains(" HTTP"))
                     {
                         string base64Url = request.Substring(5, request.IndexOf(" HTTP") - 5);
-                        downloadUrl = Util.convertFromBase64(base64Url);
+                        string url = Util.convertFromBase64(base64Url);
+                        if (url.Contains("googlevideo.com/videoplayback"))
+                        {
+                            // bypass the initial congestion window
+                            if (!url.Contains("initcwndbps")) youtubeUrls.Push(url);
+                        }
+                        else downloadUrl = url;
                     }
                     client.Close();
                 }
