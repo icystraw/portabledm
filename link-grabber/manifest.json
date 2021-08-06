@@ -6,8 +6,15 @@
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": [ "downloads", "storage", "tabs", "webRequest" ],
-  "host_permissions": [ "<all_urls>" ],
+  "permissions": [
+    "downloads",
+    "storage",
+    "tabs",
+    "webRequest"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "action": {
     "default_icon": {
       "16": "16.png",

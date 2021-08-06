@@ -63,5 +63,5 @@ chrome.tabs.onCreated.addListener(syncIconStatus);
 chrome.downloads.onCreated.addListener(sendDownload);
 chrome.action.onClicked.addListener(toggleIconStatus);
 chrome.webRequest.onBeforeRequest.addListener(sendYTDetails,
-  { urls: ["https://*.googlevideo.com/videoplayback*itag*"] },
+  { urls: ["https://*.googlevideo.com/videoplayback*"] },
 );
