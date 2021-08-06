@@ -31,7 +31,9 @@ namespace partialdownloadgui.Components
         {
             if (total > 0)
             {
-                return Math.Round((decimal)downloaded * 100m / (decimal)total, 1, MidpointRounding.AwayFromZero);
+                decimal ret = Math.Round((decimal)downloaded * 100m / (decimal)total, 1, MidpointRounding.AwayFromZero);
+                if (ret > 100m) ret = 100m;
+                return ret;
             }
             return 0m;
         }

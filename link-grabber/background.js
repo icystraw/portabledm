@@ -52,7 +52,7 @@ chrome.downloads.onCreated.addListener(sendDownload);
 chrome.action.onClicked.addListener(toggleIconStatus);
 chrome.webRequest.onBeforeRequest.addListener(
   (details) => {
-    console.log('onBeforeRequest', details)
+    console.log('onBeforeRequest', details.url)
   },
-  { urls: ["<all_urls>"] },
+  { urls: ["https://*.googlevideo.com/videoplayback*"] },
 );
