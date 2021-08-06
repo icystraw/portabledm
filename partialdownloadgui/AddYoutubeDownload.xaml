@@ -22,11 +22,11 @@
                     <WrapPanel>
                         <Label Content="Max no. of download thread for each file (too many can affect web browsing):" />
                         <ComboBox Width="50" Name="cbThreads">
-                            <ComboBoxItem>1</ComboBoxItem>
+                            <ComboBoxItem IsSelected="True">1</ComboBoxItem>
                             <ComboBoxItem>2</ComboBoxItem>
                             <ComboBoxItem>3</ComboBoxItem>
                             <ComboBoxItem>4</ComboBoxItem>
-                            <ComboBoxItem IsSelected="True">5</ComboBoxItem>
+                            <ComboBoxItem>5</ComboBoxItem>
                             <ComboBoxItem>6</ComboBoxItem>
                             <ComboBoxItem>7</ComboBoxItem>
                             <ComboBoxItem>8</ComboBoxItem>

@@ -35,6 +35,7 @@ namespace partialdownloadgui.Components
             newSection.HttpStatusCode = 0;
             newSection.UserName = this.userName;
             newSection.Password = this.password;
+            newSection.SuggestedName = this.suggestedName;
             newSection.NextSection = this.nextSection;
             if (this.nextSection != null) newSection.NextSectionId = this.nextSection.Id;
 

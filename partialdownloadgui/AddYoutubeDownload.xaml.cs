@@ -85,7 +85,7 @@ namespace partialdownloadgui
                     DownloadSection ds = new();
                     ds.Url = v.Url;
                     ds.End = (-1);
-                    ds.SuggestedName = Util.removeInvalidCharFromFileName(v.MimeType);
+                    ds.SuggestedName = v.MimeType.Replace('/', '.');
 
                     try
                     {

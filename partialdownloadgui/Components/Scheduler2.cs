@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Threading;
 
@@ -62,25 +63,6 @@ namespace partialdownloadgui.Components
                 {
                     downloaders[i].StopDownloading();
                 }
-            }
-        }
-
-        private void StopDownloadExcept(DownloadSection ds)
-        {
-            for (int i = 0; i < NoDownloader; i++)
-            {
-                if (downloaders[i] != null && downloaders[i].DownloadSection != ds)
-                {
-                    downloaders[i].StopDownloading();
-                }
-            }
-        }
-
-        private void CancelSectionsExcept(DownloadSection ds)
-        {
-            foreach (DownloadSection section in download.Sections)
-            {
-                if (section != ds) section.DownloadStatus = DownloadStatus.LogicalErrorOrCancelled;
             }
         }
 
@@ -168,20 +150,33 @@ namespace partialdownloadgui.Components
             }
         }
 
-        private bool CancelOtherSectionsIf200SectionExists()
+        private bool DealWithSectionAnormalies()
         {
-            for (int i = 0; i < download.Sections.Count; i++)
+            int http200Secs = 0;
+            int http206Secs = 0;
+            bool anormalyFound = false;
+            foreach (DownloadSection ds in download.Sections)
             {
-                DownloadStatus ds = download.Sections[i].DownloadStatus;
-                // if there is a downloading section with HTTP 200, don't make more sections and cancel other sections
-                if (ds == DownloadStatus.Downloading && download.Sections[i].HttpStatusCode == System.Net.HttpStatusCode.OK)
+                if (ds.DownloadStatus == DownloadStatus.LogicalErrorOrCancelled)
                 {
-                    StopDownloadExcept(download.Sections[i]);
-                    CancelSectionsExcept(download.Sections[i]);
-                    return true;
+                    anormalyFound = true;
+                    break;
+                }
+                HttpStatusCode code = ds.HttpStatusCode;
+                if (code == HttpStatusCode.OK) http200Secs++;
+                if (code == HttpStatusCode.PartialContent) http206Secs++;
+            }
+            if (http200Secs > 1) anormalyFound = true;
+            if (http206Secs > 0 && http200Secs > 0) anormalyFound = true;
+            if (anormalyFound)
+            {
+                StopDownload();
+                foreach (DownloadSection ds in download.Sections)
+                {
+                    ds.DownloadStatus = DownloadStatus.LogicalErrorOrCancelled;
                 }
             }
-            return false;
+            return anormalyFound;
         }
 
         private void TryDownloadingAllUnfinishedSections()
@@ -196,20 +191,17 @@ namespace partialdownloadgui.Components
             }
         }
 
-        private void ProcessSections()
+        private bool ProcessSections()
         {
-            if (download.SummarySection.DownloadStatus == DownloadStatus.Finished) return;
-            if (CancelOtherSectionsIf200SectionExists()) return;
+            if (DealWithSectionAnormalies()) return false;
             CreateNewSectionIfFeasible();
             TryDownloadingAllUnfinishedSections();
+            return true;
         }
 
         private DownloadStatus GetDownloadStatus()
         {
-            if (exMessage != null) return DownloadStatus.DownloadError;
-            if (IsDownloading()) return DownloadStatus.Downloading;
-            if (IsDownloadFinished()) return DownloadStatus.Finished;
-            return DownloadStatus.Stopped;
+            return download.SummarySection.DownloadStatus;
         }
 
         public ProgressView GetDownloadStatusView()
@@ -279,12 +271,6 @@ namespace partialdownloadgui.Components
 
         private void JoinSectionsToFile()
         {
-            if (download.Sections.Count == 0) return;
-            // make sure the download cannot continue
-            if (!IsDownloadHalted()) return;
-            // is download already finished?
-            if (download.SummarySection.DownloadStatus == DownloadStatus.Finished) return;
-
             DownloadSection ds = download.Sections[0];
             Stream streamDest = null, streamSection = null;
             byte[] buffer = new byte[bufferSize];
@@ -335,7 +321,6 @@ namespace partialdownloadgui.Components
                 {
                     download.SummarySection.End = totalFileSize - 1;
                 }
-                download.SummarySection.DownloadStatus = DownloadStatus.Finished;
             }
             finally
             {
@@ -360,14 +345,12 @@ namespace partialdownloadgui.Components
 
         public bool IsDownloadFinished()
         {
-            if (download.SummarySection.DownloadStatus == DownloadStatus.Finished) return true;
-            return false;
+            return download.SummarySection.DownloadStatus == DownloadStatus.Finished;
         }
 
         public bool IsDownloading()
         {
-            if (downloadThread != null && downloadThread.IsAlive) return true;
-            return false;
+            return download.SummarySection.DownloadStatus == DownloadStatus.Downloading;
         }
 
         public bool IsDownloadResumable()
@@ -398,8 +381,9 @@ namespace partialdownloadgui.Components
 
         public void Start()
         {
-            if (download.SummarySection.DownloadStatus == DownloadStatus.Finished) return;
-            if (IsDownloading()) return;
+            if (IsDownloadFinished() || IsDownloading()) return;
+            download.SummarySection.DownloadStatus = DownloadStatus.Downloading;
+            this.exMessage = null;
             sc = new();
             this.downloadStopFlag = false;
             downloadThread = new(new ThreadStart(DownloadThreadProc));
@@ -414,22 +398,31 @@ namespace partialdownloadgui.Components
                 if (this.downloadStopFlag)
                 {
                     StopDownload();
+                    download.SummarySection.DownloadStatus = DownloadStatus.Stopped;
                     return;
                 }
-                ProcessSections();
+                if (!ProcessSections())
+                {
+                    this.exMessage = new Exception("Section anomalies exist. Try to re-download with single thread.");
+                    download.SummarySection.DownloadStatus = DownloadStatus.DownloadError;
+                    return;
+                }
                 Thread.Sleep(500);
                 if (IsDownloadHalted()) break;
             }
             try
             {
                 JoinSectionsToFile();
-                CleanTempFiles();
-                this.exMessage = null;
             }
             catch (Exception ex)
             {
                 this.exMessage = ex;
+                download.SummarySection.DownloadStatus = DownloadStatus.DownloadError;
+                return;
             }
+            CleanTempFiles();
+            this.exMessage = null;
+            download.SummarySection.DownloadStatus = DownloadStatus.Finished;
         }
     }
 }
