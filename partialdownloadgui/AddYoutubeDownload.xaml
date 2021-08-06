@@ -1,0 +1,46 @@
+﻿<Window x:Class="partialdownloadgui.AddYoutubeDownload"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:partialdownloadgui"
+        mc:Ignorable="d"
+        Title="AddYoutubeDownload" Background="#FFF2F5FC" Width="600" ShowInTaskbar="False" SizeToContent="Height" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Loaded="Window_Loaded">
+    <StackPanel>
+        <GroupBox Header="Options" Margin="5">
+            <StackPanel>
+                <Label>Below are the recent Youtube videos you have watched, select the ones you would like to download.</Label>
+                <StackPanel Name="spVideos" />
+                <DockPanel Margin="0,5,0,0">
+                    <Label Content="Save to folder:" DockPanel.Dock="Left"></Label>
+                    <Button Name="btnBrowse" Content="Choose location..." Click="btnBrowse_Click" Margin="0,0,5,0" Style="{DynamicResource RoundCorner}"></Button>
+                </DockPanel>
+                <GroupBox Header="Multi-threading">
+                    <WrapPanel>
+                        <Label Content="Maximum no. of download thread (too many can affect web browsing):" />
+                        <ComboBox Width="50" Name="cbThreads">
+                            <ComboBoxItem>1</ComboBoxItem>
+                            <ComboBoxItem>2</ComboBoxItem>
+                            <ComboBoxItem>3</ComboBoxItem>
+                            <ComboBoxItem>4</ComboBoxItem>
+                            <ComboBoxItem IsSelected="True">5</ComboBoxItem>
+                            <ComboBoxItem>6</ComboBoxItem>
+                            <ComboBoxItem>7</ComboBoxItem>
+                            <ComboBoxItem>8</ComboBoxItem>
+                            <ComboBoxItem>9</ComboBoxItem>
+                            <ComboBoxItem>10</ComboBoxItem>
+                        </ComboBox>
+                    </WrapPanel>
+                </GroupBox>
+                <WrapPanel HorizontalAlignment="Center">
+                    <Button Name="btnOk" Margin="5" Width="40" Click="btnOk_Click" IsDefault="True" Style="{DynamicResource RoundCorner}">
+                        <Image Source="pack://application:,,,/Images/go.png" />
+                    </Button>
+                    <Button Name="btnCancel" Margin="5" Width="40" Click="btnCancel_Click" IsCancel="True" Style="{DynamicResource RoundCorner}">
+                        <Image Source="pack://application:,,,/Images/cancel.png" />
+                    </Button>
+                </WrapPanel>
+            </StackPanel>
+        </GroupBox>
+    </StackPanel>
+</Window>

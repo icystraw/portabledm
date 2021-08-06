@@ -22,6 +22,7 @@
 		<None Remove="Images\pause.png" />
 		<None Remove="Images\pencil.png" />
 		<None Remove="Images\play.png" />
+		<None Remove="Images\youtube.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -38,6 +39,7 @@
 		<Resource Include="Images\pause.png" />
 		<Resource Include="Images\pencil.png" />
 		<Resource Include="Images\play.png" />
+		<Resource Include="Images\youtube.png" />
 	</ItemGroup>
 
 </Project>

@@ -251,6 +251,18 @@ namespace partialdownloadgui
             }
         }
 
+        private void SeeIfThereIsDownloadFromYoutube()
+        {
+            if (TcpServer.YoutubeUrls.Count > 0)
+            {
+                btnAddYoutube.IsEnabled = true;
+            }
+            else
+            {
+                btnAddYoutube.IsEnabled = false;
+            }
+        }
+
         private void SeeIfThereIsDownloadFromBrowser()
         {
             if (string.IsNullOrEmpty(TcpServer.DownloadUrl)) return;
@@ -358,6 +370,7 @@ namespace partialdownloadgui
         {
             UpdateDownloadsStatus();
             UpdateControlsStatus();
+            SeeIfThereIsDownloadFromYoutube();
             SeeIfThereIsDownloadFromBrowser();
         }
 
@@ -462,6 +475,24 @@ namespace partialdownloadgui
         private void lstDownloads_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             btnOpenFolder_Click(this, null);
+        }
+
+        private void btnAddYoutube_Click(object sender, RoutedEventArgs e)
+        {
+            AddYoutubeDownload ad = new();
+            ad.Owner = this;
+            if (ad.ShowDialog() == true)
+            {
+                foreach (Download d in ad.Downloads)
+                {
+                    Scheduler2 s = new(d);
+                    ProgressView pv = s.GetDownloadStatusView();
+                    schedulers.Add(s);
+                    progressViews.Add(pv);
+                    downloadViews.Add(pv.DownloadView);
+                    s.Start();
+                }
+            }
         }
     }
 }
