@@ -89,13 +89,14 @@ namespace partialdownloadgui.Components
                         string url = Util.convertFromBase64(base64Url);
                         if (url.Contains("googlevideo.com/videoplayback"))
                         {
-                            string newUrl = Regex.Replace(url, @"(\brange=[^&]*&|[\?&]range=[^&]*$)", string.Empty);
-                            newUrl = Regex.Replace(newUrl, @"(\brn=[^&]*&|[\?&]rn=[^&]*$)", string.Empty);
-                            newUrl = Regex.Replace(newUrl, @"(\brbuf=[^&]*&|[\?&]rbuf=[^&]*$)", string.Empty);
-                            if (!youtubeUrls.Contains(newUrl))
+                            if (!url.Contains("initcwndbps"))
                             {
-                                if (youtubeUrls.Count >= 10) youtubeUrls.Dequeue();
-                                youtubeUrls.Enqueue(newUrl);
+                                string newUrl = Regex.Replace(url, @"[\?&]((range)|(rn)|(rbuf))=[^&]+", string.Empty);
+                                if (!youtubeUrls.Contains(newUrl))
+                                {
+                                    if (youtubeUrls.Count >= 10) youtubeUrls.Dequeue();
+                                    youtubeUrls.Enqueue(newUrl);
+                                }
                             }
                         }
                         else downloadUrl = url;

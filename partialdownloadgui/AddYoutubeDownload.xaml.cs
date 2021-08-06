@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
-using System.Text.RegularExpressions;
 using System.Web;
 using System.Windows;
 using System.Windows.Controls;
@@ -78,7 +77,39 @@ namespace partialdownloadgui
                 MessageBox.Show("You need to specify a folder for downloaded files.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
-            // to do
+            foreach (CheckBox cb in spVideos.Children)
+            {
+                if (cb != null && cb.IsChecked == true)
+                {
+                    YoutubeVideo v = cb.Tag as YoutubeVideo;
+                    DownloadSection ds = new();
+                    ds.Url = v.Url;
+                    ds.End = (-1);
+                    ds.SuggestedName = Util.removeInvalidCharFromFileName(v.MimeType);
+
+                    try
+                    {
+                        Util.downloadPreprocess(ds);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                        continue;
+                    }
+                    if (ds.DownloadStatus == DownloadStatus.DownloadError)
+                    {
+                        MessageBox.Show(ds.Error);
+                        continue;
+                    }
+
+                    Download d = new();
+                    d.DownloadFolder = App.AppSettings.DownloadFolder;
+                    d.NoDownloader = cbThreads.SelectedIndex + 1;
+                    d.SummarySection = ds;
+                    d.Sections.Add(d.SummarySection.Clone());
+                    downloads.Add(d);
+                }
+            }
             this.DialogResult = true;
             this.Close();
         }

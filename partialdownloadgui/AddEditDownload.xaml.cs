@@ -115,12 +115,12 @@ namespace partialdownloadgui
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.Message);
                 return;
             }
             if (ds.DownloadStatus == DownloadStatus.DownloadError)
             {
-                MessageBox.Show("Error occurred. Server response code was: " + ds.HttpStatusCode);
+                MessageBox.Show(ds.Error);
                 return;
             }
             download.SummarySection = ds;

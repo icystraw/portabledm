@@ -10,7 +10,10 @@
         <GroupBox Header="Options" Margin="5">
             <StackPanel>
                 <Label>Below are the recent Youtube videos you have watched, select the ones you would like to download.</Label>
-                <StackPanel Name="spVideos" />
+                <Label>The most recent video and its corresponding audio files are shown on the bottom of the list.</Label>
+                <Label>Try downloading them will give you greater chance of success.</Label>
+                <Label>The files with small sizes are often advertisements.</Label>
+                <StackPanel Name="spVideos" Margin="5" />
                 <DockPanel Margin="0,5,0,0">
                     <Label Content="Save to folder:" DockPanel.Dock="Left"></Label>
                     <Button Name="btnBrowse" Content="Choose location..." Click="btnBrowse_Click" Margin="0,0,5,0" Style="{DynamicResource RoundCorner}"></Button>
