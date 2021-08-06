@@ -236,6 +236,8 @@ namespace partialdownloadgui.Components
                     sv.HttpStatusCode = ds.HttpStatusCode;
                     sv.Status = ds.DownloadStatus;
                     long secTotal = ds.Total, secDownloaded = ds.BytesDownloaded;
+                    // if a 206 section has been splitted before, downloader could download a little more than needed.
+                    if (secTotal > 0 && secDownloaded > secTotal) secDownloaded = secTotal;
                     totalDownloaded += secDownloaded;
                     sv.Size = Util.getShortFileSize(secTotal);
                     sv.Progress = Util.getProgress(secDownloaded, secTotal);
@@ -243,8 +245,10 @@ namespace partialdownloadgui.Components
                     pv.SectionViews.Add(sv);
                     if (total > 0)
                     {
-                        long downloadedSquares = secDownloaded * 200 / total;
-                        long pendingSquares = secTotal * 200 / total - downloadedSquares;
+                        // make sure there are set number of squares for each section
+                        decimal totalSectionSquares = Math.Round((decimal)secTotal * 200m / (decimal)total, MidpointRounding.AwayFromZero);
+                        decimal downloadedSquares = Math.Round((decimal)secDownloaded * 200m / (decimal)total, MidpointRounding.AwayFromZero);
+                        decimal pendingSquares = totalSectionSquares - downloadedSquares;
                         for (long i = 0; i < downloadedSquares; i++) sb.Append('\u2593');
                         for (long i = 0; i < pendingSquares; i++) sb.Append('\u2591');
                     }

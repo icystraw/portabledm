@@ -6,8 +6,8 @@
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": [ "downloads", "storage", "tabs" ],
-  "host_permissions": [ "http://localhost:13000/" ],
+  "permissions": [ "downloads", "storage", "tabs", "webRequest" ],
+  "host_permissions": [ "<all_urls>" ],
   "action": {
     "default_icon": {
       "16": "16.png",
