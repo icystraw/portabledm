@@ -47,12 +47,21 @@ function setIconStyle(bEnabled) {
   }
 }
 
+function sendYTDetails(details) {
+  chrome.storage.local.get(["enabled"], function (result) {
+    var isEnabled = result.hasOwnProperty("enabled") ? result.enabled : true;
+    if (!isEnabled) return;
+    var encodedUrl = btoa(details.url);
+    fetch("http://localhost:13000/" + encodedUrl)
+      .catch((error) => {
+        console.error(error);
+      });
+  });
+}
+
 chrome.tabs.onCreated.addListener(syncIconStatus);
 chrome.downloads.onCreated.addListener(sendDownload);
 chrome.action.onClicked.addListener(toggleIconStatus);
-chrome.webRequest.onBeforeRequest.addListener(
-  (details) => {
-    console.log('onBeforeRequest', details.url)
-  },
-  { urls: ["https://*.googlevideo.com/videoplayback*"] },
+chrome.webRequest.onBeforeRequest.addListener(sendYTDetails,
+  { urls: ["https://*.googlevideo.com/videoplayback*itag*"] },
 );
