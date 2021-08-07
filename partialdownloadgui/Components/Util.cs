@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -179,6 +180,8 @@ namespace partialdownloadgui.Components
             try
             {
                 response = Downloader.Client.Send(request, HttpCompletionOption.ResponseHeadersRead);
+                Debug.WriteLine(response.Headers.ToString());
+                Debug.WriteLine(response.Content.Headers.ToString());
                 ds.HttpStatusCode = response.StatusCode;
                 // handle http redirection up to 5 times
                 for (int retry = 0; retry < 5; retry++)
@@ -250,6 +253,8 @@ namespace partialdownloadgui.Components
                 {
                     if (string.IsNullOrEmpty(ds.SuggestedName)) ds.SuggestedName = response.Content.Headers.ContentDisposition.FileName;
                 }
+                if (response.Content.Headers.ContentType != null && response.Content.Headers.ContentType.MediaType != null)
+                    ds.ContentType = response.Content.Headers.ContentType.MediaType;
                 response.Dispose();
                 ds.DownloadStatus = DownloadStatus.Stopped;
             }

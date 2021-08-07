@@ -172,6 +172,8 @@ namespace partialdownloadgui.Components
                 {
                     if (string.IsNullOrEmpty(this.downloadSection.SuggestedName)) this.downloadSection.SuggestedName = response.Content.Headers.ContentDisposition.FileName;
                 }
+                if (response.Content.Headers.ContentType != null && response.Content.Headers.ContentType.MediaType != null)
+                    this.downloadSection.ContentType = response.Content.Headers.ContentType.MediaType;
                 if (this.downloadStopFlag)
                 {
                     response.Dispose();

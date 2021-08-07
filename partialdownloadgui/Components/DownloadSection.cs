@@ -13,6 +13,7 @@ namespace partialdownloadgui.Components
             newSection.Start = this.start;
             newSection.End = this.end;
             newSection.SuggestedName = this.suggestedName;
+            newSection.ContentType = this.contentType;
             newSection.DownloadStatus = DownloadStatus.Stopped;
             newSection.BytesDownloaded = 0;
             newSection.HttpStatusCode = 0;
@@ -36,6 +37,7 @@ namespace partialdownloadgui.Components
             newSection.UserName = this.userName;
             newSection.Password = this.password;
             newSection.SuggestedName = this.suggestedName;
+            newSection.ContentType = this.contentType;
             newSection.NextSection = this.nextSection;
             if (this.nextSection != null) newSection.NextSectionId = this.nextSection.Id;
 
@@ -63,6 +65,7 @@ namespace partialdownloadgui.Components
         private DownloadStatus downloadStatus;
         private long bytesDownloaded;
         private HttpStatusCode httpStatusCode;
+        private string contentType;
         private string userName;
         private string password;
         private DownloadSection nextSection;
@@ -93,5 +96,6 @@ namespace partialdownloadgui.Components
         public string UserName { get => userName; set => userName = value; }
         public string Password { get => password; set => password = value; }
         public string Error { get => error; set => error = value; }
+        public string ContentType { get => contentType; set => contentType = value; }
     }
 }
