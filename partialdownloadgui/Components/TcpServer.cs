@@ -12,6 +12,7 @@ namespace partialdownloadgui.Components
     public class TcpServer
     {
         private static readonly int listenPort = 13000;
+        private static readonly int maxYoutubeVideosKept = 6;
         private static string downloadUrl;
         private static Queue<string> youtubeUrls = new();
         private static Thread serverThread;
@@ -92,7 +93,7 @@ namespace partialdownloadgui.Components
                             string newUrl = Regex.Replace(url, @"[\?&](range|rn|rbuf)=[^&]+", string.Empty);
                             if (!youtubeUrls.Contains(newUrl))
                             {
-                                if (youtubeUrls.Count >= 10) youtubeUrls.Dequeue();
+                                if (youtubeUrls.Count >= maxYoutubeVideosKept) youtubeUrls.Dequeue();
                                 youtubeUrls.Enqueue(newUrl);
                             }
                         }
