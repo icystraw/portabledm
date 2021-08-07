@@ -40,10 +40,10 @@ function syncIconStatus(tab) {
 
 function setIconStyle(bEnabled) {
   if (bEnabled) {
-    chrome.action.setIcon({ path: normalIcons });
+    chrome.browserAction.setIcon({ path: normalIcons });
   }
   else {
-    chrome.action.setIcon({ path: bwIcon });
+    chrome.browserAction.setIcon({ path: bwIcon });
   }
 }
 
@@ -61,7 +61,7 @@ function sendYTDetails(details) {
 
 chrome.tabs.onCreated.addListener(syncIconStatus);
 chrome.downloads.onCreated.addListener(sendDownload);
-chrome.action.onClicked.addListener(toggleIconStatus);
+chrome.browserAction.onClicked.addListener(toggleIconStatus);
 chrome.webRequest.onBeforeRequest.addListener(sendYTDetails,
   { urls: ["https://*.googlevideo.com/videoplayback*"] },
 );
