@@ -40,7 +40,8 @@ namespace partialdownloadgui
                 ds.Url = url;
                 ds.End = (-1);
                 NameValueCollection parameters = HttpUtility.ParseQueryString(new Uri(url).Query);
-                ds.SuggestedName = parameters.Get("mime") ?? string.Empty;
+                ds.SuggestedName = parameters.Get("itag") ?? string.Empty;
+                ds.SuggestedName += parameters.Get("mime") ?? string.Empty;
                 ds.SuggestedName = ds.SuggestedName.Replace('/', '.');
                 dsPreprocess.Add(ds);
                 Thread t = new(downloadPreprocess);
