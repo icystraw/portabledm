@@ -56,7 +56,10 @@ namespace partialdownloadgui
                 CheckBox cb = new();
                 cb.Tag = ds;
                 cb.Content = ds.SuggestedName + ", " + Util.getShortFileSize(ds.Total);
-                spVideos.Children.Add(cb);
+                if (ds.SuggestedName.Contains("video"))
+                    spVideos.Children.Add(cb);
+                else
+                    spAudios.Children.Add(cb);
             }
         }
 
@@ -96,7 +99,15 @@ namespace partialdownloadgui
                 MessageBox.Show("You need to specify a folder for downloaded files.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
-            foreach (CheckBox cb in spVideos.Children)
+            addDownload(spVideos);
+            addDownload(spAudios);
+            this.DialogResult = true;
+            this.Close();
+        }
+
+        private void addDownload(StackPanel sp)
+        {
+            foreach (CheckBox cb in sp.Children)
             {
                 if (cb != null && cb.IsChecked == true)
                 {
@@ -108,8 +119,6 @@ namespace partialdownloadgui
                     downloads.Add(d);
                 }
             }
-            this.DialogResult = true;
-            this.Close();
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
