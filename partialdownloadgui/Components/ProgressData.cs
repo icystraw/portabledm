@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace partialdownloadgui.Components
 {
-    public class ProgressView
+    public class ProgressData
     {
         private Guid downloadId;
         private DownloadView downloadView;
@@ -15,7 +15,7 @@ namespace partialdownloadgui.Components
         public List<SectionView> SectionViews { get => sectionViews; set => sectionViews = value; }
         public string ProgressBar { get => progressBar; set => progressBar = value; }
 
-        public ProgressView()
+        public ProgressData()
         {
             downloadView = new();
             sectionViews = new();

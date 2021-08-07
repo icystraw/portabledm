@@ -204,17 +204,17 @@ namespace partialdownloadgui.Components
             return download.SummarySection.DownloadStatus;
         }
 
-        public ProgressView GetDownloadStatusView()
+        public ProgressData GetDownloadStatusData()
         {
-            ProgressView pv = new();
-            pv.DownloadId = download.SummarySection.Id;
-            pv.DownloadView.Url = download.SummarySection.Url;
-            pv.DownloadView.DownloadFolder = download.DownloadFolder;
-            pv.DownloadView.Id = download.SummarySection.Id;
-            pv.DownloadView.FileName = Util.getDownloadFileNameFromDownloadSection(download.SummarySection);
-            pv.DownloadView.Size = Util.getShortFileSize(download.SummarySection.Total);
-            pv.DownloadView.Status = GetDownloadStatus();
-            pv.DownloadView.Error = this.exMessage == null ? string.Empty : this.exMessage.Message;
+            ProgressData pd = new();
+            pd.DownloadId = download.SummarySection.Id;
+            pd.DownloadView.Url = download.SummarySection.Url;
+            pd.DownloadView.DownloadFolder = download.DownloadFolder;
+            pd.DownloadView.Id = download.SummarySection.Id;
+            pd.DownloadView.FileName = Util.getDownloadFileNameFromDownloadSection(download.SummarySection);
+            pd.DownloadView.Size = Util.getShortFileSize(download.SummarySection.Total);
+            pd.DownloadView.Status = GetDownloadStatus();
+            pd.DownloadView.Error = this.exMessage == null ? string.Empty : this.exMessage.Message;
 
             long total = download.SummarySection.Total;
             long totalDownloaded = 0;
@@ -234,7 +234,7 @@ namespace partialdownloadgui.Components
                     sv.Size = Util.getShortFileSize(secTotal);
                     sv.Progress = Util.getProgress(secDownloaded, secTotal);
                     sv.Error = ds.Error;
-                    pv.SectionViews.Add(sv);
+                    pd.SectionViews.Add(sv);
                     if (total > 0)
                     {
                         // make sure there are set number of squares for each section
@@ -249,12 +249,12 @@ namespace partialdownloadgui.Components
                 while (ds != null);
             }
             download.SummarySection.BytesDownloaded = totalDownloaded;
-            pv.ProgressBar = sb.ToString();
+            pd.ProgressBar = sb.ToString();
             sc.RegisterBytes(totalDownloaded);
-            pv.DownloadView.Speed = Util.getShortFileSize(sc.GetSpeed()) + "/sec";
-            pv.DownloadView.Progress = Util.getProgress(totalDownloaded, total);
+            pd.DownloadView.Speed = Util.getShortFileSize(sc.GetSpeed()) + "/sec";
+            pd.DownloadView.Progress = Util.getProgress(totalDownloaded, total);
 
-            return pv;
+            return pd;
         }
 
         private bool IsDownloadHalted()
