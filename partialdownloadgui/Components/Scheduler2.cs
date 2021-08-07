@@ -317,6 +317,7 @@ namespace partialdownloadgui.Components
                     else break;
                 }
                 streamDest.Close();
+                download.SummarySection.FileName = fileNameWithPath;
                 if (download.SummarySection.Start == 0 && download.SummarySection.End < 0 && download.SummarySection.HttpStatusCode == System.Net.HttpStatusCode.OK)
                 {
                     download.SummarySection.End = totalFileSize - 1;
