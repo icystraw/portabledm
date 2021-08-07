@@ -11,7 +11,7 @@
             <StackPanel>
                 <Label>Below are the recent Youtube videos you have watched, select the ones you would like to download.</Label>
                 <Label>The most recent video and its corresponding audio files are shown on the bottom of the list.</Label>
-                <Label>Try downloading them will give you greater chance of success.</Label>
+                <Label>The quality of the video and audio is the same as what you have watched on Youtube.</Label>
                 <Label>The files with small sizes are often advertisements.</Label>
                 <StackPanel Name="spVideos" Margin="5" />
                 <DockPanel Margin="0,5,0,0">
