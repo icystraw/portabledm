@@ -25,6 +25,7 @@
                     <Label Content="Save to folder:" DockPanel.Dock="Left"></Label>
                     <Button Name="btnBrowse" Content="Choose location..." Click="btnBrowse_Click" Margin="0,0,5,0" Style="{DynamicResource RoundCorner}"></Button>
                 </DockPanel>
+                <CheckBox Name="cbCombine" IsChecked="True" Margin="5">Combine files and output single .mkv file</CheckBox>
                 <GroupBox Header="Multi-threading">
                     <WrapPanel>
                         <Label Content="Max no. of download thread for each file (too many can affect web browsing):" />

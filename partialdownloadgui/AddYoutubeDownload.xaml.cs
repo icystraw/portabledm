@@ -21,6 +21,7 @@ namespace partialdownloadgui
         }
 
         private List<Download> downloads = new();
+        private Guid downloadGroup = Guid.NewGuid();
 
         public List<Download> Downloads { get => downloads; set => downloads = value; }
 
@@ -120,6 +121,7 @@ namespace partialdownloadgui
                     d.NoDownloader = cbThreads.SelectedIndex + 1;
                     d.SummarySection = cb.Tag as DownloadSection;
                     d.Sections.Add(d.SummarySection.Clone());
+                    if (cbCombine.IsChecked == true) d.DownloadGroup = downloadGroup;
                     downloads.Add(d);
                 }
             }
