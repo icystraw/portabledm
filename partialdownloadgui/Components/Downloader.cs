@@ -220,7 +220,7 @@ namespace partialdownloadgui.Components
                 streamFile.Close();
                 streamHttp.Close();
                 response.Dispose();
-                if (currentEnd < 0 && this.downloadSection.Start == 0 && this.downloadSection.HttpStatusCode == HttpStatusCode.OK)
+                if (this.downloadSection.HttpStatusCode == HttpStatusCode.OK && currentEnd < 0)
                 {
                     this.downloadSection.End = this.downloadSection.BytesDownloaded - 1;
                 }

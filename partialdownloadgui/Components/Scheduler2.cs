@@ -326,10 +326,8 @@ namespace partialdownloadgui.Components
                 }
                 streamDest.Close();
                 download.SummarySection.FileName = fileNameWithPath;
-                if (download.SummarySection.Start == 0 && download.SummarySection.End < 0 && download.SummarySection.HttpStatusCode == System.Net.HttpStatusCode.OK)
-                {
-                    download.SummarySection.End = totalFileSize - 1;
-                }
+                download.SummarySection.Start = download.Sections[0].Start;
+                download.SummarySection.End = download.SummarySection.Start + totalFileSize - 1;
             }
             finally
             {
