@@ -39,9 +39,13 @@ namespace partialdownloadgui
                 DownloadSection ds = new();
                 ds.Url = url;
                 ds.End = (-1);
+                ds.SuggestedName = "videoplayback";
                 NameValueCollection parameters = HttpUtility.ParseQueryString(new Uri(url).Query);
-                ds.SuggestedName = parameters.Get("itag") ?? string.Empty;
-                ds.SuggestedName += parameters.Get("mime") ?? string.Empty;
+                if (parameters.Get("dur") != null)
+                {
+                    ds.SuggestedName = Util.getDurationFromParam(parameters.Get("dur"));
+                }
+                ds.SuggestedName += " " + (parameters.Get("mime") ?? string.Empty);
                 ds.SuggestedName = ds.SuggestedName.Replace('/', '.');
                 dsPreprocess.Add(ds);
                 Thread t = new(downloadPreprocess);

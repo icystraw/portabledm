@@ -281,5 +281,21 @@ namespace partialdownloadgui.Components
                 return getFileName(ds.Url);
             }
         }
+
+        public static string getDurationFromParam(string dur)
+        {
+            int seconds = 0;
+            try
+            {
+                seconds = Convert.ToInt32(decimal.Parse(dur));
+            }
+            catch { }
+            StringBuilder sb = new();
+            sb.Append(seconds / 60);
+            sb.Append("min ");
+            sb.Append(seconds % 60);
+            sb.Append("sec");
+            return sb.ToString();
+        }
     }
 }
