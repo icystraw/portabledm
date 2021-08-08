@@ -72,10 +72,10 @@ namespace partialdownloadgui
             Util.saveDownloadsToFile(downloads);
         }
 
-        private void UpdateDownloadsStatus()
+        private void UpdateDownloads()
         {
             bool bJustFinished = false;
-            List<Guid> downloadGroupRepository = new();
+            List<Guid> downloadGroupsWithJustFinishedDownloads = new();
             progressData = new();
             foreach (Scheduler2 s in schedulers)
             {
@@ -94,9 +94,9 @@ namespace partialdownloadgui
                         {
                             bJustFinished = true;
                             // does the finished download belong to any download group
-                            if (dv.DownloadGroup != Guid.Empty && !downloadGroupRepository.Contains(dv.DownloadGroup))
+                            if (dv.DownloadGroup != Guid.Empty && !downloadGroupsWithJustFinishedDownloads.Contains(dv.DownloadGroup))
                             {
-                                downloadGroupRepository.Add(dv.DownloadGroup);
+                                downloadGroupsWithJustFinishedDownloads.Add(dv.DownloadGroup);
                             }
                         }
                         dv.Status = pd.DownloadView.Status;
@@ -104,12 +104,13 @@ namespace partialdownloadgui
                     }
                 }
             }
-            if (downloadGroupRepository.Count > 0)
+            if (downloadGroupsWithJustFinishedDownloads.Count > 0)
             {
-                foreach (Guid g in downloadGroupRepository)
+                foreach (Guid g in downloadGroupsWithJustFinishedDownloads)
                 {
                     List<string> files = new();
                     string downloadFolder = string.Empty;
+                    // see if all files in this group have finished downloading
                     foreach (DownloadView dv in this.downloadViews)
                     {
                         if (dv.DownloadGroup == g)
@@ -126,11 +127,12 @@ namespace partialdownloadgui
                             }
                         }
                     }
+                    // merge to one mkv file
                     if (files.Count > 0)
                     {
                         StringBuilder sb = new();
                         sb.Append("-o \"");
-                        sb.Append(System.IO.Path.Combine(downloadFolder, DateTime.Now.ToString("yyyy-MMM-dd-HH-mm-ss.fff") + " combined.mkv\" "));
+                        sb.Append(System.IO.Path.Combine(downloadFolder, DateTime.Now.ToString("MMM-dd-HH-mm-ss.fff") + " combined.mkv\" "));
                         foreach (string f in files)
                         {
                             sb.Append('\"');
@@ -404,7 +406,7 @@ namespace partialdownloadgui
         private void Timer_Tick(object sender, EventArgs e)
         {
             timer.Stop();
-            UpdateDownloadsStatus();
+            UpdateDownloads();
             UpdateControlsStatus();
             SeeIfThereIsDownloadFromYoutube();
             SeeIfThereIsDownloadFromBrowser();

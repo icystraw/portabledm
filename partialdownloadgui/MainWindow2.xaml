@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:partialdownloadgui"
         mc:Ignorable="d"
-        Title="Portable HTTP Download Manager" Background="#FFF2F5FC" Height="450" Width="1000" Closed="Window_Closed" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen" Closing="Window_Closing" StateChanged="Window_StateChanged">
+        Title="Portable HTTP Download Manager" Background="#FFF2F5FC" Height="500" Width="1000" Closed="Window_Closed" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen" Closing="Window_Closing" StateChanged="Window_StateChanged">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
@@ -119,7 +119,7 @@
                                         <Setter Property="FrameworkElement.Visibility" Value="Collapsed"></Setter>
                                     </Style>
                                 </GridView.ColumnHeaderContainerStyle>
-                                <GridViewColumn>
+                                <GridViewColumn Width="450">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <DockPanel>

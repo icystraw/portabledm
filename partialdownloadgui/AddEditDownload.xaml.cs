@@ -115,12 +115,12 @@ namespace partialdownloadgui
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
             if (ds.DownloadStatus == DownloadStatus.DownloadError)
             {
-                MessageBox.Show(ds.Error);
+                MessageBox.Show(ds.Error, "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
             download.SummarySection = ds;
