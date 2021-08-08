@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace partialdownloadgui.Components
 {
@@ -8,25 +9,18 @@ namespace partialdownloadgui.Components
         private DownloadSection summarySection;
         private string downloadFolder;
         private int noDownloader;
+        private Guid downloadGroup;
 
         public List<DownloadSection> Sections { get => sections; set => sections = value; }
         public DownloadSection SummarySection { get => summarySection; set => summarySection = value; }
         public string DownloadFolder { get => downloadFolder; set => downloadFolder = value; }
         public int NoDownloader { get => noDownloader; set => noDownloader = value; }
+        public Guid DownloadGroup { get => downloadGroup; set => downloadGroup = value; }
 
         public Download()
         {
             summarySection = new();
             sections = new();
-        }
-
-        public void SetUrl(string url)
-        {
-            this.summarySection.Url = url;
-            foreach (DownloadSection ds in this.sections)
-            {
-                ds.Url = url;
-            }
         }
 
         public void SetCredentials(string userName, string password)
