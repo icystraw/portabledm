@@ -292,7 +292,7 @@ namespace partialdownloadgui.Components
             catch { }
             StringBuilder sb = new();
             sb.Append(seconds / 60);
-            sb.Append("min ");
+            sb.Append("min");
             sb.Append(seconds % 60);
             sb.Append("sec");
             return sb.ToString();
