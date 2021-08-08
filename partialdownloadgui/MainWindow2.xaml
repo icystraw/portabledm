@@ -144,7 +144,7 @@
                                                     </Image.Style>
                                                 </Image>
                                                 <StackPanel>
-                                                    <TextBlock Text="{Binding Path=FileName}" FontSize="14" FontWeight="Bold"></TextBlock>
+                                                    <TextBlock Text="{Binding Path=FileName}" FontSize="14" FontWeight="Bold" TextWrapping="Wrap"></TextBlock>
                                                     <WrapPanel Margin="2">
                                                         <TextBlock Text="{Binding Path=Size}"></TextBlock>
                                                         <TextBlock Text=", "></TextBlock>
