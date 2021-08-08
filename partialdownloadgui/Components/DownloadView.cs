@@ -14,6 +14,7 @@ namespace partialdownloadgui.Components
         private string speed;
         private DownloadStatus status;
         private string error;
+        private Guid downloadGroup;
         private object tag;
 
         public string FileName { get => fileName; set => fileName = value; }
@@ -68,6 +69,7 @@ namespace partialdownloadgui.Components
         public string Url { get => url; set => url = value; }
         public string DownloadFolder { get => downloadFolder; set => downloadFolder = value; }
         public object Tag { get => tag; set => tag = value; }
+        public Guid DownloadGroup { get => downloadGroup; set => downloadGroup = value; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

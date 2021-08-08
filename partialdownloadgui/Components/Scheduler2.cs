@@ -211,10 +211,18 @@ namespace partialdownloadgui.Components
             pd.DownloadView.Url = download.SummarySection.Url;
             pd.DownloadView.DownloadFolder = download.DownloadFolder;
             pd.DownloadView.Id = download.SummarySection.Id;
-            pd.DownloadView.FileName = Util.getDownloadFileNameFromDownloadSection(download.SummarySection);
+            if (IsDownloadFinished())
+            {
+                pd.DownloadView.FileName = download.SummarySection.FileName;
+            }
+            else
+            {
+                pd.DownloadView.FileName = Util.getDownloadFileNameFromDownloadSection(download.SummarySection);
+            }
             pd.DownloadView.Size = Util.getShortFileSize(download.SummarySection.Total);
             pd.DownloadView.Status = GetDownloadStatus();
             pd.DownloadView.Error = this.exMessage == null ? string.Empty : this.exMessage.Message;
+            pd.DownloadView.DownloadGroup = download.DownloadGroup;
 
             long total = download.SummarySection.Total;
             long totalDownloaded = 0;
@@ -283,7 +291,7 @@ namespace partialdownloadgui.Components
                     fileNameWithPath = Path.Combine(download.DownloadFolder, fileNameOnly);
                     if (File.Exists(fileNameWithPath))
                     {
-                        fileNameOnly = DateTime.Now.ToString("yyyy-MMM-dd-HH-mm-ss") + " " + fileNameOnly;
+                        fileNameOnly = DateTime.Now.ToString("yyyy-MMM-dd-HH-mm-ss.fff") + " " + fileNameOnly;
                         fileNameWithPath = Path.Combine(download.DownloadFolder, fileNameOnly);
                     }
                 }

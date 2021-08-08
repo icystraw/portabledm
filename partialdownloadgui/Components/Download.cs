@@ -21,6 +21,7 @@ namespace partialdownloadgui.Components
         {
             summarySection = new();
             sections = new();
+            downloadGroup = Guid.Empty;
         }
 
         public void SetCredentials(string userName, string password)

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Text;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -74,25 +75,69 @@ namespace partialdownloadgui
         private void UpdateDownloadsStatus()
         {
             bool bJustFinished = false;
+            List<Guid> downloadGroupRepository = new();
             progressData = new();
             foreach (Scheduler2 s in schedulers)
             {
-                ProgressData pv = s.GetDownloadStatusData();
-                progressData.Add(pv);
+                ProgressData pd = s.GetDownloadStatusData();
+                progressData.Add(pd);
                 foreach (DownloadView dv in downloadViews)
                 {
-                    if (dv.Id == pv.DownloadId)
+                    if (dv.Id == pd.DownloadId)
                     {
-                        dv.Size = pv.DownloadView.Size;
-                        dv.Progress = pv.DownloadView.Progress;
-                        dv.Speed = pv.DownloadView.Speed;
+                        dv.Size = pd.DownloadView.Size;
+                        dv.Progress = pd.DownloadView.Progress;
+                        dv.Speed = pd.DownloadView.Speed;
+                        dv.FileName = pd.DownloadView.FileName;
                         // if there is a download that has just completed
-                        if (dv.Status == DownloadStatus.Downloading && pv.DownloadView.Status == DownloadStatus.Finished)
+                        if (dv.Status == DownloadStatus.Downloading && pd.DownloadView.Status == DownloadStatus.Finished)
                         {
                             bJustFinished = true;
+                            // does the finished download belong to any download group
+                            if (dv.DownloadGroup != Guid.Empty && !downloadGroupRepository.Contains(dv.DownloadGroup))
+                            {
+                                downloadGroupRepository.Add(dv.DownloadGroup);
+                            }
                         }
-                        dv.Status = pv.DownloadView.Status;
+                        dv.Status = pd.DownloadView.Status;
                         break;
+                    }
+                }
+            }
+            if (downloadGroupRepository.Count > 0)
+            {
+                foreach (Guid g in downloadGroupRepository)
+                {
+                    List<string> files = new();
+                    string downloadFolder = string.Empty;
+                    foreach (DownloadView dv in this.downloadViews)
+                    {
+                        if (dv.DownloadGroup == g)
+                        {
+                            if (dv.Status != DownloadStatus.Finished)
+                            {
+                                files.Clear();
+                                break;
+                            }
+                            else
+                            {
+                                files.Add(dv.FileName);
+                                downloadFolder = dv.DownloadFolder;
+                            }
+                        }
+                    }
+                    if (files.Count > 0)
+                    {
+                        StringBuilder sb = new();
+                        sb.Append("-o \"");
+                        sb.Append(System.IO.Path.Combine(downloadFolder, DateTime.Now.ToString("yyyy-MMM-dd-HH-mm-ss.fff") + " combined.mkv\" "));
+                        foreach (string f in files)
+                        {
+                            sb.Append('\"');
+                            sb.Append(f);
+                            sb.Append("\" ");
+                        }
+                        Process.Start("mkvmerge.exe", sb.ToString()).WaitForExit();
                     }
                 }
             }
