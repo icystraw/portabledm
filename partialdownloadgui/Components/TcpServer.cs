@@ -4,7 +4,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace partialdownloadgui.Components
@@ -14,11 +13,11 @@ namespace partialdownloadgui.Components
         private static readonly int listenPort = 13000;
         private static readonly int maxYoutubeVideosKept = 6;
         private static string downloadUrl;
-        private static Queue<string> youtubeUrls = new();
+        private static Queue<YoutubeVideo> youtubeVideos = new();
         private static Thread serverThread;
 
         public static string DownloadUrl { get => downloadUrl; set => downloadUrl = value; }
-        public static Queue<string> YoutubeUrls { get => youtubeUrls; set => youtubeUrls = value; }
+        public static Queue<YoutubeVideo> YoutubeVideos { get => youtubeVideos; }
 
         public static void Start()
         {
@@ -86,18 +85,33 @@ namespace partialdownloadgui.Components
                     }
                     else if (request.StartsWith("GET /") && request.Contains(" HTTP"))
                     {
-                        string base64Url = request.Substring(5, request.IndexOf(" HTTP") - 5);
-                        string url = Util.convertFromBase64(base64Url);
-                        if (url.Contains("googlevideo.com/videoplayback"))
+                        string encodedUrl = request.Substring(5, request.IndexOf(" HTTP") - 5);
+                        if (encodedUrl.Contains("/")) // it is a Youtube url
                         {
-                            string newUrl = Regex.Replace(url, @"[\?&](range|rn|rbuf)=[^&]+", string.Empty);
-                            if (!youtubeUrls.Contains(newUrl))
+                            YoutubeVideo video = YoutubeVideo.ParseQuery(encodedUrl);
+                            if (video != null)
                             {
-                                if (youtubeUrls.Count >= maxYoutubeVideosKept) youtubeUrls.Dequeue();
-                                youtubeUrls.Enqueue(newUrl);
+                                bool foundSameUrl = false;
+                                foreach (YoutubeVideo v in youtubeVideos)
+                                {
+                                    if (v.Url == video.Url)
+                                    {
+                                        v.Title = video.Title;
+                                        foundSameUrl = true;
+                                        break;
+                                    }
+                                }
+                                if (!foundSameUrl)
+                                {
+                                    if (youtubeVideos.Count >= maxYoutubeVideosKept) youtubeVideos.Dequeue();
+                                    youtubeVideos.Enqueue(video);
+                                }
                             }
                         }
-                        else downloadUrl = url;
+                        else
+                        {
+                            downloadUrl = Uri.UnescapeDataString(encodedUrl);
+                        }
                     }
                     client.Close();
                 }

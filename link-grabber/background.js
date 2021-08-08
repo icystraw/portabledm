@@ -8,7 +8,7 @@ function sendDownload(downloadItem) {
     var startTime = Date.parse(downloadItem.startTime);
     var now = Date.now();
     if (Math.abs(now - startTime) < 1000) {
-      var encodedUrl = btoa(downloadItem.finalUrl);
+      var encodedUrl = encodeURIComponent(downloadItem.finalUrl);
       fetch("http://localhost:13000/" + encodedUrl)
         .then(function (response) {
           if (response.status == 403) {
@@ -51,11 +51,20 @@ function sendYTDetails(details) {
   chrome.storage.local.get(["enabled"], function (result) {
     var isEnabled = result.hasOwnProperty("enabled") ? result.enabled : true;
     if (!isEnabled) return;
-    var encodedUrl = btoa(details.url);
-    fetch("http://localhost:13000/" + encodedUrl)
-      .catch((error) => {
-        console.error(error);
-      });
+    if (details.tabId == (-1)) return;
+    chrome.tabs.get(details.tabId, function (tab) {
+      var encodedUrl;
+      if (tab.title) {
+        encodedUrl = encodeURIComponent(details.url) + "/" + encodeURIComponent(tab.title);
+      }
+      else {
+        encodedUrl = encodeURIComponent(details.url) + "/" + "YouTube";
+      }
+      fetch("http://localhost:13000/" + encodedUrl)
+        .catch((error) => {
+          console.error(error);
+        });
+    });
   });
 }
 

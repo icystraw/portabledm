@@ -15,19 +15,6 @@ namespace partialdownloadgui.Components
         public static readonly string settingsFileName = "settings.json";
         public static readonly string downloadsFileName = "downloads.json";
 
-        public static string convertFromBase64(string base64String)
-        {
-            try
-            {
-                return Encoding.GetEncoding(28591).GetString(Convert.FromBase64String(base64String));
-
-            }
-            catch
-            {
-                return string.Empty;
-            }
-        }
-
         public static decimal getProgress(long downloaded, long total)
         {
             if (total > 0)

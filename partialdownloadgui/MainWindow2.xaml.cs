@@ -290,7 +290,7 @@ namespace partialdownloadgui
 
         private void SeeIfThereIsDownloadFromYoutube()
         {
-            if (TcpServer.YoutubeUrls.Count > 0)
+            if (TcpServer.YoutubeVideos.Count > 0)
             {
                 btnAddYoutube.IsEnabled = true;
             }

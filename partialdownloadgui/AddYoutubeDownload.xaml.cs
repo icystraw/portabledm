@@ -31,23 +31,16 @@ namespace partialdownloadgui
             {
                 btnBrowse.Content = App.AppSettings.DownloadFolder;
             }
-            if (TcpServer.YoutubeUrls.Count == 0) return;
-            string[] urls = TcpServer.YoutubeUrls.ToArray();
+            if (TcpServer.YoutubeVideos.Count == 0) return;
+            YoutubeVideo[] videos = TcpServer.YoutubeVideos.ToArray();
             List<DownloadSection> dsPreprocess = new();
             List<Thread> threads = new();
-            foreach (string url in urls)
+            foreach (YoutubeVideo v in videos)
             {
                 DownloadSection ds = new();
-                ds.Url = url;
+                ds.Url = v.Url;
                 ds.End = (-1);
-                ds.SuggestedName = "videoplayback";
-                NameValueCollection parameters = HttpUtility.ParseQueryString(new Uri(url).Query);
-                if (parameters.Get("dur") != null)
-                {
-                    ds.SuggestedName = Util.getDurationFromParam(parameters.Get("dur"));
-                }
-                ds.SuggestedName += " " + (parameters.Get("mime") ?? string.Empty);
-                ds.SuggestedName = ds.SuggestedName.Replace('/', '.');
+                ds.SuggestedName = v.Duration + " " + v.Title + " " + v.Mime;
                 dsPreprocess.Add(ds);
                 Thread t = new(downloadPreprocess);
                 threads.Add(t);
