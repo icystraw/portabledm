@@ -17,7 +17,15 @@ namespace partialdownloadgui.Components
         private Guid downloadGroup;
         private object tag;
 
-        public string FileName { get => fileName; set => fileName = value; }
+        public string FileName
+        {
+            get => fileName;
+            set
+            {
+                fileName = value;
+                OnPropertyChanged(nameof(FileName));
+            }
+        }
         public string Size
         {
             get => size;
