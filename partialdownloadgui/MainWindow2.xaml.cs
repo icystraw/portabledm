@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
@@ -526,6 +527,47 @@ namespace partialdownloadgui
                     AddDownloadWorker(d).Start();
                 }
             }
+        }
+
+        private void btnSortFileName_Click(object sender, RoutedEventArgs e)
+        {
+            SortUsing("FileName");
+        }
+
+        private void btnSortProgress_Click(object sender, RoutedEventArgs e)
+        {
+            SortUsing("Progress");
+        }
+
+        private void SortUsing(string property)
+        {
+            ListCollectionView view = (ListCollectionView)CollectionViewSource.GetDefaultView(lstDownloads.ItemsSource);
+            if (view.SortDescriptions.Count > 0)
+            {
+                if (view.SortDescriptions[0].PropertyName == property)
+                {
+                    if (view.SortDescriptions[0].Direction == System.ComponentModel.ListSortDirection.Ascending)
+                    {
+                        view.SortDescriptions.Clear();
+                        view.SortDescriptions.Add(new System.ComponentModel.SortDescription(property, System.ComponentModel.ListSortDirection.Descending));
+                    }
+                    else
+                    {
+                        view.SortDescriptions.Clear();
+                        view.SortDescriptions.Add(new System.ComponentModel.SortDescription(property, System.ComponentModel.ListSortDirection.Ascending));
+                    }
+                }
+                else
+                {
+                    view.SortDescriptions.Clear();
+                    view.SortDescriptions.Add(new System.ComponentModel.SortDescription(property, System.ComponentModel.ListSortDirection.Ascending));
+                }
+            }
+            else
+            {
+                view.SortDescriptions.Add(new System.ComponentModel.SortDescription(property, System.ComponentModel.ListSortDirection.Ascending));
+            }
+
         }
     }
 }

@@ -33,6 +33,14 @@
                                 </ToolTip>
                             </Button.ToolTip>
                         </Button>
+                        <Button Name="btnAddYoutube" Click="btnAddYoutube_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}" IsEnabled="False">
+                            <Image Source="pack://application:,,,/Images/youtube.png" />
+                            <Button.ToolTip>
+                                <ToolTip>
+                                    <TextBlock>Youtube download is available! Click to see available files.</TextBlock>
+                                </ToolTip>
+                            </Button.ToolTip>
+                        </Button>
                         <Button Name="btnEdit" Click="btnEdit_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
                             <Image Source="pack://application:,,,/Images/pencil.png" />
                             <Button.ToolTip>
@@ -73,11 +81,19 @@
                                 </ToolTip>
                             </Button.ToolTip>
                         </Button>
-                        <Button Name="btnAddYoutube" Click="btnAddYoutube_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}" IsEnabled="False">
-                            <Image Source="pack://application:,,,/Images/youtube.png" />
+                        <Button Name="btnSortFileName" Click="btnSortFileName_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
+                            <Image Source="pack://application:,,,/Images/sortfile.png" />
                             <Button.ToolTip>
                                 <ToolTip>
-                                    <TextBlock>Youtube download is available! Click to see available files.</TextBlock>
+                                    <TextBlock>Sort download by file name.</TextBlock>
+                                </ToolTip>
+                            </Button.ToolTip>
+                        </Button>
+                        <Button Name="btnSortProgress" Click="btnSortProgress_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
+                            <Image Source="pack://application:,,,/Images/sortprogress.png" />
+                            <Button.ToolTip>
+                                <ToolTip>
+                                    <TextBlock>Sort download by download progress.</TextBlock>
                                 </ToolTip>
                             </Button.ToolTip>
                         </Button>

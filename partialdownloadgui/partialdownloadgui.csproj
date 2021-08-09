@@ -22,6 +22,8 @@
 		<None Remove="Images\pause.png" />
 		<None Remove="Images\pencil.png" />
 		<None Remove="Images\play.png" />
+		<None Remove="Images\sortfile.png" />
+		<None Remove="Images\sortprogress.png" />
 		<None Remove="Images\youtube.png" />
 	</ItemGroup>
 
@@ -39,6 +41,8 @@
 		<Resource Include="Images\pause.png" />
 		<Resource Include="Images\pencil.png" />
 		<Resource Include="Images\play.png" />
+		<Resource Include="Images\sortfile.png" />
+		<Resource Include="Images\sortprogress.png" />
 		<Resource Include="Images\youtube.png" />
 	</ItemGroup>
 
