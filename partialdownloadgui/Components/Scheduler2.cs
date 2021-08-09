@@ -44,6 +44,10 @@ namespace partialdownloadgui.Components
                 throw new ArgumentNullException(nameof(d));
             }
             download = d;
+            if (download.SummarySection.DownloadStatus == DownloadStatus.Downloading)
+            {
+                download.SummarySection.DownloadStatus = DownloadStatus.Stopped;
+            }
         }
 
         private int FindFreeDownloader()
@@ -375,15 +379,22 @@ namespace partialdownloadgui.Components
             return true;
         }
 
-        public void Stop(bool cancel)
+        public void Stop(bool cancel, bool wait)
         {
             if (IsDownloading())
             {
                 this.downloadStopFlag = true;
                 if (cancel)
                 {
-                    downloadThread.Join();
+                    if (downloadThread != null && downloadThread.IsAlive) downloadThread.Join();
                     CleanTempFiles();
+                }
+                else
+                {
+                    if (wait)
+                    {
+                        if (downloadThread != null && downloadThread.IsAlive) downloadThread.Join();
+                    }
                 }
             }
             else if (cancel) CleanTempFiles();

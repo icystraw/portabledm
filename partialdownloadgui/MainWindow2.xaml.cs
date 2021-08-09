@@ -55,11 +55,11 @@ namespace partialdownloadgui
             }
         }
 
-        private void StopAllDownloads()
+        private void StopAllDownloads(bool wait)
         {
             foreach (Scheduler2 s in schedulers)
             {
-                s.Stop(false);
+                s.Stop(false, wait);
             }
         }
 
@@ -329,7 +329,7 @@ namespace partialdownloadgui
             if (s != null)
             {
                 if (s.IsDownloadFinished()) return;
-                if (s.IsDownloading()) s.Stop(false);
+                if (s.IsDownloading()) s.Stop(false, true);
 
                 AddEditDownload ad = new();
                 ad.Owner = this;
@@ -357,12 +357,12 @@ namespace partialdownloadgui
                 {
                     if (MessageBox.Show("This download is not resumable. Do you still want to stop it?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                     {
-                        s.Stop(false);
+                        s.Stop(false, false);
                     }
                 }
                 else
                 {
-                    s.Stop(false);
+                    s.Stop(false, false);
                 }
             }
         }
@@ -378,7 +378,7 @@ namespace partialdownloadgui
                 {
                     if (MessageBox.Show("Download is not finished. Do you want to delete?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No) return;
                 }
-                s.Stop(true);
+                s.Stop(true, true);
                 schedulers.Remove(s);
                 downloadViews.Remove(dv);
             }
@@ -388,7 +388,7 @@ namespace partialdownloadgui
         {
             timer.Stop();
             TcpServer.Stop();
-            StopAllDownloads();
+            StopAllDownloads(true);
             try
             {
                 SaveDownloadsToFile();

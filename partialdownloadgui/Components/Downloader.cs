@@ -44,6 +44,7 @@ namespace partialdownloadgui.Components
         public Downloader(DownloadSection section)
         {
             this.DownloadSection = section;
+            ResetDownloadStatus();
         }
 
         public void StopDownloading()
@@ -52,11 +53,6 @@ namespace partialdownloadgui.Components
             this.downloadStopFlag = true;
             if (downloadThread != null && downloadThread.IsAlive) downloadThread.Join();
             this.downloadStopFlag = false;
-        }
-
-        public void WaitForFinish()
-        {
-            if (downloadThread != null && downloadThread.IsAlive) downloadThread.Join();
         }
 
         public bool IsBusy()
@@ -69,6 +65,7 @@ namespace partialdownloadgui.Components
         {
             if (IsBusy()) return false;
             this.downloadSection = newSection;
+            ResetDownloadStatus();
             return true;
         }
 
@@ -101,6 +98,14 @@ namespace partialdownloadgui.Components
             }
             downloadThread = new(new ThreadStart(DownloadThreadProc));
             downloadThread.Start();
+        }
+
+        private void ResetDownloadStatus()
+        {
+            if (this.downloadSection.DownloadStatus == DownloadStatus.PrepareToDownload || this.downloadSection.DownloadStatus == DownloadStatus.Downloading)
+            {
+                this.downloadSection.DownloadStatus = DownloadStatus.Stopped;
+            }
         }
 
         private void DownloadThreadProc()

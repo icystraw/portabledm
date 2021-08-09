@@ -99,6 +99,16 @@
                         </Button>
                     </StackPanel>
                     <ListView Name="lstDownloads" SelectionChanged="lstDownloads_SelectionChanged" MouseDoubleClick="lstDownloads_MouseDoubleClick" Margin="5">
+                        <ListView.Resources>
+                            <Style TargetType="ListViewItem">
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="#FF7F9DFF"></Setter>
+                                        <Setter Property="Foreground" Value="White"></Setter>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListView.Resources>
                         <ListView.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Open Download Folder" Name="mnuOpenFolder" Click="mnuOpenFolder_Click">
