@@ -152,10 +152,17 @@ namespace partialdownloadgui
 
         private void ShowDownloadProgress(ProgressData pd)
         {
-            lstSections.ItemsSource = pd.SectionViews;
-            DrawProgress(pd.ProgressBar);
             txtUrl.Text = pd.DownloadView.Url;
             txtDownloadFolder.Text = pd.DownloadView.DownloadFolder;
+            if (pd.DownloadView.Status == DownloadStatus.Finished)
+            {
+                lstSections.ItemsSource = null;
+                wpProgress.Children.Clear();
+                txtResumability.Text = string.Empty;
+                return;
+            }
+            lstSections.ItemsSource = pd.SectionViews;
+            DrawProgress(pd.ProgressBar);
             foreach (SectionView sv in pd.SectionViews)
             {
                 if (sv.HttpStatusCode != 0 && sv.HttpStatusCode != System.Net.HttpStatusCode.PartialContent)
