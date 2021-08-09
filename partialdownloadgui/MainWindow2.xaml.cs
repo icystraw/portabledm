@@ -266,9 +266,13 @@ namespace partialdownloadgui
                 {
                     r.Fill = Brushes.LightSeaGreen;
                 }
-                else
+                else if (progress[i] == '\u2591')
                 {
                     r.Fill = Brushes.LightGray;
+                }
+                else
+                {
+                    r.Fill = Brushes.OrangeRed;
                 }
                 wpProgress.Children.Add(r);
             }
