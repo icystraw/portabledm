@@ -98,17 +98,72 @@
                             </Button.ToolTip>
                         </Button>
                     </StackPanel>
-                    <ListView Name="lstDownloads" SelectionChanged="lstDownloads_SelectionChanged" MouseDoubleClick="lstDownloads_MouseDoubleClick" Margin="5">
-                        <ListView.Resources>
-                            <Style TargetType="ListViewItem">
+                    <ListView Name="lstDownloads" BorderThickness="0" HorizontalContentAlignment="Stretch" Foreground="White" Background="#FFF2F5FC" SelectionChanged="lstDownloads_SelectionChanged" MouseDoubleClick="lstDownloads_MouseDoubleClick" Margin="5">
+                        <ListView.Style>
+                            <Style TargetType="ListView">
                                 <Style.Triggers>
-                                    <Trigger Property="IsSelected" Value="True">
-                                        <Setter Property="Background" Value="#FF7F9DFF"></Setter>
-                                        <Setter Property="Foreground" Value="White"></Setter>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ListView">
+                                                    <Border CornerRadius="5" Margin="2" Background="#FFCFDBFF">
+                                                        <TextBlock Foreground="DarkSlateBlue" Text="Downloads will be shown here once you add them." Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
-                        </ListView.Resources>
+                        </ListView.Style>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border CornerRadius="5" Margin="2">
+                                    <Border.Background>
+                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                            <GradientStop Color="#FF93ADFF"/>
+                                            <GradientStop Color="#FF7F9DFF" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <DockPanel>
+                                        <Image DockPanel.Dock="Left" Width="30" Margin="5">
+                                            <Image.Style>
+                                                <Style TargetType="Image">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Status}" Value="Downloading">
+                                                            <Setter Property="Source" Value="pack://application:,,,/Images/play.png"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}" Value="DownloadError">
+                                                            <Setter Property="Source" Value="pack://application:,,,/Images/error.png"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}" Value="Finished">
+                                                            <Setter Property="Source" Value="pack://application:,,,/Images/finished.png"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}" Value="Stopped">
+                                                            <Setter Property="Source" Value="pack://application:,,,/Images/pause.png"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Path=FileName}" FontSize="14" FontWeight="Bold" TextWrapping="Wrap"></TextBlock>
+                                            <WrapPanel Margin="2">
+                                                <TextBlock Text="{Binding Path=Size}"></TextBlock>
+                                                <TextBlock Text=", "></TextBlock>
+                                                <TextBlock Text="{Binding Path=Progress, StringFormat=N1}"></TextBlock>
+                                                <TextBlock Text="% completed"></TextBlock>
+                                            </WrapPanel>
+                                            <ProgressBar HorizontalAlignment="Left" Minimum="0" Maximum="100" Value="{Binding Path=Progress}" Width="250" Height="8" Margin="2"></ProgressBar>
+                                            <WrapPanel Margin="2">
+                                                <TextBlock Text="{Binding Path=Speed}"></TextBlock>
+                                                <TextBlock Text="{Binding Path=Error}" Foreground="Red" Margin="10,0,0,0"></TextBlock>
+                                            </WrapPanel>
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
                         <ListView.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Open Download Folder" Name="mnuOpenFolder" Click="mnuOpenFolder_Click">
@@ -138,57 +193,6 @@
                                 </MenuItem>
                             </ContextMenu>
                         </ListView.ContextMenu>
-                        <ListView.View>
-                            <GridView>
-                                <GridView.ColumnHeaderContainerStyle>
-                                    <Style>
-                                        <Setter Property="FrameworkElement.Visibility" Value="Collapsed"></Setter>
-                                    </Style>
-                                </GridView.ColumnHeaderContainerStyle>
-                                <GridViewColumn Width="450">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <DockPanel>
-                                                <Image DockPanel.Dock="Left" Width="30" Margin="5">
-                                                    <Image.Style>
-                                                        <Style TargetType="Image">
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding Status}" Value="Downloading">
-                                                                    <Setter Property="Source" Value="pack://application:,,,/Images/play.png"/>
-                                                                </DataTrigger>
-                                                                <DataTrigger Binding="{Binding Status}" Value="DownloadError">
-                                                                    <Setter Property="Source" Value="pack://application:,,,/Images/error.png"/>
-                                                                </DataTrigger>
-                                                                <DataTrigger Binding="{Binding Status}" Value="Finished">
-                                                                    <Setter Property="Source" Value="pack://application:,,,/Images/finished.png"/>
-                                                                </DataTrigger>
-                                                                <DataTrigger Binding="{Binding Status}" Value="Stopped">
-                                                                    <Setter Property="Source" Value="pack://application:,,,/Images/pause.png"/>
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Image.Style>
-                                                </Image>
-                                                <StackPanel>
-                                                    <TextBlock Text="{Binding Path=FileName}" FontSize="14" FontWeight="Bold" TextWrapping="Wrap"></TextBlock>
-                                                    <WrapPanel Margin="2">
-                                                        <TextBlock Text="{Binding Path=Size}"></TextBlock>
-                                                        <TextBlock Text=", "></TextBlock>
-                                                        <TextBlock Text="{Binding Path=Progress, StringFormat=N1}"></TextBlock>
-                                                        <TextBlock Text="% completed"></TextBlock>
-                                                    </WrapPanel>
-                                                    <ProgressBar HorizontalAlignment="Left" Minimum="0" Maximum="100" Value="{Binding Path=Progress}" Width="250" Height="5" Margin="2"></ProgressBar>
-                                                    <WrapPanel Margin="2">
-                                                        <TextBlock Text="{Binding Path=Speed}"></TextBlock>
-                                                        <TextBlock Text="{Binding Path=Error}" Foreground="Red" Margin="10,0,0,0"></TextBlock>
-                                                    </WrapPanel>
-                                                </StackPanel>
-                                            </DockPanel>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                            </GridView>
-                        </ListView.View>
                     </ListView>
                 </DockPanel>
             </GroupBox>
@@ -231,7 +235,7 @@
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="Sessions" Margin="5">
-                <ListView Name="lstSections" Margin="5" Background="#FFF2F5FC">
+                <ListView Name="lstSections" Margin="5" Background="#FFF2F5FC" BorderThickness="0">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="Focusable" Value="false"/>

@@ -158,6 +158,8 @@ namespace partialdownloadgui
                         txtUrl.Text = clipboardText;
                     }
                 }
+                txtUrl.Focus();
+                txtUrl.SelectAll();
             }
             else
             {
