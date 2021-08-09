@@ -5,15 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:partialdownloadgui"
         mc:Ignorable="d"
-        Title="Add Youtube Download" Background="#FFF2F5FC" Width="600" ShowInTaskbar="False" SizeToContent="Height" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Loaded="Window_Loaded">
+        Title="Add Youtube Download" Background="#FFF2F5FC" Width="700" ShowInTaskbar="False" SizeToContent="Height" WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
     <StackPanel>
         <GroupBox Header="Options" Margin="5">
             <StackPanel>
                 <Label>Below are the Youtube videos you are watching, or have JUST watched.</Label>
                 <Label>Each Youtube video has two streams, video stream and audio stream.</Label>
-                <Label>The most recent video and its corresponding audio files are shown on the bottom of each list.</Label>
                 <Label>The quality of the video and audio is the same as what you have watched on Youtube.</Label>
-                <Label>Small video files are often advertisements.</Label>
+                <Label>Small size files are often advertisements.</Label>
                 <Label>Please select the files you would like to download.</Label>
                 <GroupBox Header="Videos" Margin="5">
                     <StackPanel Name="spVideos" />
