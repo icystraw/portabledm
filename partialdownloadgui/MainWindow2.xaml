@@ -221,7 +221,7 @@
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="Sessions" Margin="5">
-                <ListView Name="lstSections" Margin="5">
+                <ListView Name="lstSections" Margin="5" Background="#FFF2F5FC">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="Focusable" Value="false"/>
