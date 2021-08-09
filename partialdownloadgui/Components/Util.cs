@@ -205,7 +205,7 @@ namespace partialdownloadgui.Components
                 if (ds.HttpStatusCode != HttpStatusCode.OK && ds.HttpStatusCode != HttpStatusCode.PartialContent)
                 {
                     response.Dispose();
-                    ds.Error = "HTTP status is not 200 or 206.";
+                    ds.Error = "HTTP status is not 200 or 206. Check your link and try again.";
                     ds.DownloadStatus = DownloadStatus.DownloadError;
                     return;
                 }
