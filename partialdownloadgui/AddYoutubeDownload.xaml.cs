@@ -138,5 +138,10 @@ namespace partialdownloadgui
             this.DialogResult = false;
             this.Close();
         }
+
+        private void btnAnalyse_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

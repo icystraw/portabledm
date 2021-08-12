@@ -10,9 +10,29 @@
         <GroupBox Header="Options" Margin="5">
             <StackPanel>
                 <Label>Each Youtube video has two streams, video stream and audio stream.</Label>
+                <DockPanel>
+                    <Label Content="Youtube watch page URL:" DockPanel.Dock="Left" />
+                    <TextBox TextWrapping="NoWrap" Name="txtUrl" Style="{DynamicResource RoundCornerText}">
+                        <TextBox.ToolTip>
+                            <ToolTip>
+                                <TextBlock>For example: https://www.youtube.com/watch?v=abcdeabcdea</TextBlock>
+                            </ToolTip>
+                        </TextBox.ToolTip>
+                    </TextBox>
+                </DockPanel>
+                <Button Name="btnAnalyse" Content="Get Available Video/Audio Formats" Click="btnAnalyse_Click" Margin="5" Style="{DynamicResource RoundCorner}" Width="350"></Button>
+                <GroupBox Header="Videos" Margin="5">
+                    <StackPanel Name="spVideos">
+                        <TextBlock Text="No videos"></TextBlock>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Header="Audios" Margin="5">
+                    <StackPanel Name="spAudios">
+                        <TextBlock Text="No audios"></TextBlock>
+                    </StackPanel>
+                </GroupBox>
                 <Label>Below are the Youtube videos you are watching, or have JUST watched.</Label>
-                <Label>You can download them as well.</Label>
-                <Label>Small size files are often advertisements.</Label>
+                <Label>You can download them as well. Small size files are often advertisements.</Label>
                 <GroupBox Header="Recent Videos" Margin="5">
                     <StackPanel Name="spRecentVideos">
                         <TextBlock Text="No videos"></TextBlock>
