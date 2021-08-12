@@ -37,7 +37,7 @@
                             <Image Source="pack://application:,,,/Images/youtube.png" />
                             <Button.ToolTip>
                                 <ToolTip>
-                                    <TextBlock>Youtube download is available! Click to see available files.</TextBlock>
+                                    <TextBlock>Download videos from Youtube.</TextBlock>
                                 </ToolTip>
                             </Button.ToolTip>
                         </Button>
