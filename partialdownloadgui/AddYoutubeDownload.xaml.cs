@@ -1,10 +1,8 @@
 ﻿using partialdownloadgui.Components;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using System.Threading;
-using System.Web;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -52,8 +50,7 @@ namespace partialdownloadgui
             spRecentAudios.Children.Clear();
             foreach (DownloadSection ds in dsPreprocess)
             {
-                if (ds.DownloadStatus == DownloadStatus.DownloadError || ds.HttpStatusCode == System.Net.HttpStatusCode.OK) continue;
-                if (!string.IsNullOrEmpty(ds.ContentType) && ds.ContentType.Contains("text")) continue;
+                if (!CheckPreprocessedDownloadSection(ds)) continue;
                 CheckBox cb = new();
                 cb.Tag = ds;
                 cb.Content = ds.SuggestedName + ", " + Util.getShortFileSize(ds.Total);
@@ -100,6 +97,8 @@ namespace partialdownloadgui
                 MessageBox.Show("You need to specify a folder for downloaded files.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
+            addDownload(spVideos, false);
+            addDownload(spAudios, false);
             addDownload(spRecentVideos, true);
             addDownload(spRecentAudios, true);
             this.DialogResult = true;
@@ -116,6 +115,15 @@ namespace partialdownloadgui
                     d.DownloadFolder = App.AppSettings.DownloadFolder;
                     d.NoDownloader = cbThreads.SelectedIndex + 1;
                     d.SummarySection = box.Tag as DownloadSection;
+                    if (!isRecent)
+                    {
+                        try
+                        {
+                            Util.downloadPreprocess(d.SummarySection);
+                        }
+                        catch { }
+                        if (!CheckPreprocessedDownloadSection(d.SummarySection)) continue;
+                    }
                     d.Sections.Add(d.SummarySection.Clone());
                     if (cbCombine.IsChecked == true)
                     {
@@ -133,6 +141,13 @@ namespace partialdownloadgui
             }
         }
 
+        private bool CheckPreprocessedDownloadSection(DownloadSection ds)
+        {
+            if (ds.DownloadStatus == DownloadStatus.DownloadError || ds.HttpStatusCode == System.Net.HttpStatusCode.OK) return false;
+            if (!string.IsNullOrEmpty(ds.ContentType) && ds.ContentType.Contains("text")) return false;
+            return true;
+        }
+
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
@@ -141,7 +156,72 @@ namespace partialdownloadgui
 
         private void btnAnalyse_Click(object sender, RoutedEventArgs e)
         {
-
+            string urlText = txtUrl.Text.Trim();
+            if (!urlText.Contains("youtube.com/watch?"))
+            {
+                MessageBox.Show("Does not appear to be a valid Youtube watch page URL.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            string page = Downloader.SimpleDownloadToString(urlText);
+            if (string.IsNullOrEmpty(page))
+            {
+                MessageBox.Show("Cannot access the page.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            YoutubeWatchPageParser wp = new(page);
+            try
+            {
+                wp.Parse();
+            }
+            catch
+            {
+                MessageBox.Show("The page given is not a Youtube watch page.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            this.Title = wp.PageTitle;
+            string player = Downloader.SimpleDownloadToString("https://www.youtube.com" + wp.PlayerJsUrl);
+            if (string.IsNullOrEmpty(player))
+            {
+                MessageBox.Show("Cannot get player script file.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            YoutubePlayerParser pp = new(player);
+            try
+            {
+                pp.Parse();
+            }
+            catch
+            {
+                MessageBox.Show("Parsing player script file failed.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            spVideos.Children.Clear();
+            spAudios.Children.Clear();
+            foreach (AdaptiveFormatsJson v in wp.Videos)
+            {
+                if (!string.IsNullOrEmpty(v.signatureCipher) && !string.IsNullOrEmpty(v.paramS))
+                {
+                    pp.CalculateSignature(v.paramS);
+                    v.signature = pp.Signature;
+                }
+                long fileSize = 0;
+                try
+                {
+                    fileSize = Convert.ToInt64(v.contentLength);
+                }
+                catch { }
+                DownloadSection ds = new();
+                ds.Url = v.url;
+                ds.End = (-1);
+                ds.SuggestedName = v.mimeType + ", " + (v.qualityLabel ?? v.audioQuality) + ", " + Util.getShortFileSize(fileSize);
+                CheckBox cb = new();
+                cb.Tag = ds;
+                cb.Content = ds.SuggestedName;
+                if (ds.SuggestedName.Contains("video"))
+                    spVideos.Children.Add(cb);
+                else
+                    spAudios.Children.Add(cb);
+            }
         }
     }
 }

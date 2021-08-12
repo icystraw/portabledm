@@ -113,6 +113,37 @@ namespace partialdownloadgui.Components
             }
         }
 
+        public static string SimpleDownloadToString(string url)
+        {
+            HttpRequestMessage request = new(HttpMethod.Get, url);
+            request.Headers.Referrer = request.RequestUri;
+
+            HttpResponseMessage response = null;
+            Stream streamHttp = null;
+            StreamReader reader = null;
+            try
+            {
+                response = client.Send(request, HttpCompletionOption.ResponseHeadersRead);
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    response.Dispose();
+                    return string.Empty;
+                }
+                streamHttp = response.Content.ReadAsStream();
+                reader = new(streamHttp);
+                return reader.ReadToEnd();
+            }
+            catch
+            {
+                return string.Empty;
+            }
+            finally
+            {
+                if (reader != null) reader.Close();
+                if (streamHttp != null) streamHttp.Close();
+            }
+        }
+
         private void DownloadThreadProc()
         {
             HttpRequestMessage request = new(HttpMethod.Get, this.downloadSection.Url);
