@@ -133,7 +133,7 @@ namespace partialdownloadgui
                     {
                         StringBuilder sb = new();
                         sb.Append("-o \"");
-                        sb.Append(System.IO.Path.Combine(downloadFolder, DateTime.Now.ToString("MMM-dd-HH-mm-ss.fff") + " combined.mkv\" "));
+                        sb.Append(System.IO.Path.Combine(downloadFolder, DateTime.Now.ToString("MMMdd-HHmmss.fff") + " combined.mkv\" "));
                         foreach (string f in files)
                         {
                             sb.Append('\"');

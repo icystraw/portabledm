@@ -296,7 +296,7 @@ namespace partialdownloadgui.Components
                     fileNameWithPath = Path.Combine(download.DownloadFolder, fileNameOnly);
                     if (File.Exists(fileNameWithPath))
                     {
-                        fileNameOnly = DateTime.Now.ToString("MMM-dd-HH-mm-ss.fff") + " " + fileNameOnly;
+                        fileNameOnly = DateTime.Now.ToString("MMMdd-HHmmss.fff") + " " + fileNameOnly;
                         fileNameWithPath = Path.Combine(download.DownloadFolder, fileNameOnly);
                     }
                 }
