@@ -67,6 +67,7 @@ namespace partialdownloadgui.Components
                     StringBuilder sb = new();
                     string request, response;
                     NetworkStream stream = client.GetStream();
+                    stream.ReadTimeout = 500;
                     // Loop to receive all the data sent by the client.
                     while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
                     {
