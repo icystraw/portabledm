@@ -12,13 +12,13 @@ namespace partialdownloadgui.Components
         private string pageTitle;
         private string playerJsUrl;
         private string adaptiveFormats;
-        private List<AdaptiveFormatsJson> videos;
+        private List<YoutubeVideo> videos;
 
         public string WatchPageFile { get => watchPageFile; set => watchPageFile = value; }
         public string PageTitle { get => pageTitle; set => pageTitle = value; }
         public string PlayerJsUrl { get => playerJsUrl; set => playerJsUrl = value; }
         public string AdaptiveFormats { get => adaptiveFormats; set => adaptiveFormats = value; }
-        public List<AdaptiveFormatsJson> Videos { get => videos; set => videos = value; }
+        public List<YoutubeVideo> Videos { get => videos; set => videos = value; }
 
         public YoutubeWatchPageParser(string file)
         {
@@ -66,7 +66,7 @@ namespace partialdownloadgui.Components
         public void CreateVideosFromJson()
         {
             if (string.IsNullOrEmpty(adaptiveFormats)) throw new ArgumentNullException(nameof(adaptiveFormats));
-            videos = JsonSerializer.Deserialize<List<AdaptiveFormatsJson>>(adaptiveFormats);
+            videos = JsonSerializer.Deserialize<List<YoutubeVideo>>(adaptiveFormats);
             if (videos.Count > 0) Debug.WriteLine(videos[0].signatureCipher ?? videos[0].url);
         }
 

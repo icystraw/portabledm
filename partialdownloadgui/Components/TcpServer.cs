@@ -94,9 +94,9 @@ namespace partialdownloadgui.Components
                                 bool foundSameUrl = false;
                                 foreach (YoutubeVideo v in youtubeVideos)
                                 {
-                                    if (v.Url == video.Url)
+                                    if (v.url == video.url)
                                     {
-                                        v.Title = video.Title;
+                                        v.title = video.title;
                                         foundSameUrl = true;
                                         break;
                                     }

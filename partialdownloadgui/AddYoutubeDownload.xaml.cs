@@ -30,6 +30,7 @@ namespace partialdownloadgui
             {
                 btnBrowse.Content = App.AppSettings.DownloadFolder;
             }
+            txtUrl.Focus();
             if (TcpServer.YoutubeVideos.Count == 0) return;
             YoutubeVideo[] videos = TcpServer.YoutubeVideos.ToArray();
             List<DownloadSection> dsPreprocess = new();
@@ -37,9 +38,9 @@ namespace partialdownloadgui
             foreach (YoutubeVideo v in videos)
             {
                 DownloadSection ds = new();
-                ds.Url = v.Url;
+                ds.Url = v.url;
                 ds.End = (-1);
-                ds.SuggestedName = v.Duration + " " + v.Title + " " + v.Mime;
+                ds.SuggestedName = v.duration + ", " + v.title + ", " + v.mimeType;
                 dsPreprocess.Add(ds);
                 Thread t = new(downloadPreprocess);
                 threads.Add(t);
@@ -197,7 +198,7 @@ namespace partialdownloadgui
             }
             spVideos.Children.Clear();
             spAudios.Children.Clear();
-            foreach (AdaptiveFormatsJson v in wp.Videos)
+            foreach (YoutubeVideo v in wp.Videos)
             {
                 if (!string.IsNullOrEmpty(v.signatureCipher) && !string.IsNullOrEmpty(v.paramS))
                 {
@@ -213,10 +214,10 @@ namespace partialdownloadgui
                 DownloadSection ds = new();
                 ds.Url = v.url;
                 ds.End = (-1);
-                ds.SuggestedName = v.mimeType + ", " + (v.qualityLabel ?? v.audioQuality) + ", " + Util.getShortFileSize(fileSize);
+                ds.SuggestedName = wp.PageTitle + ", " + (v.qualityLabel ?? v.audioQuality) + ", " + v.mimeType.Replace('/', '.');
                 CheckBox cb = new();
                 cb.Tag = ds;
-                cb.Content = ds.SuggestedName;
+                cb.Content = (v.qualityLabel ?? v.audioQuality) + ", " + v.mimeType + ", " + Util.getShortFileSize(fileSize);
                 if (ds.SuggestedName.Contains("video"))
                     spVideos.Children.Add(cb);
                 else
