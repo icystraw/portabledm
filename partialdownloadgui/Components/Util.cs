@@ -284,5 +284,15 @@ namespace partialdownloadgui.Components
             sb.Append("sec");
             return sb.ToString();
         }
+
+        public static string RemoveLineBreaks(string s)
+        {
+            return s.Replace("\n", string.Empty).Replace("\r", string.Empty);
+        }
+
+        public static string RemoveSpaces(string s)
+        {
+            return s.Replace(" ", string.Empty);
+        }
     }
 }

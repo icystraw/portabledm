@@ -55,6 +55,11 @@ namespace partialdownloadgui.Components
             this.downloadStopFlag = false;
         }
 
+        public void WaitForFinish()
+        {
+            if (downloadThread != null && downloadThread.IsAlive) downloadThread.Join();
+        }
+
         public bool IsBusy()
         {
             DownloadStatus ds = this.downloadSection.DownloadStatus;
