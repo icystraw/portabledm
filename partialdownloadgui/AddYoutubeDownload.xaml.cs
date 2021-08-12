@@ -21,6 +21,7 @@ namespace partialdownloadgui
         }
 
         private List<Download> downloads = new();
+        private Guid downloadGroupRecent = Guid.NewGuid();
         private Guid downloadGroup = Guid.NewGuid();
 
         public List<Download> Downloads { get => downloads; set => downloads = value; }
@@ -47,8 +48,8 @@ namespace partialdownloadgui
                 t.Start(ds);
             }
             foreach (Thread t in threads) t.Join();
-            spVideos.Children.Clear();
-            spAudios.Children.Clear();
+            spRecentVideos.Children.Clear();
+            spRecentAudios.Children.Clear();
             foreach (DownloadSection ds in dsPreprocess)
             {
                 if (ds.DownloadStatus == DownloadStatus.DownloadError || ds.HttpStatusCode == System.Net.HttpStatusCode.OK) continue;
@@ -57,9 +58,9 @@ namespace partialdownloadgui
                 cb.Tag = ds;
                 cb.Content = ds.SuggestedName + ", " + Util.getShortFileSize(ds.Total);
                 if (ds.SuggestedName.Contains("video"))
-                    spVideos.Children.Add(cb);
+                    spRecentVideos.Children.Add(cb);
                 else
-                    spAudios.Children.Add(cb);
+                    spRecentAudios.Children.Add(cb);
             }
         }
 
@@ -99,13 +100,13 @@ namespace partialdownloadgui
                 MessageBox.Show("You need to specify a folder for downloaded files.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
-            addDownload(spVideos);
-            addDownload(spAudios);
+            addDownload(spRecentVideos, true);
+            addDownload(spRecentAudios, true);
             this.DialogResult = true;
             this.Close();
         }
 
-        private void addDownload(StackPanel sp)
+        private void addDownload(StackPanel sp, bool isRecent)
         {
             foreach (UIElement cb in sp.Children)
             {
@@ -116,7 +117,17 @@ namespace partialdownloadgui
                     d.NoDownloader = cbThreads.SelectedIndex + 1;
                     d.SummarySection = box.Tag as DownloadSection;
                     d.Sections.Add(d.SummarySection.Clone());
-                    if (cbCombine.IsChecked == true) d.DownloadGroup = downloadGroup;
+                    if (cbCombine.IsChecked == true)
+                    {
+                        if (isRecent)
+                        {
+                            d.DownloadGroup = downloadGroupRecent;
+                        }
+                        else
+                        {
+                            d.DownloadGroup = downloadGroup;
+                        }
+                    }
                     downloads.Add(d);
                 }
             }

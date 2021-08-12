@@ -11,15 +11,15 @@
             <StackPanel>
                 <Label>Each Youtube video has two streams, video stream and audio stream.</Label>
                 <Label>Below are the Youtube videos you are watching, or have JUST watched.</Label>
+                <Label>You can download them as well.</Label>
                 <Label>Small size files are often advertisements.</Label>
-                <Label>Please select the files you would like to download.</Label>
-                <GroupBox Header="Videos" Margin="5">
-                    <StackPanel Name="spVideos">
+                <GroupBox Header="Recent Videos" Margin="5">
+                    <StackPanel Name="spRecentVideos">
                         <TextBlock Text="No videos"></TextBlock>
                     </StackPanel>
                 </GroupBox>
-                <GroupBox Header="Audios" Margin="5">
-                    <StackPanel Name="spAudios">
+                <GroupBox Header="Recent Audios" Margin="5">
+                    <StackPanel Name="spRecentAudios">
                         <TextBlock Text="No audios"></TextBlock>
                     </StackPanel>
                 </GroupBox>
