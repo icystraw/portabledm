@@ -140,13 +140,21 @@ namespace partialdownloadgui
                             sb.Append(f);
                             sb.Append("\" ");
                         }
-                        Process.Start("mkvmerge.exe", sb.ToString()).WaitForExit();
+                        try
+                        {
+                            Process.Start("mkvmerge.exe", sb.ToString()).WaitForExit();
+                        }
+                        catch { }
                     }
                 }
             }
             if (bJustFinished && chkShutdown.IsChecked == true && !IsBusy())
             {
-                Process.Start("shutdown.exe", "/s");
+                try
+                {
+                    Process.Start("shutdown.exe", "/s");
+                }
+                catch { }
             }
         }
 
@@ -300,18 +308,6 @@ namespace partialdownloadgui
             return s;
         }
 
-        private void SeeIfThereIsDownloadFromYoutube()
-        {
-            if (TcpServer.YoutubeVideos.Count > 0)
-            {
-                btnAddYoutube.IsEnabled = true;
-            }
-            else
-            {
-                btnAddYoutube.IsEnabled = false;
-            }
-        }
-
         private void SeeIfThereIsDownloadFromBrowser()
         {
             if (string.IsNullOrEmpty(TcpServer.DownloadUrl)) return;
@@ -420,7 +416,6 @@ namespace partialdownloadgui
             timer.Stop();
             UpdateDownloads();
             UpdateControlsStatus();
-            SeeIfThereIsDownloadFromYoutube();
             SeeIfThereIsDownloadFromBrowser();
             timer.Start();
         }

@@ -9,16 +9,19 @@
     <StackPanel>
         <GroupBox Header="Options" Margin="5">
             <StackPanel>
-                <Label>Below are the Youtube videos you are watching, or have JUST watched.</Label>
                 <Label>Each Youtube video has two streams, video stream and audio stream.</Label>
-                <Label>The quality of the video and audio is the same as what you have watched on Youtube.</Label>
+                <Label>Below are the Youtube videos you are watching, or have JUST watched.</Label>
                 <Label>Small size files are often advertisements.</Label>
                 <Label>Please select the files you would like to download.</Label>
                 <GroupBox Header="Videos" Margin="5">
-                    <StackPanel Name="spVideos" />
+                    <StackPanel Name="spVideos">
+                        <TextBlock Text="No videos"></TextBlock>
+                    </StackPanel>
                 </GroupBox>
                 <GroupBox Header="Audios" Margin="5">
-                    <StackPanel Name="spAudios" />
+                    <StackPanel Name="spAudios">
+                        <TextBlock Text="No audios"></TextBlock>
+                    </StackPanel>
                 </GroupBox>
                 <DockPanel Margin="0,5,0,0">
                     <Label Content="Save to folder:" DockPanel.Dock="Left"></Label>

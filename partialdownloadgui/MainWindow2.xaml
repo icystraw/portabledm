@@ -33,7 +33,7 @@
                                 </ToolTip>
                             </Button.ToolTip>
                         </Button>
-                        <Button Name="btnAddYoutube" Click="btnAddYoutube_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}" IsEnabled="False">
+                        <Button Name="btnAddYoutube" Click="btnAddYoutube_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
                             <Image Source="pack://application:,,,/Images/youtube.png" />
                             <Button.ToolTip>
                                 <ToolTip>

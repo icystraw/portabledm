@@ -47,6 +47,8 @@ namespace partialdownloadgui
                 t.Start(ds);
             }
             foreach (Thread t in threads) t.Join();
+            spVideos.Children.Clear();
+            spAudios.Children.Clear();
             foreach (DownloadSection ds in dsPreprocess)
             {
                 if (ds.DownloadStatus == DownloadStatus.DownloadError || ds.HttpStatusCode == System.Net.HttpStatusCode.OK) continue;
@@ -105,14 +107,14 @@ namespace partialdownloadgui
 
         private void addDownload(StackPanel sp)
         {
-            foreach (CheckBox cb in sp.Children)
+            foreach (UIElement cb in sp.Children)
             {
-                if (cb != null && cb.IsChecked == true)
+                if (cb != null && cb is CheckBox box && box.IsChecked == true)
                 {
                     Download d = new();
                     d.DownloadFolder = App.AppSettings.DownloadFolder;
                     d.NoDownloader = cbThreads.SelectedIndex + 1;
-                    d.SummarySection = cb.Tag as DownloadSection;
+                    d.SummarySection = box.Tag as DownloadSection;
                     d.Sections.Add(d.SummarySection.Clone());
                     if (cbCombine.IsChecked == true) d.DownloadGroup = downloadGroup;
                     downloads.Add(d);
