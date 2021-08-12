@@ -30,7 +30,7 @@ namespace partialdownloadgui.Components
 
         public void FindScramblerFunction()
         {
-            string pattern = @"[A-Za-z]+\=function\(([A-Za-z]+)\)\{\1=\1\.split\(\""\""\);.+?return\s\1\.join\(\""\""\)\}";
+            string pattern = @"[A-Za-z0-9]+\=function\(([A-Za-z]+)\)\{\1=\1\.split\(\""\""\);.+?return\s\1\.join\(\""\""\)\}";
             Match m = Regex.Match(playerFile, pattern, RegexOptions.Singleline);
             if (m.Success)
             {
@@ -44,7 +44,7 @@ namespace partialdownloadgui.Components
             if (string.IsNullOrEmpty(scramblerFunction)) throw new ArgumentNullException(nameof(scramblerFunction));
             string s = Util.RemoveSpaces(scramblerFunction);
             string[] ss = s.Split(';');
-            string pattern = @"^([A-Za-z]+)\.([A-Za-z]+)\([A-Za-z]+,([0-9]+)\)$";
+            string pattern = @"^([A-Za-z0-9]+)\.([A-Za-z0-9]+)\([A-Za-z0-9]+,([0-9]+)\)$";
             for (int i = 1; i < ss.Length - 1; i++)
             {
                 Match m = Regex.Match(ss[i], pattern);
