@@ -21,12 +21,10 @@ namespace partialdownloadgui.Components
         public string Signature { get => signature; set => signature = value; }
         public string ParamS { get => paramS; set => paramS = value; }
 
-        public YoutubePlayerParser(string file, string paramS)
+        public YoutubePlayerParser(string file)
         {
             if (string.IsNullOrEmpty(file)) throw new ArgumentNullException(nameof(file));
-            if (string.IsNullOrEmpty(paramS)) throw new ArgumentNullException(nameof(paramS));
             this.playerFile = file;
-            this.paramS = paramS;
             scramblerFunctions = new List<ScramblerFunction>();
         }
 
@@ -96,10 +94,11 @@ namespace partialdownloadgui.Components
             }
         }
 
-        public void CalculateSignature()
+        public void CalculateSignature(string paramS)
         {
-            if (string.IsNullOrEmpty(this.paramS)) throw new ArgumentNullException(nameof(paramS));
-            this.signature = this.paramS;
+            if (string.IsNullOrEmpty(paramS)) throw new ArgumentNullException(nameof(paramS));
+            this.paramS = paramS;
+            this.signature = paramS;
             foreach (ScramblerFunction f in this.scramblerFunctions)
             {
                 if (f.Type == ScramblerType.Reverse) this.signature = Reverse(this.signature);
@@ -115,7 +114,6 @@ namespace partialdownloadgui.Components
             ExtractScramblerFunctionInfo();
             FindScramblerAlgorithm();
             MatchAlgorithmWithFunction();
-            CalculateSignature();
         }
 
         private static string Reverse(string s)
