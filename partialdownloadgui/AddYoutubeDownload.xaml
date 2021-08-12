@@ -5,49 +5,48 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:partialdownloadgui"
         mc:Ignorable="d"
-        Title="Add Youtube Download" Background="#FFF2F5FC" Width="700" ShowInTaskbar="False" SizeToContent="Height" WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
-    <StackPanel>
-        <GroupBox Header="Options" Margin="5">
+        Title="Download From YouTube" Background="#FFF2F5FC" Width="700" ShowInTaskbar="False" SizeToContent="Height" WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
+    <StackPanel Margin="5">
+        <TextBlock Margin="5" TextWrapping="Wrap">Each YouTube video has two streams, video stream and audio stream. They combine to form a complete video.</TextBlock>
+        <DockPanel>
+            <Label Content="YouTube watch page URL:" DockPanel.Dock="Left" />
+            <Button Name="btnAnalyse" DockPanel.Dock="Right" Content="Get Available Video/Audio Qualities" Click="btnAnalyse_Click" Style="{DynamicResource RoundCorner}" Width="250"></Button>
+            <TextBox TextWrapping="NoWrap" Name="txtUrl" Style="{DynamicResource RoundCornerText}">
+                <TextBox.ToolTip>
+                    <ToolTip>
+                        <TextBlock>For example: https://www.youtube.com/watch?v=abcdeabcdef</TextBlock>
+                    </ToolTip>
+                </TextBox.ToolTip>
+            </TextBox>
+        </DockPanel>
+        <GroupBox Header="Videos" Margin="5">
+            <StackPanel Name="spVideos">
+                <TextBlock Text="No videos"></TextBlock>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="Audios" Margin="5">
+            <StackPanel Name="spAudios">
+                <TextBlock Text="No audios"></TextBlock>
+            </StackPanel>
+        </GroupBox>
+        <TextBlock TextWrapping="Wrap" Margin="5">Below are the YouTube videos you are watching, or have JUST watched. You can download them as well. Small size files are often advertisements.</TextBlock>
+        <GroupBox Header="Recent Videos" Margin="5">
+            <StackPanel Name="spRecentVideos">
+                <TextBlock Text="No videos"></TextBlock>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="Recent Audios" Margin="5">
+            <StackPanel Name="spRecentAudios">
+                <TextBlock Text="No audios"></TextBlock>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Margin="5" Header="Options">
             <StackPanel>
-                <Label>Each Youtube video has two streams, video stream and audio stream.</Label>
                 <DockPanel>
-                    <Label Content="Youtube watch page URL:" DockPanel.Dock="Left" />
-                    <TextBox TextWrapping="NoWrap" Name="txtUrl" Style="{DynamicResource RoundCornerText}">
-                        <TextBox.ToolTip>
-                            <ToolTip>
-                                <TextBlock>For example: https://www.youtube.com/watch?v=abcdeabcdea</TextBlock>
-                            </ToolTip>
-                        </TextBox.ToolTip>
-                    </TextBox>
-                </DockPanel>
-                <Button Name="btnAnalyse" Content="Get Available Video/Audio Formats" Click="btnAnalyse_Click" Margin="5" Style="{DynamicResource RoundCorner}" Width="350"></Button>
-                <GroupBox Header="Videos" Margin="5">
-                    <StackPanel Name="spVideos">
-                        <TextBlock Text="No videos"></TextBlock>
-                    </StackPanel>
-                </GroupBox>
-                <GroupBox Header="Audios" Margin="5">
-                    <StackPanel Name="spAudios">
-                        <TextBlock Text="No audios"></TextBlock>
-                    </StackPanel>
-                </GroupBox>
-                <Label>Below are the Youtube videos you are watching, or have JUST watched.</Label>
-                <Label>You can download them as well. Small size files are often advertisements.</Label>
-                <GroupBox Header="Recent Videos" Margin="5">
-                    <StackPanel Name="spRecentVideos">
-                        <TextBlock Text="No videos"></TextBlock>
-                    </StackPanel>
-                </GroupBox>
-                <GroupBox Header="Recent Audios" Margin="5">
-                    <StackPanel Name="spRecentAudios">
-                        <TextBlock Text="No audios"></TextBlock>
-                    </StackPanel>
-                </GroupBox>
-                <DockPanel Margin="0,5,0,0">
                     <Label Content="Save to folder:" DockPanel.Dock="Left"></Label>
-                    <Button Name="btnBrowse" Content="Choose location..." Click="btnBrowse_Click" Margin="0,0,5,0" Style="{DynamicResource RoundCorner}"></Button>
+                    <Button Name="btnBrowse" Content="Choose location..." Click="btnBrowse_Click" Style="{DynamicResource RoundCorner}"></Button>
                 </DockPanel>
-                <CheckBox Name="cbCombine" IsChecked="True" Margin="5">Combine files and output single .mkv file</CheckBox>
+                <CheckBox Name="cbCombine" IsChecked="True" Margin="5">Combine streams and output single .mkv file(highly recommended)</CheckBox>
                 <GroupBox Header="Multi-threading">
                     <WrapPanel>
                         <Label Content="Max no. of download thread for each file (too many can affect web browsing):" />
@@ -65,15 +64,15 @@
                         </ComboBox>
                     </WrapPanel>
                 </GroupBox>
-                <WrapPanel HorizontalAlignment="Center">
-                    <Button Name="btnOk" Margin="5" Width="40" Click="btnOk_Click" IsDefault="True" Style="{DynamicResource RoundCorner}">
-                        <Image Source="pack://application:,,,/Images/go.png" />
-                    </Button>
-                    <Button Name="btnCancel" Margin="5" Width="40" Click="btnCancel_Click" IsCancel="True" Style="{DynamicResource RoundCorner}">
-                        <Image Source="pack://application:,,,/Images/cancel.png" />
-                    </Button>
-                </WrapPanel>
             </StackPanel>
         </GroupBox>
+        <WrapPanel HorizontalAlignment="Center">
+            <Button Name="btnOk" Margin="5" Width="40" Click="btnOk_Click" IsDefault="True" Style="{DynamicResource RoundCorner}">
+                <Image Source="pack://application:,,,/Images/go.png" />
+            </Button>
+            <Button Name="btnCancel" Margin="5" Width="40" Click="btnCancel_Click" IsCancel="True" Style="{DynamicResource RoundCorner}">
+                <Image Source="pack://application:,,,/Images/cancel.png" />
+            </Button>
+        </WrapPanel>
     </StackPanel>
 </Window>
