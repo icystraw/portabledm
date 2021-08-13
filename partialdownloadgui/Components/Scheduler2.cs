@@ -279,6 +279,7 @@ namespace partialdownloadgui.Components
 
         private void JoinSectionsToFile()
         {
+            if (DealWithSectionAnormalies()) throw new InvalidOperationException("Section anomalies exist. Please re-download this file with single thread.");
             DownloadSection ds = download.Sections[0];
             Stream streamDest = null, streamSection = null;
             byte[] buffer = new byte[bufferSize];
