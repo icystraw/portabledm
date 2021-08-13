@@ -8,6 +8,7 @@
         Title="Download From YouTube" Background="#FFF2F5FC" Width="700" ShowInTaskbar="False" SizeToContent="Height" WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
     <StackPanel Margin="5">
         <TextBlock Margin="5" TextWrapping="Wrap">Each YouTube video has two streams, video stream and audio stream. They combine to form a complete video.</TextBlock>
+        <TextBlock Margin="5" FontWeight="Bold">Method 1:</TextBlock>
         <DockPanel>
             <Label Content="YouTube watch page URL:" DockPanel.Dock="Left" />
             <Button Name="btnAnalyse" DockPanel.Dock="Right" Content="Get Available Video/Audio Streams" Click="btnAnalyse_Click" Style="{DynamicResource RoundCorner}" Width="250"></Button>
@@ -33,6 +34,7 @@
                 </GroupBox>
             </StackPanel>
         </ScrollViewer>
+        <TextBlock Margin="5" FontWeight="Bold">Method 2(need to install browser extension):</TextBlock>
         <TextBlock TextWrapping="Wrap" Margin="5">Below are the YouTube videos you are watching, or have JUST watched. You can download them as well. Small size files are often advertisements.</TextBlock>
         <GroupBox Header="Recent Videos" Margin="5">
             <StackPanel Name="spRecentVideos">
