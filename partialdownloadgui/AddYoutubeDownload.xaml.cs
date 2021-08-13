@@ -223,6 +223,7 @@ namespace partialdownloadgui
                 else
                     spAudios.Children.Add(cb);
             }
+            spAV.Visibility = Visibility.Visible;
         }
     }
 }
