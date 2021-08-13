@@ -10,7 +10,7 @@
         <TextBlock Margin="5" TextWrapping="Wrap">Each YouTube video has two streams, video stream and audio stream. They combine to form a complete video.</TextBlock>
         <DockPanel>
             <Label Content="YouTube watch page URL:" DockPanel.Dock="Left" />
-            <Button Name="btnAnalyse" DockPanel.Dock="Right" Content="Get Available Video/Audio Qualities" Click="btnAnalyse_Click" Style="{DynamicResource RoundCorner}" Width="250"></Button>
+            <Button Name="btnAnalyse" DockPanel.Dock="Right" Content="Get Available Video/Audio Streams" Click="btnAnalyse_Click" Style="{DynamicResource RoundCorner}" Width="250"></Button>
             <TextBox TextWrapping="NoWrap" Name="txtUrl" Style="{DynamicResource RoundCornerText}">
                 <TextBox.ToolTip>
                     <ToolTip>
