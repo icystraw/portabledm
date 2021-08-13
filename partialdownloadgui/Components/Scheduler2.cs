@@ -112,9 +112,10 @@ namespace partialdownloadgui.Components
         private bool ErrorSectionExists()
         {
             bool ret = false;
-            for (int i = 0; i < download.Sections.Count; i++)
+            foreach (DownloadSection ds in download.Sections)
             {
-                if (download.Sections[i].DownloadStatus == DownloadStatus.DownloadError)
+                DownloadStatus status = ds.DownloadStatus;
+                if (status == DownloadStatus.DownloadError || status == DownloadStatus.LogicalErrorOrCancelled)
                 {
                     ret = true;
                     break;
@@ -131,13 +132,13 @@ namespace partialdownloadgui.Components
             // find current biggest downloading section
             for (int i = 0; i < download.Sections.Count; i++)
             {
-                DownloadStatus ds = download.Sections[i].DownloadStatus;
-                if (ds == DownloadStatus.Downloading && download.Sections[i].HttpStatusCode == System.Net.HttpStatusCode.PartialContent)
+                DownloadSection ds = download.Sections[i];
+                if (ds.DownloadStatus == DownloadStatus.Downloading && ds.HttpStatusCode == System.Net.HttpStatusCode.PartialContent)
                 {
-                    long bytesDownloaded = download.Sections[i].BytesDownloaded;
-                    if (bytesDownloaded > 0 && download.Sections[i].Total - bytesDownloaded > biggestDownloadingSectionSize)
+                    long bytesDownloaded = ds.BytesDownloaded;
+                    if (bytesDownloaded > 0 && ds.Total - bytesDownloaded > biggestDownloadingSectionSize)
                     {
-                        biggestDownloadingSectionSize = download.Sections[i].Total - bytesDownloaded;
+                        biggestDownloadingSectionSize = ds.Total - bytesDownloaded;
                         biggestBeingDownloadedSection = i;
                     }
                 }
@@ -203,11 +204,6 @@ namespace partialdownloadgui.Components
             return true;
         }
 
-        private DownloadStatus GetDownloadStatus()
-        {
-            return download.SummarySection.DownloadStatus;
-        }
-
         public ProgressData GetDownloadStatusData()
         {
             ProgressData pd = new();
@@ -224,7 +220,7 @@ namespace partialdownloadgui.Components
                 pd.DownloadView.FileName = Util.getDownloadFileNameFromDownloadSection(download.SummarySection);
             }
             pd.DownloadView.Size = Util.getShortFileSize(download.SummarySection.Total);
-            pd.DownloadView.Status = GetDownloadStatus();
+            pd.DownloadView.Status = download.SummarySection.DownloadStatus;
             pd.DownloadView.Error = this.exMessage == null ? string.Empty : this.exMessage.Message;
             pd.DownloadView.DownloadGroup = download.DownloadGroup;
 
