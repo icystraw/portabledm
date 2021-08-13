@@ -117,6 +117,7 @@ namespace partialdownloadgui.Components
         {
             HttpRequestMessage request = new(HttpMethod.Get, url);
             request.Headers.Referrer = request.RequestUri;
+            request.Headers.Add("accept-encoding", "identity");
 
             HttpResponseMessage response = null;
             Stream streamHttp = null;
