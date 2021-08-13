@@ -19,18 +19,20 @@
                 </TextBox.ToolTip>
             </TextBox>
         </DockPanel>
-        <StackPanel Name="spAV" Visibility="Collapsed">
-            <GroupBox Header="Videos" Margin="5">
-                <StackPanel Name="spVideos">
-                    <TextBlock Text="No videos"></TextBlock>
-                </StackPanel>
-            </GroupBox>
-            <GroupBox Header="Audios" Margin="5">
-                <StackPanel Name="spAudios">
-                    <TextBlock Text="No audios"></TextBlock>
-                </StackPanel>
-            </GroupBox>
-        </StackPanel>
+        <ScrollViewer Name="spAV" Visibility="Collapsed" MaxHeight="300">
+            <StackPanel>
+                <GroupBox Header="Videos" Margin="5">
+                    <StackPanel Name="spVideos">
+                        <TextBlock Text="No videos"></TextBlock>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Header="Audios" Margin="5">
+                    <StackPanel Name="spAudios">
+                        <TextBlock Text="No audios"></TextBlock>
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </ScrollViewer>
         <TextBlock TextWrapping="Wrap" Margin="5">Below are the YouTube videos you are watching, or have JUST watched. You can download them as well. Small size files are often advertisements.</TextBlock>
         <GroupBox Header="Recent Videos" Margin="5">
             <StackPanel Name="spRecentVideos">
