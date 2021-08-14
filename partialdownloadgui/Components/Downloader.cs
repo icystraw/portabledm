@@ -115,33 +115,39 @@ namespace partialdownloadgui.Components
 
         public static string SimpleDownloadToString(string url)
         {
+            return Encoding.UTF8.GetString(SimpleDownloadToByteArray(url));
+        }
+
+        public static byte[] SimpleDownloadToByteArray(string url)
+        {
             HttpRequestMessage request = new(HttpMethod.Get, url);
             request.Headers.Referrer = request.RequestUri;
             request.Headers.Add("accept-encoding", "identity");
 
             HttpResponseMessage response = null;
             Stream streamHttp = null;
-            StreamReader reader = null;
+            MemoryStream ms = new();
             try
             {
                 response = client.Send(request, HttpCompletionOption.ResponseHeadersRead);
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     response.Dispose();
-                    return string.Empty;
+                    return new byte[0];
                 }
                 streamHttp = response.Content.ReadAsStream();
-                reader = new(streamHttp);
-                return reader.ReadToEnd();
+                streamHttp.CopyTo(ms);
+                return ms.ToArray();
             }
             catch
             {
-                return string.Empty;
+                return new byte[0];
             }
             finally
             {
-                if (reader != null) reader.Close();
                 if (streamHttp != null) streamHttp.Close();
+                if (ms != null) ms.Close();
+                if (response != null) response.Dispose();
             }
         }
 

@@ -23,14 +23,10 @@
         <ScrollViewer Name="spAV" Visibility="Collapsed" MaxHeight="300">
             <StackPanel>
                 <GroupBox Header="Videos" Margin="5">
-                    <StackPanel Name="spVideos">
-                        <TextBlock Text="No videos"></TextBlock>
-                    </StackPanel>
+                    <StackPanel Name="spVideos"/>
                 </GroupBox>
                 <GroupBox Header="Audios" Margin="5">
-                    <StackPanel Name="spAudios">
-                        <TextBlock Text="No audios"></TextBlock>
-                    </StackPanel>
+                    <StackPanel Name="spAudios"/>
                 </GroupBox>
             </StackPanel>
         </ScrollViewer>

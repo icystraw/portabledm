@@ -110,7 +110,7 @@ namespace partialdownloadgui
         {
             foreach (UIElement cb in sp.Children)
             {
-                if (cb != null && cb is CheckBox box && box.IsChecked == true)
+                if (cb is CheckBox box && box.IsChecked == true)
                 {
                     Download d = new();
                     d.DownloadFolder = App.AppSettings.DownloadFolder;

@@ -22,10 +22,10 @@ namespace partialdownloadgui.Components
         public string VideoFormats { get => videoFormats; set => videoFormats = value; }
         public List<Video> Audios { get => audios; set => audios = value; }
 
-        public BilibiliWatchPageParser(string file)
+        public BilibiliWatchPageParser(byte[] file)
         {
-            if (string.IsNullOrEmpty(file)) throw new ArgumentNullException(nameof(file));
-            this.watchPageFile = file;
+            if (null == file || file.Length == 0) throw new ArgumentNullException(nameof(file));
+            this.watchPageFile = Util.GZipDecompress(file);
             this.videos = new();
             this.audios = new();
         }

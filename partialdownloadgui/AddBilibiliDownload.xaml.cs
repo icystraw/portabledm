@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -66,14 +65,20 @@ namespace partialdownloadgui
 
         private void addDownload(StackPanel sp)
         {
-            foreach (UIElement cb in sp.Children)
+            foreach (CheckBox box in sp.Children)
             {
-                if (cb != null && cb is CheckBox box && box.IsChecked == true)
+                if (box.IsChecked == true)
                 {
                     Download d = new();
                     d.DownloadFolder = App.AppSettings.DownloadFolder;
                     d.NoDownloader = cbThreads.SelectedIndex + 1;
                     d.SummarySection = box.Tag as DownloadSection;
+                    try
+                    {
+                        Util.downloadPreprocess(d.SummarySection);
+                    }
+                    catch { }
+                    if (!CheckPreprocessedDownloadSection(d.SummarySection)) continue;
                     d.Sections.Add(d.SummarySection.Clone());
                     if (cbCombine.IsChecked == true)
                     {
@@ -82,6 +87,12 @@ namespace partialdownloadgui
                     downloads.Add(d);
                 }
             }
+        }
+
+        private bool CheckPreprocessedDownloadSection(DownloadSection ds)
+        {
+            if (ds.DownloadStatus == DownloadStatus.DownloadError) return false;
+            return true;
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -98,8 +109,8 @@ namespace partialdownloadgui
                 MessageBox.Show("Does not appear to be a valid Bilibili watch page URL.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
-            string page = Downloader.SimpleDownloadToString(urlText);
-            if (string.IsNullOrEmpty(page))
+            byte[] page = Downloader.SimpleDownloadToByteArray(urlText);
+            if (page.Length == 0)
             {
                 MessageBox.Show("Cannot access the page.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -293,6 +294,21 @@ namespace partialdownloadgui.Components
         public static string RemoveSpaces(string s)
         {
             return s.Replace(" ", string.Empty);
+        }
+
+        public static string GZipDecompress(byte[] file)
+        {
+            using (MemoryStream ms = new(file))
+            {
+                using (MemoryStream ms2 = new())
+                {
+                    using (GZipStream gs = new(ms, CompressionMode.Decompress))
+                    {
+                        gs.CopyTo(ms2);
+                        return Encoding.UTF8.GetString(ms2.ToArray());
+                    }
+                }
+            }
         }
     }
 }
