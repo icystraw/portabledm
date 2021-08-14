@@ -122,10 +122,10 @@ namespace partialdownloadgui
                 DownloadSection ds = new();
                 ds.Url = v.url;
                 ds.End = (-1);
-                //ds.SuggestedName = wp.PageTitle + ", " + (v.qualityLabel ?? v.audioQuality) + ", " + v.mimeType.Replace('/', '.');
+                ds.SuggestedName = wp.PageTitle + "(" + v.width + "x" + v.height + "), " + v.mimeType.Replace('/', '.') + ", " + v.codecs;
                 CheckBox cb = new();
                 cb.Tag = ds;
-                //cb.Content = (v.qualityLabel ?? v.audioQuality) + ", " + v.mimeType;
+                cb.Content = ds.SuggestedName;
                 spVideos.Children.Add(cb);
             }
             foreach (Video v in wp.Audios)
@@ -133,10 +133,10 @@ namespace partialdownloadgui
                 DownloadSection ds = new();
                 ds.Url = v.url;
                 ds.End = (-1);
-                //ds.SuggestedName = wp.PageTitle + ", " + (v.qualityLabel ?? v.audioQuality) + ", " + v.mimeType.Replace('/', '.');
+                ds.SuggestedName = wp.PageTitle + ", " + "bitrate " + v.bandwidth / 1000 + "K, " + v.mimeType.Replace('/', '.') + ", " + v.codecs;
                 CheckBox cb = new();
                 cb.Tag = ds;
-                //cb.Content = (v.qualityLabel ?? v.audioQuality) + ", " + v.mimeType;
+                cb.Content = ds.SuggestedName;
                 spAudios.Children.Add(cb);
             }
             spAV.Visibility = Visibility.Visible;
