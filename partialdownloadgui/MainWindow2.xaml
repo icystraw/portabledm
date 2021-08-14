@@ -42,7 +42,7 @@
                             </Button.ToolTip>
                         </Button>
                         <Button Name="btnAddBilibili" Click="btnAddBilibili_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
-                            <Image Source="pack://application:,,,/Images/youtube.png" />
+                            <Image Source="pack://application:,,,/Images/bilibili.png" />
                             <Button.ToolTip>
                                 <ToolTip>
                                     <TextBlock>Download videos from bilibili.com.</TextBlock>

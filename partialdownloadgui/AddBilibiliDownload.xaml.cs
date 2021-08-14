@@ -106,7 +106,7 @@ namespace partialdownloadgui
             string urlText = txtUrl.Text.Trim();
             if (!urlText.Contains("bilibili.com/video/"))
             {
-                MessageBox.Show("Does not appear to be a valid Bilibili watch page URL.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Does not appear to be a valid bilibili.com watch page URL.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
             byte[] page = Downloader.SimpleDownloadToByteArray(urlText);
@@ -122,7 +122,7 @@ namespace partialdownloadgui
             }
             catch
             {
-                MessageBox.Show("The page given is not a Bilibili watch page.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("The page given is not a bilibili.com watch page.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
             this.Title = wp.PageTitle;

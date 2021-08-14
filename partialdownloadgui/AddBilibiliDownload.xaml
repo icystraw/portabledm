@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:local="clr-namespace:partialdownloadgui"
         mc:Ignorable="d" 
-        Title="Download From Bilibili" Background="#FFF2F5FC" Width="700" ShowInTaskbar="False" SizeToContent="Height" WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
+        Title="Download From bilibili.com" Background="#FFF2F5FC" Width="700" ShowInTaskbar="False" SizeToContent="Height" WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
     <StackPanel Margin="5">
-        <TextBlock Margin="5" TextWrapping="Wrap">Each Bilibili video has two streams, video stream and audio stream. They combine to form a complete video.</TextBlock>
+        <TextBlock Margin="5" TextWrapping="Wrap">Each bilibili.com video has two streams, video stream and audio stream. They combine to form a complete video.</TextBlock>
         <DockPanel>
-            <Label Content="Bilibili watch page URL:" DockPanel.Dock="Left" />
+            <Label Content="bilibili.com watch page URL:" DockPanel.Dock="Left" />
             <Button Name="btnAnalyse" DockPanel.Dock="Right" Content="Get Available Video/Audio Streams" Click="btnAnalyse_Click" Style="{DynamicResource RoundCorner}" Width="250"></Button>
             <TextBox TextWrapping="NoWrap" Name="txtUrl" Style="{DynamicResource RoundCornerText}">
                 <TextBox.ToolTip>

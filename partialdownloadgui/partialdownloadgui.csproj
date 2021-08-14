@@ -9,6 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Remove="Images\bilibili.png" />
 		<None Remove="Images\cancel.png" />
 		<None Remove="Images\clipboard.png" />
 		<None Remove="Images\decrease.ico" />
@@ -28,6 +29,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Resource Include="Images\bilibili.png" />
 		<Resource Include="Images\cancel.png" />
 		<Resource Include="Images\clipboard.png" />
 		<Resource Include="Images\decrease.ico" />
