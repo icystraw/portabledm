@@ -8,7 +8,7 @@
         Title="Portable HTTP Download Manager" Background="#FFF2F5FC" Height="500" Width="1000" Closed="Window_Closed" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen" Closing="Window_Closing" StateChanged="Window_StateChanged">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="600"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition Width="5"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
@@ -25,7 +25,7 @@
             <GroupBox Header="Downloads" Margin="5">
                 <DockPanel>
                     <StackPanel Orientation="Horizontal" Margin="5" DockPanel.Dock="Top">
-                        <Button Name="btnAdd" Click="btnAdd_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
+                        <Button Name="btnAdd" Click="btnAdd_Click" Margin="2" Width="40" Style="{DynamicResource RoundCorner}">
                             <Image Source="pack://application:,,,/Images/new-document.png" />
                             <Button.ToolTip>
                                 <ToolTip>
@@ -33,7 +33,7 @@
                                 </ToolTip>
                             </Button.ToolTip>
                         </Button>
-                        <Button Name="btnAddYoutube" Click="btnAddYoutube_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
+                        <Button Name="btnAddYoutube" Click="btnAddYoutube_Click" Margin="2" Width="40" Style="{DynamicResource RoundCorner}">
                             <Image Source="pack://application:,,,/Images/youtube.png" />
                             <Button.ToolTip>
                                 <ToolTip>
@@ -41,7 +41,7 @@
                                 </ToolTip>
                             </Button.ToolTip>
                         </Button>
-                        <Button Name="btnAddBilibili" Click="btnAddBilibili_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
+                        <Button Name="btnAddBilibili" Click="btnAddBilibili_Click" Margin="2" Width="40" Style="{DynamicResource RoundCorner}">
                             <Image Source="pack://application:,,,/Images/bilibili.png" />
                             <Button.ToolTip>
                                 <ToolTip>
@@ -49,7 +49,7 @@
                                 </ToolTip>
                             </Button.ToolTip>
                         </Button>
-                        <Button Name="btnEdit" Click="btnEdit_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
+                        <Button Name="btnEdit" Click="btnEdit_Click" Margin="2" Width="40" Style="{DynamicResource RoundCorner}">
                             <Image Source="pack://application:,,,/Images/pencil.png" />
                             <Button.ToolTip>
                                 <ToolTip>
@@ -57,7 +57,7 @@
                                 </ToolTip>
                             </Button.ToolTip>
                         </Button>
-                        <Button Name="btnStart" Click="btnStart_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
+                        <Button Name="btnStart" Click="btnStart_Click" Margin="2" Width="40" Style="{DynamicResource RoundCorner}">
                             <Image Source="pack://application:,,,/Images/play.png" />
                             <Button.ToolTip>
                                 <ToolTip>
@@ -65,7 +65,7 @@
                                 </ToolTip>
                             </Button.ToolTip>
                         </Button>
-                        <Button Name="btnStop" Click="btnStop_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
+                        <Button Name="btnStop" Click="btnStop_Click" Margin="2" Width="40" Style="{DynamicResource RoundCorner}">
                             <Image Source="pack://application:,,,/Images/pause.png" />
                             <Button.ToolTip>
                                 <ToolTip>
@@ -73,7 +73,7 @@
                                 </ToolTip>
                             </Button.ToolTip>
                         </Button>
-                        <Button Name="btnDelete" Click="btnDelete_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
+                        <Button Name="btnDelete" Click="btnDelete_Click" Margin="2" Width="40" Style="{DynamicResource RoundCorner}">
                             <Image Source="pack://application:,,,/Images/delete.png" />
                             <Button.ToolTip>
                                 <ToolTip>
@@ -81,7 +81,7 @@
                                 </ToolTip>
                             </Button.ToolTip>
                         </Button>
-                        <Button Name="btnOpenFolder" Click="btnOpenFolder_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
+                        <Button Name="btnOpenFolder" Click="btnOpenFolder_Click" Margin="2" Width="40" Style="{DynamicResource RoundCorner}">
                             <Image Source="pack://application:,,,/Images/openfolder.png" />
                             <Button.ToolTip>
                                 <ToolTip>
@@ -89,7 +89,7 @@
                                 </ToolTip>
                             </Button.ToolTip>
                         </Button>
-                        <Button Name="btnSortFileName" Click="btnSortFileName_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
+                        <Button Name="btnSortFileName" Click="btnSortFileName_Click" Margin="2" Width="40" Style="{DynamicResource RoundCorner}">
                             <Image Source="pack://application:,,,/Images/sortfile.png" />
                             <Button.ToolTip>
                                 <ToolTip>
@@ -97,7 +97,7 @@
                                 </ToolTip>
                             </Button.ToolTip>
                         </Button>
-                        <Button Name="btnSortProgress" Click="btnSortProgress_Click" Margin="5" Width="40" Style="{DynamicResource RoundCorner}">
+                        <Button Name="btnSortProgress" Click="btnSortProgress_Click" Margin="2" Width="40" Style="{DynamicResource RoundCorner}">
                             <Image Source="pack://application:,,,/Images/sortprogress.png" />
                             <Button.ToolTip>
                                 <ToolTip>
