@@ -11,7 +11,7 @@ namespace partialdownloadgui.Components
     public class TcpServer
     {
         private static readonly int listenPort = 13000;
-        private static readonly int maxYoutubeVideosKept = 6;
+        private static readonly int maxYoutubeVideoRecordsKept = 6;
         private static string downloadUrl;
         private static Queue<YoutubeVideo> youtubeVideos = new();
         private static Thread serverThread;
@@ -79,9 +79,9 @@ namespace partialdownloadgui.Components
                     response = "HTTP/1.1 403 Forbidden\r\nDate: " + DateTime.Now.ToUniversalTime().ToString("R") + "\r\n\r\n";
                     byte[] msg = Encoding.ASCII.GetBytes(response);
                     stream.Write(msg, 0, msg.Length);
+                    client.Close();
                     if (request.Contains("__SERVER_STOP"))
                     {
-                        client.Close();
                         break;
                     }
                     else if (request.StartsWith("GET /") && request.Contains(" HTTP"))
@@ -89,7 +89,7 @@ namespace partialdownloadgui.Components
                         string encodedUrl = request.Substring(5, request.IndexOf(" HTTP") - 5);
                         if (encodedUrl.Contains("/")) // it is a Youtube url
                         {
-                            YoutubeVideo video = YoutubeVideo.ParseQuery(encodedUrl);
+                            YoutubeVideo video = YoutubeVideo.ParseYoutubeEncodedUrlFromExtension(encodedUrl);
                             if (video != null)
                             {
                                 bool foundSameUrl = false;
@@ -104,7 +104,7 @@ namespace partialdownloadgui.Components
                                 }
                                 if (!foundSameUrl)
                                 {
-                                    if (youtubeVideos.Count >= maxYoutubeVideosKept) youtubeVideos.Dequeue();
+                                    if (youtubeVideos.Count >= maxYoutubeVideoRecordsKept) youtubeVideos.Dequeue();
                                     youtubeVideos.Enqueue(video);
                                 }
                             }
@@ -114,7 +114,6 @@ namespace partialdownloadgui.Components
                             downloadUrl = Uri.UnescapeDataString(encodedUrl);
                         }
                     }
-                    client.Close();
                 }
                 catch
                 {

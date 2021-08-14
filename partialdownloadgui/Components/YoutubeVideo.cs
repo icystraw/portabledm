@@ -53,10 +53,10 @@ namespace partialdownloadgui.Components
             }
         }
 
-        public static YoutubeVideo ParseQuery(string query)
+        public static YoutubeVideo ParseYoutubeEncodedUrlFromExtension(string url)
         {
             YoutubeVideo v = new();
-            string[] queries = query.Split('/');
+            string[] queries = url.Split('/');
             if (queries.Length != 2) return null;
             string encodedUrl = queries[0];
             string escapedTitle = queries[1];
