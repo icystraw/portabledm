@@ -8,7 +8,7 @@
         Title="Portable HTTP Download Manager" Background="#FFF2F5FC" Height="500" Width="1000" Closed="Window_Closed" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen" Closing="Window_Closing" StateChanged="Window_StateChanged">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="600"></ColumnDefinition>
             <ColumnDefinition Width="5"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
