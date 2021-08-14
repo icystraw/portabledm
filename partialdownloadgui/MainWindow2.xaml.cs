@@ -571,5 +571,18 @@ namespace partialdownloadgui
             }
 
         }
+
+        private void btnAddBilibili_Click(object sender, RoutedEventArgs e)
+        {
+            AddBilibiliDownload ad = new();
+            ad.Owner = this;
+            if (ad.ShowDialog() == true)
+            {
+                foreach (Download d in ad.Downloads)
+                {
+                    AddDownloadWorker(d).Start();
+                }
+            }
+        }
     }
 }

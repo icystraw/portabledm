@@ -1,0 +1,145 @@
+﻿using partialdownloadgui.Components;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading;
+using System.Windows;
+using System.Windows.Controls;
+
+namespace partialdownloadgui
+{
+    /// <summary>
+    /// Interaction logic for AddBilibiliDownload.xaml
+    /// </summary>
+    public partial class AddBilibiliDownload : Window
+    {
+        public AddBilibiliDownload()
+        {
+            InitializeComponent();
+        }
+
+        private List<Download> downloads = new();
+        private Guid downloadGroup = Guid.NewGuid();
+
+        public List<Download> Downloads { get => downloads; set => downloads = value; }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(App.AppSettings.DownloadFolder))
+            {
+                btnBrowse.Content = App.AppSettings.DownloadFolder;
+            }
+            txtUrl.Focus();
+        }
+
+        private void BrowseForDownloadedFiles()
+        {
+            System.Windows.Forms.FolderBrowserDialog dlg = new();
+            if (!string.IsNullOrEmpty(App.AppSettings.DownloadFolder))
+            {
+                if (Directory.Exists(App.AppSettings.DownloadFolder)) dlg.SelectedPath = App.AppSettings.DownloadFolder;
+            }
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                btnBrowse.Content = dlg.SelectedPath;
+                App.AppSettings.DownloadFolder = dlg.SelectedPath;
+            }
+        }
+
+        private void btnBrowse_Click(object sender, RoutedEventArgs e)
+        {
+            BrowseForDownloadedFiles();
+        }
+
+        private void btnOk_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(App.AppSettings.DownloadFolder))
+            {
+                MessageBox.Show("You need to specify a folder for downloaded files.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            addDownload(spVideos);
+            addDownload(spAudios);
+            this.DialogResult = true;
+            this.Close();
+        }
+
+        private void addDownload(StackPanel sp)
+        {
+            foreach (UIElement cb in sp.Children)
+            {
+                if (cb != null && cb is CheckBox box && box.IsChecked == true)
+                {
+                    Download d = new();
+                    d.DownloadFolder = App.AppSettings.DownloadFolder;
+                    d.NoDownloader = cbThreads.SelectedIndex + 1;
+                    d.SummarySection = box.Tag as DownloadSection;
+                    d.Sections.Add(d.SummarySection.Clone());
+                    if (cbCombine.IsChecked == true)
+                    {
+                        d.DownloadGroup = downloadGroup;
+                    }
+                    downloads.Add(d);
+                }
+            }
+        }
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;
+            this.Close();
+        }
+
+        private void btnAnalyse_Click(object sender, RoutedEventArgs e)
+        {
+            string urlText = txtUrl.Text.Trim();
+            if (!urlText.Contains("bilibili.com/video/"))
+            {
+                MessageBox.Show("Does not appear to be a valid Bilibili watch page URL.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            string page = Downloader.SimpleDownloadToString(urlText);
+            if (string.IsNullOrEmpty(page))
+            {
+                MessageBox.Show("Cannot access the page.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            BilibiliWatchPageParser wp = new(page);
+            try
+            {
+                wp.Parse();
+            }
+            catch
+            {
+                MessageBox.Show("The page given is not a Bilibili watch page.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            this.Title = wp.PageTitle;
+            spVideos.Children.Clear();
+            spAudios.Children.Clear();
+            foreach (Video v in wp.Videos)
+            {
+                DownloadSection ds = new();
+                ds.Url = v.url;
+                ds.End = (-1);
+                //ds.SuggestedName = wp.PageTitle + ", " + (v.qualityLabel ?? v.audioQuality) + ", " + v.mimeType.Replace('/', '.');
+                CheckBox cb = new();
+                cb.Tag = ds;
+                //cb.Content = (v.qualityLabel ?? v.audioQuality) + ", " + v.mimeType;
+                spVideos.Children.Add(cb);
+            }
+            foreach (Video v in wp.Audios)
+            {
+                DownloadSection ds = new();
+                ds.Url = v.url;
+                ds.End = (-1);
+                //ds.SuggestedName = wp.PageTitle + ", " + (v.qualityLabel ?? v.audioQuality) + ", " + v.mimeType.Replace('/', '.');
+                CheckBox cb = new();
+                cb.Tag = ds;
+                //cb.Content = (v.qualityLabel ?? v.audioQuality) + ", " + v.mimeType;
+                spAudios.Children.Add(cb);
+            }
+            spAV.Visibility = Visibility.Visible;
+        }
+    }
+}
