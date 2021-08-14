@@ -199,9 +199,6 @@
         </DockPanel>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="#FFF2F5FC"></GridSplitter>
         <DockPanel Grid.Column="2">
-            <GroupBox Header="Progress" DockPanel.Dock="Bottom" Margin="5">
-                <WrapPanel Name="wpProgress" Margin="5" />
-            </GroupBox>
             <GroupBox Header="Details" DockPanel.Dock="Top" Margin="5">
                 <StackPanel Margin="5">
                     <WrapPanel>
@@ -232,9 +229,10 @@
                         <TextBlock Margin="2">Ability to resume:</TextBlock>
                         <TextBlock Margin="2" Name="txtResumability" />
                     </WrapPanel>
+                    <WrapPanel Name="wpProgress" Margin="0,10,0,0" />
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="Sessions" Margin="5">
+            <GroupBox Header="Sections" Margin="5">
                 <ListView Name="lstSections" Margin="5" Background="#FFF2F5FC" BorderThickness="0">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
