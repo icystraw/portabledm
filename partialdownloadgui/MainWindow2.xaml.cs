@@ -173,7 +173,7 @@ namespace partialdownloadgui
             DrawProgress(pd.ProgressBar);
             foreach (SectionView sv in pd.SectionViews)
             {
-                if (sv.HttpStatusCode != 0 && sv.HttpStatusCode != System.Net.HttpStatusCode.PartialContent)
+                if (sv.HttpStatusCode == System.Net.HttpStatusCode.OK)
                 {
                     txtResumability.Text = "NOT RESUMABLE!";
                     txtResumability.Foreground = Brushes.Red;

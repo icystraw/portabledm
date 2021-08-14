@@ -367,7 +367,7 @@ namespace partialdownloadgui.Components
             {
                 foreach (DownloadSection ds in download.Sections)
                 {
-                    if (ds.HttpStatusCode != 0 && ds.HttpStatusCode != System.Net.HttpStatusCode.PartialContent)
+                    if (ds.HttpStatusCode == System.Net.HttpStatusCode.OK)
                     {
                         return false;
                     }
