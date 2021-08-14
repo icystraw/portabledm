@@ -13,11 +13,11 @@ namespace partialdownloadgui.Components
         private static readonly int listenPort = 13000;
         private static readonly int maxYoutubeVideoRecordsKept = 6;
         private static string downloadUrl;
-        private static Queue<YoutubeVideo> youtubeVideos = new();
+        private static Queue<Video> youtubeVideos = new();
         private static Thread serverThread;
 
         public static string DownloadUrl { get => downloadUrl; set => downloadUrl = value; }
-        public static Queue<YoutubeVideo> YoutubeVideos { get => youtubeVideos; }
+        public static Queue<Video> YoutubeVideos { get => youtubeVideos; }
 
         public static void Start()
         {
@@ -89,11 +89,11 @@ namespace partialdownloadgui.Components
                         string encodedUrl = request.Substring(5, request.IndexOf(" HTTP") - 5);
                         if (encodedUrl.Contains("/")) // it is a Youtube url
                         {
-                            YoutubeVideo video = YoutubeVideo.ParseYoutubeEncodedUrlFromExtension(encodedUrl);
+                            Video video = Video.ParseYoutubeEncodedUrlFromExtension(encodedUrl);
                             if (video != null)
                             {
                                 bool foundSameUrl = false;
-                                foreach (YoutubeVideo v in youtubeVideos)
+                                foreach (Video v in youtubeVideos)
                                 {
                                     if (v.url == video.url)
                                     {

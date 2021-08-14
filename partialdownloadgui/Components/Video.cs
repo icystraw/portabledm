@@ -5,10 +5,13 @@ using System.Web;
 
 namespace partialdownloadgui.Components
 {
-    public class YoutubeVideo
+    public class Video
     {
         private int _itag;
         private string _url;
+        private int _bitrate;
+        private int _width;
+        private int _height;
         private string _signatureCipher;
         private string _mimeType;
         private string _contentLength;
@@ -30,6 +33,9 @@ namespace partialdownloadgui.Components
         public string paramSp { get => _paramSp; set => _paramSp = value; }
         public string duration { get => _duration; set => _duration = value; }
         public string title { get => _title; set => _title = value; }
+        public int bitrate { get => _bitrate; set => _bitrate = value; }
+        public int width { get => _width; set => _width = value; }
+        public int height { get => _height; set => _height = value; }
         public string signatureCipher
         {
             get => _signatureCipher;
@@ -53,9 +59,9 @@ namespace partialdownloadgui.Components
             }
         }
 
-        public static YoutubeVideo ParseYoutubeEncodedUrlFromExtension(string url)
+        public static Video ParseYoutubeEncodedUrlFromExtension(string url)
         {
-            YoutubeVideo v = new();
+            Video v = new();
             string[] queries = url.Split('/');
             if (queries.Length != 2) return null;
             string encodedUrl = queries[0];
@@ -78,5 +84,12 @@ namespace partialdownloadgui.Components
 
             return v;
         }
+
+        // properties for bilibili
+        private string _codecs;
+        public int bandwidth { get => _bitrate; set => _bitrate = value; }
+        public string baseUrl { get => _url; set => _url = value; }
+        public int id { get => _itag; set => _itag = value; }
+        public string codecs { get => _codecs; set => _codecs = value; }
     }
 }

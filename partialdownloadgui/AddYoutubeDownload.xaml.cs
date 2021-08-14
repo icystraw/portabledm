@@ -32,10 +32,10 @@ namespace partialdownloadgui
             }
             txtUrl.Focus();
             if (TcpServer.YoutubeVideos.Count == 0) return;
-            YoutubeVideo[] videos = TcpServer.YoutubeVideos.ToArray();
+            Video[] videos = TcpServer.YoutubeVideos.ToArray();
             List<DownloadSection> dsPreprocess = new();
             List<Thread> threads = new();
-            foreach (YoutubeVideo v in videos)
+            foreach (Video v in videos)
             {
                 DownloadSection ds = new();
                 ds.Url = v.url;
@@ -198,7 +198,7 @@ namespace partialdownloadgui
             }
             spVideos.Children.Clear();
             spAudios.Children.Clear();
-            foreach (YoutubeVideo v in wp.Videos)
+            foreach (Video v in wp.Videos)
             {
                 if (!string.IsNullOrEmpty(v.signatureCipher) && !string.IsNullOrEmpty(v.paramS))
                 {
