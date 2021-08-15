@@ -181,17 +181,15 @@ namespace partialdownloadgui.Components
                     this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
                     return;
                 }
-                // if it is an existing download(or requested section is not from the beginning) and server does not support resuming
-                if (response.StatusCode == HttpStatusCode.OK && this.downloadSection.Start + this.downloadSection.BytesDownloaded > 0)
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    response.Dispose();
-                    this.downloadSection.Error = "Server does not support resuming, however there is already downloaded data present, or requested section is not from the beginning of file.";
-                    this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
-                    return;
-                }
-                // if it is new download and server does not support resuming
-                if (response.StatusCode == HttpStatusCode.OK && this.downloadSection.Start + this.downloadSection.BytesDownloaded == 0)
-                {
+                    if (this.downloadSection.Start > 0)
+                    {
+                        response.Dispose();
+                        this.downloadSection.Error = "Server does not support resuming, however requested section is not from the beginning of file.";
+                        this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
+                        return;
+                    }
                     if (response.Content.Headers.ContentLength != null)
                     {
                         long contentLength = (response.Content.Headers.ContentLength ?? 0);
@@ -204,8 +202,8 @@ namespace partialdownloadgui.Components
                             return;
                         }
                     }
+                    this.downloadSection.BytesDownloaded = 0;
                 }
-                // if server supports resuming
                 if (response.StatusCode == HttpStatusCode.PartialContent)
                 {
                     if (response.Content.Headers.ContentLength == null)

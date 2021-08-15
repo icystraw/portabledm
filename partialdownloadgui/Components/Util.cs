@@ -211,7 +211,7 @@ namespace partialdownloadgui.Components
                 if (response.StatusCode == HttpStatusCode.OK && ds.Start > 0)
                 {
                     response.Dispose();
-                    ds.Error = "Server does not support resuming, however there is already downloaded data present, or requested section is not from the beginning of file.";
+                    ds.Error = "Server does not support resuming, however requested section is not from the beginning of file.";
                     ds.DownloadStatus = DownloadStatus.DownloadError;
                     return;
                 }
