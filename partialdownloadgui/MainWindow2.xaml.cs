@@ -48,7 +48,7 @@ namespace partialdownloadgui
 
         private void LoadSchedulers()
         {
-            List<Download> downloads = Util.retrieveDownloadsFromFile();
+            List<Download> downloads = Util.RetrieveDownloadsFromFile();
             foreach (Download d in downloads)
             {
                 AddDownloadWorker(d);
@@ -70,7 +70,7 @@ namespace partialdownloadgui
             {
                 downloads.Add(s.Download);
             }
-            Util.saveDownloadsToFile(downloads);
+            Util.SaveDownloadsToFile(downloads);
         }
 
         private void UpdateDownloads()
@@ -393,7 +393,7 @@ namespace partialdownloadgui
             try
             {
                 SaveDownloadsToFile();
-                Util.saveAppSettingsToFile();
+                Util.SaveAppSettingsToFile();
             }
             catch { }
         }

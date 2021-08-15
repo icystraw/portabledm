@@ -78,12 +78,12 @@ namespace partialdownloadgui.Components
         {
             this.downloadStopFlag = false;
             if (this.downloadSection.DownloadStatus == DownloadStatus.Finished) return;
-            if (this.downloadSection.Start < 0 && this.downloadSection.End >= 0)
+            if (this.downloadSection.Start < 0)
             {
                 this.downloadSection.DownloadStatus = DownloadStatus.LogicalErrorOrCancelled;
                 return;
             }
-            if (this.downloadSection.Start >= 0 && this.downloadSection.End >= 0 && this.downloadSection.Start > this.downloadSection.End)
+            if (this.downloadSection.End >= 0 && this.downloadSection.Start > this.downloadSection.End)
             {
                 this.downloadSection.DownloadStatus = DownloadStatus.LogicalErrorOrCancelled;
                 return;
@@ -97,10 +97,6 @@ namespace partialdownloadgui.Components
             this.downloadSection.DownloadStatus = DownloadStatus.PrepareToDownload;
             this.downloadSection.HttpStatusCode = 0;
             this.downloadSection.Error = string.Empty;
-            if (this.downloadSection.Start < 0 && this.downloadSection.End < 0)
-            {
-                this.downloadSection.Start = 0;
-            }
             downloadThread = new(new ThreadStart(DownloadThreadProc));
             downloadThread.Start();
         }
@@ -185,35 +181,52 @@ namespace partialdownloadgui.Components
                     this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
                     return;
                 }
-                if (response.StatusCode == HttpStatusCode.OK)
+                // if it is an existing download(or requested section is not from the beginning) and server does not support resuming
+                if (response.StatusCode == HttpStatusCode.OK && this.downloadSection.Start + this.downloadSection.BytesDownloaded > 0)
                 {
-                    this.downloadSection.BytesDownloaded = 0;
+                    response.Dispose();
+                    this.downloadSection.Error = "Server does not support resuming, however there is already downloaded data present, or requested section is not from the beginning of file.";
+                    this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
+                    return;
                 }
-                if (response.Content.Headers.ContentLength != null)
+                // if it is new download and server does not support resuming
+                if (response.StatusCode == HttpStatusCode.OK && this.downloadSection.Start + this.downloadSection.BytesDownloaded == 0)
                 {
-                    if (response.StatusCode == HttpStatusCode.OK)
+                    if (response.Content.Headers.ContentLength != null)
                     {
-                        this.downloadSection.Start = 0;
-                        this.downloadSection.End = (response.Content.Headers.ContentLength ?? 0) - 1;
-                    }
-                    else
-                    {
-                        this.downloadSection.End = this.downloadSection.Start + this.downloadSection.BytesDownloaded + (response.Content.Headers.ContentLength ?? 0) - 1;
+                        long contentLength = (response.Content.Headers.ContentLength ?? 0);
+                        if (this.downloadSection.End < 0) this.downloadSection.End = contentLength - 1;
+                        else if (contentLength < this.downloadSection.Total)
+                        {
+                            response.Dispose();
+                            this.downloadSection.Error = "Content length returned from server is smaller than the section requested.";
+                            this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
+                            return;
+                        }
                     }
                 }
-                else
+                // if server supports resuming
+                if (response.StatusCode == HttpStatusCode.PartialContent)
                 {
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-                        this.downloadSection.Start = 0;
-                        this.downloadSection.End = (-1);
-                    }
-                    else
+                    if (response.Content.Headers.ContentLength == null)
                     {
                         response.Dispose();
                         this.downloadSection.Error = "HTTP ContentLength missing.";
                         this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
                         return;
+                    }
+                    long contentLength = (response.Content.Headers.ContentLength ?? 0);
+                    if (this.downloadSection.End >= 0 && this.downloadSection.Start + this.downloadSection.BytesDownloaded + contentLength - 1 != this.downloadSection.End)
+                    {
+                        response.Dispose();
+                        this.downloadSection.Error = "Content length from server does not match download section.";
+                        this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
+                        return;
+                    }
+                    // if it is a new download and all goes well
+                    if (this.downloadSection.End < 0)
+                    {
+                        this.downloadSection.End = this.downloadSection.Start + contentLength - 1;
                     }
                 }
                 if (response.Content.Headers.ContentDisposition != null && !string.IsNullOrEmpty(response.Content.Headers.ContentDisposition.FileName))
@@ -268,6 +281,12 @@ namespace partialdownloadgui.Components
                 streamFile.Close();
                 streamHttp.Close();
                 response.Dispose();
+                if (currentEnd >= 0 && this.downloadSection.BytesDownloaded < (currentEnd - this.downloadSection.Start + 1))
+                {
+                    this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
+                    this.downloadSection.Error = "Download stream reached the end, but not enough data transmitted.";
+                    return;
+                }
                 if (this.downloadSection.HttpStatusCode == HttpStatusCode.OK && currentEnd < 0)
                 {
                     this.downloadSection.End = this.downloadSection.BytesDownloaded - 1;

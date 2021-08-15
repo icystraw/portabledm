@@ -111,7 +111,7 @@ namespace partialdownloadgui
             ds.Password = txtPassword.Password;
             try
             {
-                Util.downloadPreprocess(ds);
+                Util.DownloadPreprocess(ds);
             }
             catch (Exception ex)
             {

@@ -16,7 +16,7 @@ namespace partialdownloadgui.Components
         public static readonly string settingsFileName = "settings.json";
         public static readonly string downloadsFileName = "downloads.json";
 
-        public static decimal getProgress(long downloaded, long total)
+        public static decimal GetProgress(long downloaded, long total)
         {
             if (total > 0)
             {
@@ -27,7 +27,7 @@ namespace partialdownloadgui.Components
             return 0m;
         }
 
-        public static string removeInvalidCharFromFileName(string fileName)
+        public static string RemoveInvalidCharFromFileName(string fileName)
         {
             if (string.IsNullOrEmpty(fileName)) return string.Empty;
             StringBuilder sb = new();
@@ -47,7 +47,7 @@ namespace partialdownloadgui.Components
             return sb.ToString();
         }
 
-        public static string getShortFileSize(long fileSize)
+        public static string GetShortFileSize(long fileSize)
         {
             decimal size = fileSize;
             if (size <= 0) return "0B";
@@ -72,7 +72,7 @@ namespace partialdownloadgui.Components
             }
         }
 
-        public static string getFileName(string url)
+        public static string GetFileName(string url)
         {
             try
             {
@@ -90,28 +90,28 @@ namespace partialdownloadgui.Components
             }
         }
 
-        public static void saveAppSettingsToFile()
+        public static void SaveAppSettingsToFile()
         {
             string jsonString = JsonSerializer.Serialize(App.AppSettings);
             Directory.CreateDirectory(appDataDirectory);
             File.WriteAllText(appDataDirectory + settingsFileName, jsonString);
         }
 
-        public static void loadAppSettingsFromFile()
+        public static void LoadAppSettingsFromFile()
         {
             Directory.CreateDirectory(appDataDirectory);
             string jsonString = File.ReadAllText(appDataDirectory + settingsFileName);
             App.AppSettings = JsonSerializer.Deserialize<ApplicationSettings>(jsonString);
         }
 
-        public static void saveDownloadsToFile(List<Download> downloads)
+        public static void SaveDownloadsToFile(List<Download> downloads)
         {
             if (null == downloads) return;
             string jsonString = JsonSerializer.Serialize(downloads);
             File.WriteAllText(appDataDirectory + downloadsFileName, jsonString);
         }
 
-        public static List<Download> retrieveDownloadsFromFile()
+        public static List<Download> RetrieveDownloadsFromFile()
         {
             string jsonString = File.ReadAllText(appDataDirectory + downloadsFileName);
             List<Download> ret = JsonSerializer.Deserialize<List<Download>>(jsonString);
@@ -134,14 +134,14 @@ namespace partialdownloadgui.Components
             return ret;
         }
 
-        public static void downloadPreprocess(DownloadSection ds)
+        public static void DownloadPreprocess(DownloadSection ds)
         {
-            if (ds.Start < 0 && ds.End >= 0)
+            if (ds.Start < 0)
             {
                 ds.DownloadStatus = DownloadStatus.LogicalErrorOrCancelled;
                 return;
             }
-            if (ds.Start >= 0 && ds.End >= 0 && ds.Start > ds.End)
+            if (ds.End >= 0 && ds.Start > ds.End)
             {
                 ds.DownloadStatus = DownloadStatus.LogicalErrorOrCancelled;
                 return;
@@ -152,10 +152,7 @@ namespace partialdownloadgui.Components
                 return;
             }
             ds.HttpStatusCode = 0;
-            if (ds.Start < 0 && ds.End < 0)
-            {
-                ds.Start = 0;
-            }
+            ds.Error = string.Empty;
             HttpRequestMessage request = new(HttpMethod.Get, ds.Url);
             request.Headers.Referrer = request.RequestUri;
             long? endParam = (ds.End >= 0 ? ds.End : null);
@@ -210,31 +207,51 @@ namespace partialdownloadgui.Components
                     ds.DownloadStatus = DownloadStatus.DownloadError;
                     return;
                 }
-                if (response.Content.Headers.ContentLength != null)
+                // if requested section is not from the beginning and server does not support resuming
+                if (response.StatusCode == HttpStatusCode.OK && ds.Start > 0)
                 {
-                    if (response.StatusCode == HttpStatusCode.OK)
+                    response.Dispose();
+                    ds.Error = "Server does not support resuming, however there is already downloaded data present, or requested section is not from the beginning of file.";
+                    ds.DownloadStatus = DownloadStatus.DownloadError;
+                    return;
+                }
+                if (response.StatusCode == HttpStatusCode.OK && ds.Start == 0)
+                {
+                    if (response.Content.Headers.ContentLength != null)
                     {
-                        ds.Start = 0;
-                        ds.End = (response.Content.Headers.ContentLength ?? 0) - 1;
-                    }
-                    else
-                    {
-                        ds.End = ds.Start + (response.Content.Headers.ContentLength ?? 0) - 1;
+                        long contentLength = (response.Content.Headers.ContentLength ?? 0);
+                        if (ds.End < 0) ds.End = contentLength - 1;
+                        else if (contentLength < ds.Total)
+                        {
+                            response.Dispose();
+                            ds.Error = "Content length returned from server is smaller than the section requested.";
+                            ds.DownloadStatus = DownloadStatus.DownloadError;
+                            return;
+                        }
                     }
                 }
-                else
+                // if server supports resuming
+                if (response.StatusCode == HttpStatusCode.PartialContent)
                 {
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-                        ds.Start = 0;
-                        ds.End = (-1);
-                    }
-                    else
+                    if (response.Content.Headers.ContentLength == null)
                     {
                         response.Dispose();
                         ds.Error = "HTTP ContentLength missing.";
                         ds.DownloadStatus = DownloadStatus.DownloadError;
                         return;
+                    }
+                    long contentLength = (response.Content.Headers.ContentLength ?? 0);
+                    if (ds.End >= 0 && ds.Start + contentLength - 1 != ds.End)
+                    {
+                        response.Dispose();
+                        ds.Error = "Content length from server does not match download section.";
+                        ds.DownloadStatus = DownloadStatus.DownloadError;
+                        return;
+                    }
+                    // if it is a new download and all goes well
+                    if (ds.End < 0)
+                    {
+                        ds.End = ds.Start + contentLength - 1;
                     }
                 }
                 if (response.Content.Headers.ContentDisposition != null && !string.IsNullOrEmpty(response.Content.Headers.ContentDisposition.FileName))
@@ -258,19 +275,19 @@ namespace partialdownloadgui.Components
             }
         }
 
-        public static string getDownloadFileNameFromDownloadSection(DownloadSection ds)
+        public static string GetDownloadFileNameFromDownloadSection(DownloadSection ds)
         {
             if (!string.IsNullOrEmpty(ds.SuggestedName))
             {
-                return removeInvalidCharFromFileName(ds.SuggestedName);
+                return RemoveInvalidCharFromFileName(ds.SuggestedName);
             }
             else
             {
-                return getFileName(ds.Url);
+                return GetFileName(ds.Url);
             }
         }
 
-        public static string getDurationFromParam(string dur)
+        public static string GetDurationFromParam(string dur)
         {
             int seconds = 0;
             try

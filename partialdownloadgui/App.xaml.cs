@@ -23,7 +23,7 @@ namespace partialdownloadgui
             }
             try
             {
-                Util.loadAppSettingsFromFile();
+                Util.LoadAppSettingsFromFile();
             }
             catch
             {

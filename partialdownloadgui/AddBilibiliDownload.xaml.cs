@@ -75,7 +75,7 @@ namespace partialdownloadgui
                     d.SummarySection = box.Tag as DownloadSection;
                     try
                     {
-                        Util.downloadPreprocess(d.SummarySection);
+                        Util.DownloadPreprocess(d.SummarySection);
                     }
                     catch { }
                     if (!CheckPreprocessedDownloadSection(d.SummarySection)) continue;

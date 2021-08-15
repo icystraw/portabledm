@@ -155,35 +155,6 @@ namespace partialdownloadgui.Components
             }
         }
 
-        private bool DealWithSectionAnormalies()
-        {
-            int http200Secs = 0;
-            int http206Secs = 0;
-            bool anormalyFound = false;
-            foreach (DownloadSection ds in download.Sections)
-            {
-                if (ds.DownloadStatus == DownloadStatus.LogicalErrorOrCancelled)
-                {
-                    anormalyFound = true;
-                    break;
-                }
-                HttpStatusCode code = ds.HttpStatusCode;
-                if (code == HttpStatusCode.OK) http200Secs++;
-                if (code == HttpStatusCode.PartialContent) http206Secs++;
-            }
-            if (http200Secs > 1) anormalyFound = true;
-            if (http206Secs > 0 && http200Secs > 0) anormalyFound = true;
-            if (anormalyFound)
-            {
-                StopDownload();
-                foreach (DownloadSection ds in download.Sections)
-                {
-                    ds.DownloadStatus = DownloadStatus.LogicalErrorOrCancelled;
-                }
-            }
-            return anormalyFound;
-        }
-
         private void TryDownloadingAllUnfinishedSections()
         {
             for (int i = 0; i < download.Sections.Count; i++)
@@ -196,12 +167,10 @@ namespace partialdownloadgui.Components
             }
         }
 
-        private bool ProcessSections()
+        private void ProcessSections()
         {
-            if (DealWithSectionAnormalies()) return false;
             CreateNewSectionIfFeasible();
             TryDownloadingAllUnfinishedSections();
-            return true;
         }
 
         public ProgressData GetDownloadStatusData()
@@ -217,9 +186,9 @@ namespace partialdownloadgui.Components
             }
             else
             {
-                pd.DownloadView.FileName = Util.getDownloadFileNameFromDownloadSection(download.SummarySection);
+                pd.DownloadView.FileName = Util.GetDownloadFileNameFromDownloadSection(download.SummarySection);
             }
-            pd.DownloadView.Size = Util.getShortFileSize(download.SummarySection.Total);
+            pd.DownloadView.Size = Util.GetShortFileSize(download.SummarySection.Total);
             pd.DownloadView.Status = download.SummarySection.DownloadStatus;
             pd.DownloadView.Error = this.exMessage == null ? string.Empty : this.exMessage.Message;
             pd.DownloadView.DownloadGroup = download.DownloadGroup;
@@ -239,8 +208,8 @@ namespace partialdownloadgui.Components
                     // if a 206 section has been splitted before, downloader could download a little more than needed.
                     if (secTotal > 0 && secDownloaded > secTotal) secDownloaded = secTotal;
                     totalDownloaded += secDownloaded;
-                    sv.Size = Util.getShortFileSize(secTotal);
-                    sv.Progress = Util.getProgress(secDownloaded, secTotal);
+                    sv.Size = Util.GetShortFileSize(secTotal);
+                    sv.Progress = Util.GetProgress(secDownloaded, secTotal);
                     sv.Error = ds.Error;
                     pd.SectionViews.Add(sv);
                     if (total > 0)
@@ -259,8 +228,8 @@ namespace partialdownloadgui.Components
             download.SummarySection.BytesDownloaded = totalDownloaded;
             pd.ProgressBar = sb.ToString();
             sc.RegisterBytes(totalDownloaded);
-            pd.DownloadView.Speed = Util.getShortFileSize(sc.GetSpeed()) + "/sec";
-            pd.DownloadView.Progress = Util.getProgress(totalDownloaded, total);
+            pd.DownloadView.Speed = Util.GetShortFileSize(sc.GetSpeed()) + "/sec";
+            pd.DownloadView.Progress = Util.GetProgress(totalDownloaded, total);
 
             return pd;
         }
@@ -279,7 +248,6 @@ namespace partialdownloadgui.Components
 
         private void JoinSectionsToFile()
         {
-            if (DealWithSectionAnormalies()) throw new InvalidOperationException("Section anomalies exist. Please re-download this file with single thread.");
             DownloadSection ds = download.Sections[0];
             Stream streamDest = null, streamSection = null;
             byte[] buffer = new byte[bufferSize];
@@ -288,7 +256,7 @@ namespace partialdownloadgui.Components
             {
                 if (!string.IsNullOrEmpty(download.DownloadFolder) && Directory.Exists(download.DownloadFolder))
                 {
-                    string fileNameOnly = Util.getDownloadFileNameFromDownloadSection(ds);
+                    string fileNameOnly = Util.GetDownloadFileNameFromDownloadSection(ds);
                     fileNameWithPath = Path.Combine(download.DownloadFolder, fileNameOnly);
                     if (File.Exists(fileNameWithPath))
                     {
@@ -419,12 +387,7 @@ namespace partialdownloadgui.Components
                     download.SummarySection.DownloadStatus = DownloadStatus.Stopped;
                     return;
                 }
-                if (!ProcessSections())
-                {
-                    this.exMessage = new Exception("Section anomalies exist. Try to re-download with single thread.");
-                    download.SummarySection.DownloadStatus = DownloadStatus.DownloadError;
-                    return;
-                }
+                ProcessSections();
                 Thread.Sleep(500);
                 if (IsDownloadHalted()) break;
             }

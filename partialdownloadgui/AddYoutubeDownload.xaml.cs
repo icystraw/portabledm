@@ -63,7 +63,7 @@ namespace partialdownloadgui
                 CheckBox cb = new();
                 cb.Tag = ds;
                 Video v = ds.Tag as Video;
-                cb.Content = v.mimeType + ", " + Util.getShortFileSize(ds.Total) + ", " + v.duration + ", " + v.title;
+                cb.Content = v.mimeType + ", " + Util.GetShortFileSize(ds.Total) + ", " + v.duration + ", " + v.title;
                 if (v.mimeType.Contains("video"))
                     spRecentVideos.Children.Add(cb);
                 else
@@ -76,7 +76,7 @@ namespace partialdownloadgui
             DownloadSection ds = obj as DownloadSection;
             try
             {
-                Util.downloadPreprocess(ds);
+                Util.DownloadPreprocess(ds);
             }
             catch { }
         }
@@ -129,7 +129,7 @@ namespace partialdownloadgui
                     {
                         try
                         {
-                            Util.downloadPreprocess(d.SummarySection);
+                            Util.DownloadPreprocess(d.SummarySection);
                         }
                         catch { }
                         if (!CheckPreprocessedDownloadSection(d.SummarySection)) continue;
@@ -233,7 +233,7 @@ namespace partialdownloadgui
                 }
                 CheckBox cb = new();
                 cb.Tag = ds;
-                cb.Content = (v.qualityLabel ?? v.audioQuality) + ", " + v.mimeType + ", " + Util.getShortFileSize(fileSize);
+                cb.Content = (v.qualityLabel ?? v.audioQuality) + ", " + v.mimeType + ", " + Util.GetShortFileSize(fileSize);
                 if (v.mimeType.Contains("video"))
                     spVideos.Children.Add(cb);
                 else
