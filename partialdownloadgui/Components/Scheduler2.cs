@@ -115,7 +115,7 @@ namespace partialdownloadgui.Components
             foreach (DownloadSection ds in download.Sections)
             {
                 DownloadStatus status = ds.DownloadStatus;
-                if (status == DownloadStatus.DownloadError || status == DownloadStatus.LogicalErrorOrCancelled)
+                if (status == DownloadStatus.DownloadError || status == DownloadStatus.LogicalError)
                 {
                     ret = true;
                     break;

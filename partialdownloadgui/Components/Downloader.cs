@@ -80,17 +80,17 @@ namespace partialdownloadgui.Components
             if (this.downloadSection.DownloadStatus == DownloadStatus.Finished) return;
             if (this.downloadSection.Start < 0)
             {
-                this.downloadSection.DownloadStatus = DownloadStatus.LogicalErrorOrCancelled;
+                this.downloadSection.DownloadStatus = DownloadStatus.LogicalError;
                 return;
             }
             if (this.downloadSection.End >= 0 && this.downloadSection.Start > this.downloadSection.End)
             {
-                this.downloadSection.DownloadStatus = DownloadStatus.LogicalErrorOrCancelled;
+                this.downloadSection.DownloadStatus = DownloadStatus.LogicalError;
                 return;
             }
             if (string.IsNullOrEmpty(this.downloadSection.Url) || string.IsNullOrEmpty(this.downloadSection.FileName))
             {
-                this.downloadSection.DownloadStatus = DownloadStatus.LogicalErrorOrCancelled;
+                this.downloadSection.DownloadStatus = DownloadStatus.LogicalError;
                 return;
             }
 

@@ -6,7 +6,7 @@
         PrepareToDownload = 1,
         Downloading = 2,
         Finished = 3,
-        LogicalErrorOrCancelled = 4,
+        LogicalError = 4,
         DownloadError = 5
     }
 }

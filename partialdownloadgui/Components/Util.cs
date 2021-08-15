@@ -138,17 +138,17 @@ namespace partialdownloadgui.Components
         {
             if (ds.Start < 0)
             {
-                ds.DownloadStatus = DownloadStatus.LogicalErrorOrCancelled;
+                ds.DownloadStatus = DownloadStatus.LogicalError;
                 return;
             }
             if (ds.End >= 0 && ds.Start > ds.End)
             {
-                ds.DownloadStatus = DownloadStatus.LogicalErrorOrCancelled;
+                ds.DownloadStatus = DownloadStatus.LogicalError;
                 return;
             }
             if (string.IsNullOrEmpty(ds.Url))
             {
-                ds.DownloadStatus = DownloadStatus.LogicalErrorOrCancelled;
+                ds.DownloadStatus = DownloadStatus.LogicalError;
                 return;
             }
             ds.HttpStatusCode = 0;
