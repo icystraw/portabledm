@@ -71,6 +71,7 @@ namespace partialdownloadgui.Components
         private DownloadSection nextSection;
         private Guid nextSectionId;
         private string error;
+        private object tag;
 
         [JsonIgnore]
         public long Total
@@ -97,5 +98,7 @@ namespace partialdownloadgui.Components
         public string Password { get => password; set => password = value; }
         public string Error { get => error; set => error = value; }
         public string ContentType { get => contentType; set => contentType = value; }
+        [JsonIgnore]
+        public object Tag { get => tag; set => tag = value; }
     }
 }

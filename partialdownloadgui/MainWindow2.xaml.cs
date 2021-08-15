@@ -110,7 +110,6 @@ namespace partialdownloadgui
                 foreach (Guid g in downloadGroupsWithJustFinishedDownloads)
                 {
                     List<string> files = new();
-                    string downloadFolder = string.Empty;
                     // see if all files in this group have finished downloading
                     foreach (DownloadView dv in this.downloadViews)
                     {
@@ -124,7 +123,6 @@ namespace partialdownloadgui
                             else
                             {
                                 files.Add(dv.FileName);
-                                downloadFolder = dv.DownloadFolder;
                             }
                         }
                     }
@@ -132,17 +130,24 @@ namespace partialdownloadgui
                     if (files.Count > 0)
                     {
                         StringBuilder sb = new();
-                        sb.Append("-o \"");
-                        sb.Append(System.IO.Path.Combine(downloadFolder, DateTime.Now.ToString("MMMdd-HHmmss.fff") + " combined.mkv\" "));
+                        string outputFile = string.Empty;
                         foreach (string f in files)
                         {
                             sb.Append('\"');
                             sb.Append(f);
                             sb.Append("\" ");
+                            if (f.Contains(".video"))
+                            {
+                                outputFile = "-o \"" + f + ".mkv\" ";
+                            }
+                            else
+                            {
+                                if (string.IsNullOrEmpty(outputFile)) outputFile = "-o \"" + f + ".mkv\" ";
+                            }
                         }
                         try
                         {
-                            Process.Start("mkvmerge.exe", sb.ToString()).WaitForExit();
+                            Process.Start("mkvmerge.exe", outputFile + sb.ToString()).WaitForExit();
                         }
                         catch { }
                     }

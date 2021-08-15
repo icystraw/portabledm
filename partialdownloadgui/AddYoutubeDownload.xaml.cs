@@ -40,7 +40,15 @@ namespace partialdownloadgui
                 DownloadSection ds = new();
                 ds.Url = v.url;
                 ds.End = (-1);
-                ds.SuggestedName = v.duration + ", " + v.title + ", " + v.mimeType;
+                if (v.mimeType.Contains("video"))
+                {
+                    ds.SuggestedName = v.title + ".video";
+                }
+                else
+                {
+                    ds.SuggestedName = v.title + ".audio";
+                }
+                ds.Tag = v;
                 dsPreprocess.Add(ds);
                 Thread t = new(downloadPreprocess);
                 threads.Add(t);
@@ -54,8 +62,9 @@ namespace partialdownloadgui
                 if (!CheckPreprocessedDownloadSection(ds)) continue;
                 CheckBox cb = new();
                 cb.Tag = ds;
-                cb.Content = ds.SuggestedName + ", " + Util.getShortFileSize(ds.Total);
-                if (ds.SuggestedName.Contains("video"))
+                Video v = ds.Tag as Video;
+                cb.Content = v.mimeType + ", " + Util.getShortFileSize(ds.Total) + ", " + v.duration + ", " + v.title;
+                if (v.mimeType.Contains("video"))
                     spRecentVideos.Children.Add(cb);
                 else
                     spRecentAudios.Children.Add(cb);
@@ -214,11 +223,18 @@ namespace partialdownloadgui
                 DownloadSection ds = new();
                 ds.Url = v.url;
                 ds.End = (-1);
-                ds.SuggestedName = wp.PageTitle + ", " + (v.qualityLabel ?? v.audioQuality) + ", " + v.mimeType.Replace('/', '.');
+                if (v.mimeType.Contains("video"))
+                {
+                    ds.SuggestedName = wp.PageTitle + ".video";
+                }
+                else
+                {
+                    ds.SuggestedName = wp.PageTitle + ".audio";
+                }
                 CheckBox cb = new();
                 cb.Tag = ds;
                 cb.Content = (v.qualityLabel ?? v.audioQuality) + ", " + v.mimeType + ", " + Util.getShortFileSize(fileSize);
-                if (ds.SuggestedName.Contains("video"))
+                if (v.mimeType.Contains("video"))
                     spVideos.Children.Add(cb);
                 else
                     spAudios.Children.Add(cb);

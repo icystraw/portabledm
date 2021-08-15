@@ -78,7 +78,7 @@ namespace partialdownloadgui.Components
             else v.duration = string.Empty;
             if (parameters.Get("mime") != null)
             {
-                v.mimeType = parameters.Get("mime").Replace('/', '.');
+                v.mimeType = parameters.Get("mime");
             }
             else v.mimeType = string.Empty;
 
