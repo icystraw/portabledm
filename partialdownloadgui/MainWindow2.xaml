@@ -249,6 +249,35 @@
                     </ListView.ItemContainerStyle>
                     <ListView.View>
                         <GridView>
+                            <GridView.ColumnHeaderContainerStyle>
+                                <Style TargetType="GridViewColumnHeader">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="GridViewColumnHeader">
+                                                <Grid>
+                                                    <Border CornerRadius="3" Margin="1" Background="#FF7F9DFF">
+                                                        <TextBlock Foreground="White" Margin="3" Text="{TemplateBinding Content}" Width="{TemplateBinding Width}" TextAlignment="Center"></TextBlock>
+                                                    </Border>
+                                                    <Thumb Name="PART_HeaderGripper" HorizontalAlignment="Right">
+                                                        <Thumb.Style>
+                                                            <Style TargetType="Thumb">
+                                                                <Setter Property="Width" Value="10"></Setter>
+                                                                <Setter Property="Template">
+                                                                    <Setter.Value>
+                                                                        <ControlTemplate>
+                                                                            <Border Background="Transparent"/>
+                                                                        </ControlTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Style>
+                                                        </Thumb.Style>
+                                                    </Thumb>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </GridView.ColumnHeaderContainerStyle>
                             <GridViewColumn Width="30">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
