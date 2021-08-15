@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -126,6 +127,8 @@ namespace partialdownloadgui.Components
             try
             {
                 response = client.Send(request, HttpCompletionOption.ResponseHeadersRead);
+                Debug.WriteLine(response.Headers.ToString());
+                Debug.WriteLine(response.Content.Headers.ToString());
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     response.Dispose();
