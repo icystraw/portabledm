@@ -313,7 +313,7 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=Error}" Header="Message" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=Error}" Header="Message" Width="100" />
                         </GridView>
                     </ListView.View>
                 </ListView>
