@@ -255,8 +255,8 @@
                                         <Setter.Value>
                                             <ControlTemplate TargetType="GridViewColumnHeader">
                                                 <Grid>
-                                                    <Border CornerRadius="3" Margin="1" Background="#FF7F9DFF">
-                                                        <TextBlock Foreground="White" Margin="3" Text="{TemplateBinding Content}" Width="{TemplateBinding Width}" TextAlignment="Center"></TextBlock>
+                                                    <Border CornerRadius="5" Margin="1" Background="#FF7F9DFF">
+                                                        <TextBlock Foreground="White" Margin="2" Text="{TemplateBinding Content}" Width="{TemplateBinding Width}" TextAlignment="Center"></TextBlock>
                                                     </Border>
                                                     <Thumb Name="PART_HeaderGripper" HorizontalAlignment="Right">
                                                         <Thumb.Style>
