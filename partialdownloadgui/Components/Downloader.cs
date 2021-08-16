@@ -162,6 +162,11 @@ namespace partialdownloadgui.Components
                     this.downloadSection.BytesDownloaded = 0;
                 }
             }
+            if (this.downloadSection.End >= 0 && this.downloadSection.BytesDownloaded >= this.downloadSection.Total)
+            {
+                this.downloadSection.DownloadStatus = DownloadStatus.Finished;
+                return;
+            }
             request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(this.downloadSection.Start + this.downloadSection.BytesDownloaded, endParam);
             if (!string.IsNullOrEmpty(this.downloadSection.UserName) && !string.IsNullOrEmpty(this.downloadSection.Password))
             {
@@ -282,13 +287,14 @@ namespace partialdownloadgui.Components
                 streamFile.Close();
                 streamHttp.Close();
                 response.Dispose();
+                currentEnd = this.downloadSection.End;
                 if (currentEnd >= 0 && this.downloadSection.BytesDownloaded < (currentEnd - this.downloadSection.Start + 1))
                 {
                     this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
                     this.downloadSection.Error = "Download stream reached the end, but not enough data transmitted.";
                     return;
                 }
-                if (this.downloadSection.HttpStatusCode == HttpStatusCode.OK && currentEnd < 0)
+                if (this.downloadSection.HttpStatusCode == HttpStatusCode.OK && this.downloadSection.End < 0)
                 {
                     this.downloadSection.End = this.downloadSection.BytesDownloaded - 1;
                 }
