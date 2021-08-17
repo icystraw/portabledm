@@ -11,6 +11,7 @@ namespace partialdownloadgui.Components
     public class Downloader
     {
         private static readonly string userAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36";
+        private static readonly TimeSpan retryTimeSpan = new(0, 0, 10);
         private static HttpClient client;
 
         private DownloadSection downloadSection;
@@ -79,18 +80,25 @@ namespace partialdownloadgui.Components
         {
             this.downloadStopFlag = false;
             if (this.downloadSection.DownloadStatus == DownloadStatus.Finished) return;
+            if (this.downloadSection.DownloadStatus == DownloadStatus.DownloadError || this.downloadSection.DownloadStatus == DownloadStatus.LogicalError)
+            {
+                if (DateTime.Now.Subtract(this.downloadSection.LastStatusChange) < retryTimeSpan) return;
+            }
             if (this.downloadSection.Start < 0)
             {
+                this.downloadSection.Error = "Download start position less than zero.";
                 this.downloadSection.DownloadStatus = DownloadStatus.LogicalError;
                 return;
             }
             if (this.downloadSection.End >= 0 && this.downloadSection.Start > this.downloadSection.End)
             {
+                this.downloadSection.Error = "Download start position greater than end position.";
                 this.downloadSection.DownloadStatus = DownloadStatus.LogicalError;
                 return;
             }
             if (string.IsNullOrEmpty(this.downloadSection.Url) || string.IsNullOrEmpty(this.downloadSection.FileName))
             {
+                this.downloadSection.Error = "Download URL missing.";
                 this.downloadSection.DownloadStatus = DownloadStatus.LogicalError;
                 return;
             }

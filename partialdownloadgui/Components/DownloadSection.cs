@@ -72,6 +72,7 @@ namespace partialdownloadgui.Components
         private Guid nextSectionId;
         private string error;
         private object tag;
+        private DateTime lastStatusChange;
 
         [JsonIgnore]
         public long Total
@@ -86,7 +87,15 @@ namespace partialdownloadgui.Components
         public long Start { get => start; set => start = value; }
         public long End { get => end; set => end = value; }
         public string FileName { get => fileName; set => fileName = value; }
-        public DownloadStatus DownloadStatus { get => downloadStatus; set => downloadStatus = value; }
+        public DownloadStatus DownloadStatus
+        {
+            get => downloadStatus;
+            set
+            {
+                downloadStatus = value;
+                lastStatusChange = DateTime.Now;
+            }
+        }
         [JsonIgnore]
         public DownloadSection NextSection { get => nextSection; set => nextSection = value; }
         public string Url { get => url; set => url = value; }
@@ -100,5 +109,6 @@ namespace partialdownloadgui.Components
         public string ContentType { get => contentType; set => contentType = value; }
         [JsonIgnore]
         public object Tag { get => tag; set => tag = value; }
+        public DateTime LastStatusChange { get => lastStatusChange; set => lastStatusChange = value; }
     }
 }
