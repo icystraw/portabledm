@@ -203,6 +203,7 @@ namespace partialdownloadgui
             mnuStop.IsEnabled = false;
             mnuDelete.IsEnabled = false;
             mnuOpenFolder.IsEnabled = false;
+            mnuRedownload.IsEnabled = false;
 
             DownloadView dv = lstDownloads.SelectedItem as DownloadView;
             if (null == dv)
@@ -252,6 +253,10 @@ namespace partialdownloadgui
 
                 mnuEdit.IsEnabled = true;
                 mnuStart.IsEnabled = true;
+            }
+            if (dv.Status == DownloadStatus.Finished)
+            {
+                mnuRedownload.IsEnabled = true;
             }
         }
 
@@ -588,6 +593,11 @@ namespace partialdownloadgui
                     AddDownloadWorker(d).Start();
                 }
             }
+        }
+
+        private void mnuRedownload_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -31,23 +31,9 @@ namespace partialdownloadgui
             txtUrl.Focus();
         }
 
-        private void BrowseForDownloadedFiles()
-        {
-            System.Windows.Forms.FolderBrowserDialog dlg = new();
-            if (!string.IsNullOrEmpty(App.AppSettings.DownloadFolder))
-            {
-                if (Directory.Exists(App.AppSettings.DownloadFolder)) dlg.SelectedPath = App.AppSettings.DownloadFolder;
-            }
-            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                btnBrowse.Content = dlg.SelectedPath;
-                App.AppSettings.DownloadFolder = dlg.SelectedPath;
-            }
-        }
-
         private void btnBrowse_Click(object sender, RoutedEventArgs e)
         {
-            BrowseForDownloadedFiles();
+            Util.BrowseForDownloadedFiles(btnBrowse);
         }
 
         private void btnOk_Click(object sender, RoutedEventArgs e)

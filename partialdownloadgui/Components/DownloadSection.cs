@@ -19,6 +19,7 @@ namespace partialdownloadgui.Components
             newSection.HttpStatusCode = 0;
             newSection.UserName = this.userName;
             newSection.Password = this.password;
+            newSection.ParentFile = this.parentFile;
 
             return newSection;
         }
@@ -38,6 +39,7 @@ namespace partialdownloadgui.Components
             newSection.Password = this.password;
             newSection.SuggestedName = this.suggestedName;
             newSection.ContentType = this.contentType;
+            newSection.ParentFile = this.parentFile;
             newSection.NextSection = this.nextSection;
             if (this.nextSection != null) newSection.NextSectionId = this.nextSection.Id;
 
@@ -73,6 +75,7 @@ namespace partialdownloadgui.Components
         private string error;
         private object tag;
         private DateTime lastStatusChange;
+        private string parentFile;
 
         [JsonIgnore]
         public long Total
@@ -110,5 +113,6 @@ namespace partialdownloadgui.Components
         [JsonIgnore]
         public object Tag { get => tag; set => tag = value; }
         public DateTime LastStatusChange { get => lastStatusChange; set => lastStatusChange = value; }
+        public string ParentFile { get => parentFile; set => parentFile = value; }
     }
 }

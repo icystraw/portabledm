@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using System.Windows.Controls;
 
 namespace partialdownloadgui.Components
 {
@@ -325,6 +326,20 @@ namespace partialdownloadgui.Components
                         return Encoding.UTF8.GetString(ms2.ToArray());
                     }
                 }
+            }
+        }
+
+        public static void BrowseForDownloadedFiles(Button btnBrowse)
+        {
+            System.Windows.Forms.FolderBrowserDialog dlg = new();
+            if (!string.IsNullOrEmpty(App.AppSettings.DownloadFolder))
+            {
+                if (Directory.Exists(App.AppSettings.DownloadFolder)) dlg.SelectedPath = App.AppSettings.DownloadFolder;
+            }
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                btnBrowse.Content = dlg.SelectedPath;
+                App.AppSettings.DownloadFolder = dlg.SelectedPath;
             }
         }
     }
