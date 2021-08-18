@@ -32,90 +32,29 @@ namespace partialdownloadgui
         public DownloadSection Section { get => section; set => section = value; }
         public Download Download { get => download; set => download = value; }
 
+        private void UpdateRangeFigures()
+        {
+            double total = (double)section.Total;
+            double start = (double)section.Start;
+            double actualViewWidth = wpPortionView.ActualWidth - gs1.ActualWidth - gs2.ActualWidth;
+            double startPercentage = rectPV1.ActualWidth / actualViewWidth;
+            double downloadPercentage = rectPV2.ActualWidth / actualViewWidth;
+            txtReStart.Text = Math.Round(start + (total - 1) * startPercentage, MidpointRounding.AwayFromZero).ToString();
+            txtReEnd.Text = Math.Round(start + (total - 1) * (startPercentage + downloadPercentage), MidpointRounding.AwayFromZero).ToString();
+        }
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             if (null == this.section) return;
             txtFileName.Text = section.FileName;
             txtFileSize.Text = section.Total.ToString() + " bytes (" + section.Start + '-' + section.End + ')';
-            txtReStart.Text = section.Start.ToString();
-            txtReEnd.Text = section.End.ToString();
         }
-
-        private void DrawPortionView()
-        {
-            long start = GetStart();
-            long end = GetEnd();
-            if (start == (-1) || end == (-1) || end < start) return;
-            // section.Start <= start <= end <= section.End
-            decimal squares = 100;
-            decimal bytesPerSquare = (decimal)section.Total / squares;
-            decimal s1 = Math.Round((decimal)(start - section.Start + 1) / bytesPerSquare, MidpointRounding.AwayFromZero);
-            decimal s2 = Math.Round((decimal)(end - start + 1) / bytesPerSquare, MidpointRounding.AwayFromZero);
-            decimal s3 = Math.Round((decimal)(section.End - end + 1) / bytesPerSquare, MidpointRounding.AwayFromZero);
-            wpPortionView.Children.Clear();
-            for (int i = 0; i < s1; i++)
-            {
-                wpPortionView.Children.Add(GetRectangle(false));
-            }
-            for (int i = 0; i < s2; i++)
-            {
-                wpPortionView.Children.Add(GetRectangle(true));
-            }
-            for (int i = 0; i < s3; i++)
-            {
-                wpPortionView.Children.Add(GetRectangle(false));
-            }
-        }
-
-        private Rectangle GetRectangle(bool isDownloading)
-        {
-            Rectangle r = new();
-            r.Height = 7;
-            r.Width = 3;
-            r.RadiusX = 2;
-            r.RadiusY = 2;
-            r.Margin = new Thickness(1);
-            if (isDownloading)
-            {
-                r.Fill = Brushes.OrangeRed;
-            }
-            else
-            {
-                r.Fill = Brushes.LightSeaGreen;
-            }
-            return r;
-        }
-
-        private long GetStart()
-        {
-            long start = (-1);
-            try
-            {
-                start = Convert.ToInt64(txtReStart.Text.Trim());
-                if (start < section.Start || start > section.End) return (-1);
-            }
-            catch { }
-            return start;
-        }
-
-        private long GetEnd()
-        {
-            long end = (-1);
-            try
-            {
-                end = Convert.ToInt64(txtReEnd.Text.Trim());
-                if (end < section.Start || end > section.End) return (-1);
-            }
-            catch { }
-            return end;
-        }
-
 
         private void btnOk_Click(object sender, RoutedEventArgs e)
         {
-            long start = GetStart();
-            long end = GetEnd();
-            if (start == (-1) || end == (-1) || end < start)
+            long start = Convert.ToInt64(txtReStart.Text);
+            long end = Convert.ToInt64(txtReEnd.Text);
+            if (end < start)
             {
                 MessageBox.Show("Invalid download range.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
@@ -161,9 +100,9 @@ namespace partialdownloadgui
             this.Close();
         }
 
-        private void txtReStart_TextChanged(object sender, TextChangedEventArgs e)
+        private void rectPV2_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            DrawPortionView();
+            UpdateRangeFigures();
         }
     }
 }
