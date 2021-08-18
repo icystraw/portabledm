@@ -1,4 +1,5 @@
-﻿using System;
+﻿using partialdownloadgui.Components;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,12 @@ namespace partialdownloadgui
         {
             InitializeComponent();
         }
+
+        private DownloadSection section;
+        private Download download;
+
+        public DownloadSection Section { get => section; set => section = value; }
+        public Download Download { get => download; set => download = value; }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {

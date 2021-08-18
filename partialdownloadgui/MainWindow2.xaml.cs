@@ -75,8 +75,8 @@ namespace partialdownloadgui
 
         private void UpdateDownloads()
         {
-            bool bJustFinished = false;
             List<Guid> downloadGroupsWithJustFinishedDownloads = new();
+            List<Scheduler2> justFinishedDownloads = new();
             progressData = new();
             foreach (Scheduler2 s in schedulers)
             {
@@ -93,7 +93,7 @@ namespace partialdownloadgui
                         // if there is a download that has just completed
                         if (dv.Status == DownloadStatus.Downloading && pd.DownloadView.Status == DownloadStatus.Finished)
                         {
-                            bJustFinished = true;
+                            justFinishedDownloads.Add(s);
                             // does the finished download belong to any download group
                             if (dv.DownloadGroup != Guid.Empty && !downloadGroupsWithJustFinishedDownloads.Contains(dv.DownloadGroup))
                             {
@@ -153,7 +153,19 @@ namespace partialdownloadgui
                     }
                 }
             }
-            if (bJustFinished && chkShutdown.IsChecked == true && !IsBusy())
+            foreach (Scheduler2 s in justFinishedDownloads)
+            {
+                DownloadSection ds = s.Download.SummarySection;
+                if (!string.IsNullOrEmpty(ds.ParentFile))
+                {
+                    try
+                    {
+                        Process.Start("secreplace.exe", "\"" + ds.ParentFile + "\" " + ds.Start + " \"" + ds.FileName + "\"").WaitForExit();
+                    }
+                    catch { }
+                }
+            }
+            if (justFinishedDownloads.Count > 0 && chkShutdown.IsChecked == true && !IsBusy())
             {
                 try
                 {
@@ -597,7 +609,16 @@ namespace partialdownloadgui
 
         private void mnuRedownload_Click(object sender, RoutedEventArgs e)
         {
-
+            DownloadView dv = lstDownloads.SelectedItem as DownloadView;
+            if (null == dv) return;
+            if (dv.Status != DownloadStatus.Finished) return;
+            Scheduler2 s = dv.Tag as Scheduler2;
+            RedownloadSection rs = new();
+            rs.Section = s.Download.SummarySection;
+            if (rs.ShowDialog() == true)
+            {
+                AddDownloadWorker(rs.Download).Start();
+            }
         }
     }
 }
