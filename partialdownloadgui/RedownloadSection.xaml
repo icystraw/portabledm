@@ -22,8 +22,23 @@
             <Label>To</Label>
             <TextBox Name="txtReEnd" Width="80" Style="{DynamicResource RoundCornerText}" TextChanged="txtReStart_TextChanged"></TextBox>
         </StackPanel>
-        <WrapPanel Margin="5" Name="wpPortionView" HorizontalAlignment="Center"></WrapPanel>
+        <WrapPanel Margin="0,10,0,0" Name="wpPortionView" HorizontalAlignment="Center"></WrapPanel>
         <TextBlock Margin="5" TextWrapping="Wrap" Foreground="Blue" Text="After downloading, download manager will combine the downloaded section with the original file. Please ensure you have a backup of the original file in case of download failure as not every server supports downloading file sections."></TextBlock>
+        <WrapPanel>
+            <Label Content="Maximum no. of download thread (too many can affect web browsing):" />
+            <ComboBox Width="50" Name="cbThreads">
+                <ComboBoxItem>1</ComboBoxItem>
+                <ComboBoxItem>2</ComboBoxItem>
+                <ComboBoxItem>3</ComboBoxItem>
+                <ComboBoxItem>4</ComboBoxItem>
+                <ComboBoxItem IsSelected="True">5</ComboBoxItem>
+                <ComboBoxItem>6</ComboBoxItem>
+                <ComboBoxItem>7</ComboBoxItem>
+                <ComboBoxItem>8</ComboBoxItem>
+                <ComboBoxItem>9</ComboBoxItem>
+                <ComboBoxItem>10</ComboBoxItem>
+            </ComboBox>
+        </WrapPanel>
         <WrapPanel HorizontalAlignment="Center">
             <Button Name="btnOk" Margin="5" Width="40" Click="btnOk_Click" IsDefault="True" Style="{DynamicResource RoundCorner}">
                 <Image Source="pack://application:,,,/Images/go.png" />
