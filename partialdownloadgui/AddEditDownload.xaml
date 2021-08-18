@@ -45,7 +45,7 @@
                         <GroupBox Header="Partial Download">
                             <WrapPanel>
                                 <Label Content="Download"></Label>
-                                <TextBox Text="0" Width="60" Name="txtRangeFrom" Style="{DynamicResource RoundCornerText}">
+                                <TextBox Text="0" Width="80" Name="txtRangeFrom" Style="{DynamicResource RoundCornerText}">
                                     <TextBox.ToolTip>
                                         <ToolTip>
                                             <TextBlock>0 means from the start</TextBlock>
@@ -53,7 +53,7 @@
                                     </TextBox.ToolTip>
                                 </TextBox>
                                 <Label Content="-"></Label>
-                                <TextBox Text="0" Width="60" Name="txtRangeTo" Style="{DynamicResource RoundCornerText}">
+                                <TextBox Text="0" Width="80" Name="txtRangeTo" Style="{DynamicResource RoundCornerText}">
                                     <TextBox.ToolTip>
                                         <ToolTip>
                                             <TextBlock>0 means to the end</TextBlock>

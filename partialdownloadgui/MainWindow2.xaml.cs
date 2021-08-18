@@ -614,6 +614,7 @@ namespace partialdownloadgui
             if (dv.Status != DownloadStatus.Finished) return;
             Scheduler2 s = dv.Tag as Scheduler2;
             RedownloadSection rs = new();
+            rs.Owner = this;
             rs.Section = s.Download.SummarySection;
             if (rs.ShowDialog() == true)
             {

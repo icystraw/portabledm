@@ -33,7 +33,32 @@ namespace partialdownloadgui
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            if (null == this.section) return;
+            txtFileName.Text = section.FileName;
+            txtFileSize.Text = section.Total.ToString() + " bytes (" + section.Start + '-' + section.End + ')';
+            txtReStart.Text = section.Start.ToString();
+            txtReEnd.Text = section.End.ToString();
+        }
 
+        private void DrawPortionView()
+        {
+
+        }
+
+        private void btnOk_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;
+            this.Close();
+        }
+
+        private void txtReStart_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            DrawPortionView();
         }
     }
 }

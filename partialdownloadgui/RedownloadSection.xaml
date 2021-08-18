@@ -6,7 +6,31 @@
         xmlns:local="clr-namespace:partialdownloadgui"
         mc:Ignorable="d"
         Title="Redownload File Section" Background="#FFF2F5FC" Width="600" ShowInTaskbar="False" Loaded="Window_Loaded" SizeToContent="Height" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
-    <StackPanel>
-
+    <StackPanel Margin="5">
+        <StackPanel Orientation="Horizontal" Margin="5">
+            <TextBlock Text="File name: "></TextBlock>
+            <TextBlock Name="txtFileName"></TextBlock>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="5">
+            <TextBlock Text="File size: "></TextBlock>
+            <TextBlock Name="txtFileSize"></TextBlock>
+        </StackPanel>
+        <TextBlock Margin="5" Text="Please specify the byte range you would like to redownload:"></TextBlock>
+        <StackPanel Orientation="Horizontal">
+            <Label>From</Label>
+            <TextBox Name="txtReStart" Width="80" Style="{DynamicResource RoundCornerText}" TextChanged="txtReStart_TextChanged"></TextBox>
+            <Label>To</Label>
+            <TextBox Name="txtReEnd" Width="80" Style="{DynamicResource RoundCornerText}" TextChanged="txtReStart_TextChanged"></TextBox>
+        </StackPanel>
+        <WrapPanel Margin="5" Name="wpPortionView" HorizontalAlignment="Center"></WrapPanel>
+        <TextBlock Margin="5" TextWrapping="Wrap" Foreground="Blue" Text="After downloading, download manager will combine the downloaded section with the original file. Please ensure you have a backup of the original file in case of download failure as not every server supports downloading file sections."></TextBlock>
+        <WrapPanel HorizontalAlignment="Center">
+            <Button Name="btnOk" Margin="5" Width="40" Click="btnOk_Click" IsDefault="True" Style="{DynamicResource RoundCorner}">
+                <Image Source="pack://application:,,,/Images/go.png" />
+            </Button>
+            <Button Name="btnCancel" Margin="5" Width="40" Click="btnCancel_Click" IsCancel="True" Style="{DynamicResource RoundCorner}">
+                <Image Source="pack://application:,,,/Images/cancel.png" />
+            </Button>
+        </WrapPanel>
     </StackPanel>
 </Window>
