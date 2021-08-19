@@ -125,6 +125,7 @@ namespace partialdownloadgui
             }
             download.SummarySection = ds;
             download.Sections.Add(download.SummarySection.Clone());
+            download.NoDownloader = cbThreads.SelectedIndex + 1;
             this.DialogResult = true;
             this.Close();
         }
@@ -145,7 +146,6 @@ namespace partialdownloadgui
                     download.DownloadFolder = App.AppSettings.DownloadFolder;
                     btnBrowse.Content = download.DownloadFolder;
                 }
-                download.NoDownloader = cbThreads.SelectedIndex + 1;
                 if (!string.IsNullOrEmpty(this.url))
                 {
                     txtUrl.Text = this.url;
