@@ -129,12 +129,12 @@ namespace partialdownloadgui.Components
                 DownloadSection parent = this.sectionBeingEvaluated.Tag as DownloadSection;
                 this.sectionBeingEvaluated.NextSection = parent.NextSection;
                 if (parent.NextSection != null) this.sectionBeingEvaluated.NextSectionId = parent.NextSection.Id;
-                parent.NextSection = this.sectionBeingEvaluated;
-                parent.NextSectionId = this.sectionBeingEvaluated.Id;
-                parent.End = this.sectionBeingEvaluated.Start - 1;
                 this.sectionBeingEvaluated.Tag = null;
                 lock (sectionsLock)
                 {
+                    parent.NextSection = this.sectionBeingEvaluated;
+                    parent.NextSectionId = this.sectionBeingEvaluated.Id;
+                    parent.End = this.sectionBeingEvaluated.Start - 1;
                     download.Sections.Add(this.sectionBeingEvaluated);
                 }
                 this.sectionBeingEvaluated = null;
