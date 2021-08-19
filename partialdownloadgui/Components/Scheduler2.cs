@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using System.Text;
 using System.Threading;
 
@@ -15,6 +14,8 @@ namespace partialdownloadgui.Components
         private readonly Downloader[] downloaders = new Downloader[maxNoDownloader];
         private readonly Download download;
         private readonly object sectionsLock = new();
+
+        private DownloadSection sectionBeingEvaluated;
 
         private bool downloadStopFlag = false;
         private SpeedCalculator sc = new();
@@ -98,17 +99,46 @@ namespace partialdownloadgui.Components
 
         private bool ErrorAndUnstableSectionExists()
         {
-            bool ret = false;
             foreach (DownloadSection ds in download.Sections)
             {
                 DownloadStatus status = ds.DownloadStatus;
                 if (status == DownloadStatus.DownloadError || status == DownloadStatus.LogicalError || status == DownloadStatus.PrepareToDownload)
                 {
-                    ret = true;
-                    break;
+                    return true;
                 }
             }
-            return ret;
+            if (this.sectionBeingEvaluated != null) return true;
+            return false;
+        }
+
+        private void EvaluateStatusOfJustCreatedSectionIfExists()
+        {
+            if (null == this.sectionBeingEvaluated) return;
+
+            DownloadStatus ds = this.sectionBeingEvaluated.DownloadStatus;
+            if (ds == DownloadStatus.DownloadError || ds == DownloadStatus.LogicalError)
+            {
+                // fail to create new section. Throw this section away.
+                this.sectionBeingEvaluated = null;
+                return;
+            }
+            // section creation successful
+            if (ds == DownloadStatus.Downloading || ds == DownloadStatus.Finished)
+            {
+                // add the new section to section chain
+                DownloadSection parent = this.sectionBeingEvaluated.Tag as DownloadSection;
+                this.sectionBeingEvaluated.NextSection = parent.NextSection;
+                if (parent.NextSection != null) this.sectionBeingEvaluated.NextSectionId = parent.NextSection.Id;
+                parent.NextSection = this.sectionBeingEvaluated;
+                parent.NextSectionId = this.sectionBeingEvaluated.Id;
+                parent.End = this.sectionBeingEvaluated.Start - 1;
+                this.sectionBeingEvaluated.Tag = null;
+                lock (sectionsLock)
+                {
+                    download.Sections.Add(this.sectionBeingEvaluated);
+                }
+                this.sectionBeingEvaluated = null;
+            }
         }
 
         private void CreateNewSectionIfFeasible()
@@ -132,18 +162,19 @@ namespace partialdownloadgui.Components
             }
             if (biggestBeingDownloadedSection < 0) return;
             // if section size is big enough, split the section to two(creating a new download section)
+            // and start downloading the new section without adjusting the size of the old section.
             if (biggestDownloadingSectionSize / 2 > minSectionSize)
             {
-                lock (sectionsLock)
-                {
-                    DownloadSection newSection = download.Sections[biggestBeingDownloadedSection].Split();
-                    if (newSection != null) download.Sections.Add(newSection);
-                }
+                this.sectionBeingEvaluated = download.Sections[biggestBeingDownloadedSection].Split();
             }
         }
 
         private void TryDownloadingAllUnfinishedSections()
         {
+            if (this.sectionBeingEvaluated != null && this.sectionBeingEvaluated.DownloadStatus == DownloadStatus.Stopped)
+            {
+                AutoDownloadSection(this.sectionBeingEvaluated);
+            }
             foreach (DownloadSection ds in download.Sections)
             {
                 DownloadStatus status = ds.DownloadStatus;
@@ -156,6 +187,7 @@ namespace partialdownloadgui.Components
 
         private void ProcessSections()
         {
+            EvaluateStatusOfJustCreatedSectionIfExists();
             CreateNewSectionIfFeasible();
             TryDownloadingAllUnfinishedSections();
         }

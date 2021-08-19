@@ -40,12 +40,9 @@ namespace partialdownloadgui.Components
             newSection.SuggestedName = this.suggestedName;
             newSection.ContentType = this.contentType;
             newSection.ParentFile = this.parentFile;
-            newSection.NextSection = this.nextSection;
-            if (this.nextSection != null) newSection.NextSectionId = this.nextSection.Id;
-
-            this.nextSection = newSection;
-            this.nextSectionId = newSection.Id;
-            this.end = newSection.Start - 1;
+            // store a reference of this section in the new section, in order to add the
+            // new section into the section chain in future should the HTTP request succeed.
+            newSection.Tag = this;
 
             return newSection;
         }
