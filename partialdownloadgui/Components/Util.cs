@@ -17,7 +17,7 @@ namespace partialdownloadgui.Components
         public static readonly string settingsFileName = "settings.json";
         public static readonly string downloadsFileName = "downloads.json";
 
-        public static decimal GetProgress(long downloaded, long total)
+        public static decimal CalculateProgress(long downloaded, long total)
         {
             if (total > 0)
             {
@@ -28,7 +28,7 @@ namespace partialdownloadgui.Components
             return 0m;
         }
 
-        public static string RemoveInvalidCharFromFileName(string fileName)
+        public static string RemoveInvalidCharsFromFileName(string fileName)
         {
             if (string.IsNullOrEmpty(fileName)) return string.Empty;
             StringBuilder sb = new();
@@ -48,7 +48,7 @@ namespace partialdownloadgui.Components
             return sb.ToString();
         }
 
-        public static string GetShortFileSize(long fileSize)
+        public static string GetEasyToUnderstandFileSize(long fileSize)
         {
             decimal size = fileSize;
             if (size <= 0) return "0B";
@@ -73,7 +73,7 @@ namespace partialdownloadgui.Components
             }
         }
 
-        public static string GetFileName(string url)
+        public static string GetFileNameFromUrl(string url)
         {
             try
             {
@@ -280,15 +280,15 @@ namespace partialdownloadgui.Components
         {
             if (!string.IsNullOrEmpty(ds.SuggestedName))
             {
-                return RemoveInvalidCharFromFileName(ds.SuggestedName);
+                return RemoveInvalidCharsFromFileName(ds.SuggestedName);
             }
             else
             {
-                return GetFileName(ds.Url);
+                return GetFileNameFromUrl(ds.Url);
             }
         }
 
-        public static string GetDurationFromParam(string dur)
+        public static string CalculateDurationFromYoutubeUrlParam(string dur)
         {
             int seconds = 0;
             try

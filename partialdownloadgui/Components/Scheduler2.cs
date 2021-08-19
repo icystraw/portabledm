@@ -175,7 +175,7 @@ namespace partialdownloadgui.Components
             {
                 pd.DownloadView.FileName = Util.GetDownloadFileNameFromDownloadSection(download.SummarySection);
             }
-            pd.DownloadView.Size = Util.GetShortFileSize(download.SummarySection.Total);
+            pd.DownloadView.Size = Util.GetEasyToUnderstandFileSize(download.SummarySection.Total);
             pd.DownloadView.Status = download.SummarySection.DownloadStatus;
             pd.DownloadView.Error = this.exMessage == null ? string.Empty : this.exMessage.Message;
             pd.DownloadView.DownloadGroup = download.DownloadGroup;
@@ -195,8 +195,8 @@ namespace partialdownloadgui.Components
                     // if a 206 section has been splitted before, downloader could download a little more than needed.
                     if (secTotal > 0 && secDownloaded > secTotal) secDownloaded = secTotal;
                     totalDownloaded += secDownloaded;
-                    sv.Size = Util.GetShortFileSize(secTotal);
-                    sv.Progress = Util.GetProgress(secDownloaded, secTotal);
+                    sv.Size = Util.GetEasyToUnderstandFileSize(secTotal);
+                    sv.Progress = Util.CalculateProgress(secDownloaded, secTotal);
                     sv.Error = ds.Error;
                     pd.SectionViews.Add(sv);
                     if (total > 0)
@@ -215,8 +215,8 @@ namespace partialdownloadgui.Components
             download.SummarySection.BytesDownloaded = totalDownloaded;
             pd.ProgressBar = sb.ToString();
             sc.RegisterBytes(totalDownloaded);
-            pd.DownloadView.Speed = Util.GetShortFileSize(sc.GetSpeed()) + "/sec";
-            pd.DownloadView.Progress = Util.GetProgress(totalDownloaded, total);
+            pd.DownloadView.Speed = Util.GetEasyToUnderstandFileSize(sc.GetSpeed()) + "/sec";
+            pd.DownloadView.Progress = Util.CalculateProgress(totalDownloaded, total);
 
             return pd;
         }
@@ -282,7 +282,6 @@ namespace partialdownloadgui.Components
                 }
                 streamDest.Close();
                 download.SummarySection.FileName = fileNameWithPath;
-                download.SummarySection.Start = download.Sections[0].Start;
                 download.SummarySection.End = download.SummarySection.Start + totalFileSize - 1;
             }
             finally

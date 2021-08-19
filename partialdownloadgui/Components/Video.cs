@@ -73,7 +73,7 @@ namespace partialdownloadgui.Components
             NameValueCollection parameters = HttpUtility.ParseQueryString(new Uri(v.url).Query);
             if (parameters.Get("dur") != null)
             {
-                v.duration = Util.GetDurationFromParam(parameters.Get("dur"));
+                v.duration = Util.CalculateDurationFromYoutubeUrlParam(parameters.Get("dur"));
             }
             else v.duration = string.Empty;
             if (parameters.Get("mime") != null)
