@@ -22,19 +22,19 @@
             <TextBlock Text=" to "></TextBlock>
             <TextBlock Name="txtReEnd"></TextBlock>
         </StackPanel>
-        <Grid Margin="0,10,0,0" Name="wpPortionView" HorizontalAlignment="Center" Width="550" Height="50">
+        <Grid Margin="0,10,0,0" Name="wpPortionView" HorizontalAlignment="Center" Width="550" Height="40">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition Width="5"></ColumnDefinition>
+                <ColumnDefinition Width="8"></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition Width="5"></ColumnDefinition>
+                <ColumnDefinition Width="8"></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Rectangle Name="rectPV1" Grid.Column="0" Fill="LightSeaGreen" RadiusX="3" RadiusY="3"></Rectangle>
             <Rectangle Name="rectPV2" Grid.Column="2" Fill="OrangeRed" SizeChanged="rectPV2_SizeChanged" RadiusX="3" RadiusY="3"></Rectangle>
             <Rectangle Grid.Column="4" Fill="LightSeaGreen" RadiusX="3" RadiusY="3"></Rectangle>
-            <GridSplitter Name="gs1" Grid.Column="1" Background="Transparent" HorizontalAlignment="Stretch" Width="5"></GridSplitter>
-            <GridSplitter Name="gs2" Grid.Column="3" Background="Transparent" HorizontalAlignment="Stretch" Width="5"></GridSplitter>
+            <GridSplitter Name="gs1" Grid.Column="1" Background="Transparent" HorizontalAlignment="Stretch" Width="8"></GridSplitter>
+            <GridSplitter Name="gs2" Grid.Column="3" Background="Transparent" HorizontalAlignment="Stretch" Width="8"></GridSplitter>
         </Grid>
         <TextBlock Margin="5" TextWrapping="Wrap" Foreground="Blue" Text="After downloading, download manager will combine the downloaded section with the original file. Please ensure you have a backup of the original file in case of download failure as not all servers support downloading file sections."></TextBlock>
         <WrapPanel>
