@@ -139,16 +139,19 @@ namespace partialdownloadgui.Components
         {
             if (ds.Start < 0)
             {
+                ds.Error = "Download start position less than zero.";
                 ds.DownloadStatus = DownloadStatus.LogicalError;
                 return;
             }
             if (ds.End >= 0 && ds.Start > ds.End)
             {
+                ds.Error = "Download start position greater than end position.";
                 ds.DownloadStatus = DownloadStatus.LogicalError;
                 return;
             }
             if (string.IsNullOrEmpty(ds.Url))
             {
+                ds.Error = "Download URL missing.";
                 ds.DownloadStatus = DownloadStatus.LogicalError;
                 return;
             }
@@ -163,12 +166,14 @@ namespace partialdownloadgui.Components
                 request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes(ds.UserName + ':' + ds.Password)));
             }
             HttpResponseMessage response = null;
+            System.Net.Http.Headers.HttpContentHeaders headers = null;
             try
             {
                 response = Downloader.Client.Send(request, HttpCompletionOption.ResponseHeadersRead);
                 Debug.WriteLine(response.Headers.ToString());
                 Debug.WriteLine(response.Content.Headers.ToString());
                 ds.HttpStatusCode = response.StatusCode;
+                headers = response.Content.Headers;
                 // handle http redirection up to 5 times
                 for (int retry = 0; retry < 5; retry++)
                 {
@@ -183,9 +188,9 @@ namespace partialdownloadgui.Components
                         {
                             request.RequestUri = response.Headers.Location;
                         }
-                        else if (response.Content.Headers.ContentLocation != null)
+                        else if (headers.ContentLocation != null)
                         {
-                            request.RequestUri = response.Content.Headers.ContentLocation;
+                            request.RequestUri = headers.ContentLocation;
                         }
                         else break;
                         request.Headers.Referrer = request.RequestUri;
@@ -198,19 +203,20 @@ namespace partialdownloadgui.Components
                         ds.Url = request.RequestUri.AbsoluteUri;
                         response = Downloader.Client.Send(request, HttpCompletionOption.ResponseHeadersRead);
                         ds.HttpStatusCode = response.StatusCode;
+                        headers = response.Content.Headers;
                     }
                     else break;
                 }
-                if (ds.HttpStatusCode != HttpStatusCode.OK && ds.HttpStatusCode != HttpStatusCode.PartialContent)
+                if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.PartialContent)
                 {
                     response.Dispose();
                     ds.Error = "HTTP status is not 200 or 206. Maybe try again later.";
                     ds.DownloadStatus = DownloadStatus.DownloadError;
                     return;
                 }
-                if (ds.LastDownloadTime != DateTimeOffset.MaxValue && response.Content.Headers.LastModified != null)
+                if (ds.LastModified != DateTimeOffset.MaxValue && headers.LastModified != null)
                 {
-                    if (ds.LastDownloadTime < response.Content.Headers.LastModified)
+                    if (ds.LastModified != headers.LastModified)
                     {
                         response.Dispose();
                         ds.Error = "Content changed since last time you download it. Please re-download this file.";
@@ -228,9 +234,9 @@ namespace partialdownloadgui.Components
                 }
                 if (response.StatusCode == HttpStatusCode.OK && ds.Start == 0)
                 {
-                    if (response.Content.Headers.ContentLength != null)
+                    if (headers.ContentLength != null)
                     {
-                        long contentLength = (response.Content.Headers.ContentLength ?? 0);
+                        long contentLength = (headers.ContentLength ?? 0);
                         if (ds.End < 0) ds.End = contentLength - 1;
                         else if (contentLength < ds.Total)
                         {
@@ -244,14 +250,14 @@ namespace partialdownloadgui.Components
                 // if server supports resuming
                 if (response.StatusCode == HttpStatusCode.PartialContent)
                 {
-                    if (response.Content.Headers.ContentLength == null)
+                    if (headers.ContentLength == null)
                     {
                         response.Dispose();
                         ds.Error = "HTTP ContentLength missing.";
                         ds.DownloadStatus = DownloadStatus.DownloadError;
                         return;
                     }
-                    long contentLength = (response.Content.Headers.ContentLength ?? 0);
+                    long contentLength = (headers.ContentLength ?? 0);
                     if (ds.End >= 0 && ds.Start + contentLength - 1 != ds.End)
                     {
                         response.Dispose();
@@ -265,12 +271,14 @@ namespace partialdownloadgui.Components
                         ds.End = ds.Start + contentLength - 1;
                     }
                 }
-                if (response.Content.Headers.ContentDisposition != null && !string.IsNullOrEmpty(response.Content.Headers.ContentDisposition.FileName))
+                if (headers.ContentDisposition != null && !string.IsNullOrEmpty(headers.ContentDisposition.FileName))
                 {
-                    if (string.IsNullOrEmpty(ds.SuggestedName)) ds.SuggestedName = response.Content.Headers.ContentDisposition.FileName;
+                    if (string.IsNullOrEmpty(ds.SuggestedName)) ds.SuggestedName = headers.ContentDisposition.FileName;
                 }
-                if (response.Content.Headers.ContentType != null && response.Content.Headers.ContentType.MediaType != null)
-                    ds.ContentType = response.Content.Headers.ContentType.MediaType;
+                if (headers.ContentType != null && headers.ContentType.MediaType != null)
+                    ds.ContentType = headers.ContentType.MediaType;
+                if (headers.LastModified != null)
+                    ds.LastModified = headers.LastModified ?? DateTimeOffset.MaxValue;
                 response.Dispose();
                 ds.DownloadStatus = DownloadStatus.Stopped;
             }

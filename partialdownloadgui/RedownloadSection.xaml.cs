@@ -60,7 +60,7 @@ namespace partialdownloadgui
             newDs.UserName = section.UserName;
             newDs.Password = section.Password;
             newDs.ParentFile = section.FileName;
-            newDs.LastDownloadTime = section.LastDownloadTime;
+            newDs.LastModified = section.LastModified;
             try
             {
                 Util.DownloadPreprocess(newDs);

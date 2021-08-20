@@ -320,7 +320,6 @@ namespace partialdownloadgui.Components
                 streamDest.Close();
                 download.SummarySection.FileName = fileNameWithPath;
                 download.SummarySection.End = download.SummarySection.Start + totalFileSize - 1;
-                download.SummarySection.LastDownloadTime = DateTimeOffset.UtcNow;
             }
             finally
             {

@@ -19,6 +19,7 @@ namespace partialdownloadgui.Components
             newSection.UserName = this.userName;
             newSection.Password = this.password;
             newSection.ParentFile = this.parentFile;
+            newSection.LastModified = this.lastModified;
 
             return newSection;
         }
@@ -38,6 +39,7 @@ namespace partialdownloadgui.Components
             newSection.SuggestedName = this.suggestedName;
             newSection.ContentType = this.contentType;
             newSection.ParentFile = this.parentFile;
+            newSection.LastModified = this.lastModified;
             // store a reference of this section in the new section, in order to add the
             // new section into the section chain in future should the HTTP request succeed.
             newSection.Tag = this;
@@ -51,7 +53,7 @@ namespace partialdownloadgui.Components
             this.fileName = Util.appDataDirectory + this.id.ToString();
             this.bytesDownloaded = 0;
             this.error = string.Empty;
-            this.lastDownloadTime = DateTimeOffset.MaxValue;
+            this.lastModified = DateTimeOffset.MaxValue;
         }
 
         private Guid id;
@@ -72,7 +74,7 @@ namespace partialdownloadgui.Components
         private object tag;
         private DateTime lastStatusChange;
         private string parentFile;
-        private DateTimeOffset lastDownloadTime;
+        private DateTimeOffset lastModified;
 
         [JsonIgnore]
         public long Total
@@ -111,6 +113,6 @@ namespace partialdownloadgui.Components
         public object Tag { get => tag; set => tag = value; }
         public DateTime LastStatusChange { get => lastStatusChange; set => lastStatusChange = value; }
         public string ParentFile { get => parentFile; set => parentFile = value; }
-        public DateTimeOffset LastDownloadTime { get => lastDownloadTime; set => lastDownloadTime = value; }
+        public DateTimeOffset LastModified { get => lastModified; set => lastModified = value; }
     }
 }

@@ -186,11 +186,13 @@ namespace partialdownloadgui.Components
             HttpResponseMessage response = null;
             Stream streamHttp = null;
             Stream streamFile = null;
+            System.Net.Http.Headers.HttpContentHeaders headers = null;
 
             try
             {
                 response = client.Send(request, HttpCompletionOption.ResponseHeadersRead);
                 this.downloadSection.HttpStatusCode = response.StatusCode;
+                headers = response.Content.Headers;
                 if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.PartialContent)
                 {
                     response.Dispose();
@@ -198,9 +200,9 @@ namespace partialdownloadgui.Components
                     this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
                     return;
                 }
-                if (this.downloadSection.LastDownloadTime != DateTimeOffset.MaxValue && response.Content.Headers.LastModified != null)
+                if (this.downloadSection.LastModified != DateTimeOffset.MaxValue && headers.LastModified != null)
                 {
-                    if (this.downloadSection.LastDownloadTime < response.Content.Headers.LastModified)
+                    if (this.downloadSection.LastModified != headers.LastModified)
                     {
                         response.Dispose();
                         this.downloadSection.Error = "Content changed since last time you download it. Please re-download this file.";
@@ -217,9 +219,9 @@ namespace partialdownloadgui.Components
                         this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
                         return;
                     }
-                    if (response.Content.Headers.ContentLength != null)
+                    if (headers.ContentLength != null)
                     {
-                        long contentLength = (response.Content.Headers.ContentLength ?? 0);
+                        long contentLength = (headers.ContentLength ?? 0);
                         if (this.downloadSection.End < 0) this.downloadSection.End = contentLength - 1;
                         else if (contentLength < this.downloadSection.Total)
                         {
@@ -233,14 +235,14 @@ namespace partialdownloadgui.Components
                 }
                 if (response.StatusCode == HttpStatusCode.PartialContent)
                 {
-                    if (response.Content.Headers.ContentLength == null)
+                    if (headers.ContentLength == null)
                     {
                         response.Dispose();
                         this.downloadSection.Error = "HTTP ContentLength missing.";
                         this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
                         return;
                     }
-                    long contentLength = (response.Content.Headers.ContentLength ?? 0);
+                    long contentLength = (headers.ContentLength ?? 0);
                     if (this.downloadSection.End >= 0 && this.downloadSection.Start + this.downloadSection.BytesDownloaded + contentLength - 1 != this.downloadSection.End)
                     {
                         response.Dispose();
@@ -254,12 +256,14 @@ namespace partialdownloadgui.Components
                         this.downloadSection.End = this.downloadSection.Start + contentLength - 1;
                     }
                 }
-                if (response.Content.Headers.ContentDisposition != null && !string.IsNullOrEmpty(response.Content.Headers.ContentDisposition.FileName))
+                if (headers.ContentDisposition != null && !string.IsNullOrEmpty(headers.ContentDisposition.FileName))
                 {
-                    if (string.IsNullOrEmpty(this.downloadSection.SuggestedName)) this.downloadSection.SuggestedName = response.Content.Headers.ContentDisposition.FileName;
+                    if (string.IsNullOrEmpty(this.downloadSection.SuggestedName)) this.downloadSection.SuggestedName = headers.ContentDisposition.FileName;
                 }
-                if (response.Content.Headers.ContentType != null && response.Content.Headers.ContentType.MediaType != null)
-                    this.downloadSection.ContentType = response.Content.Headers.ContentType.MediaType;
+                if (headers.ContentType != null && headers.ContentType.MediaType != null)
+                    this.downloadSection.ContentType = headers.ContentType.MediaType;
+                if (headers.LastModified != null)
+                    this.downloadSection.LastModified = headers.LastModified ?? DateTimeOffset.MaxValue;
                 if (this.downloadStopFlag)
                 {
                     response.Dispose();
@@ -282,7 +286,6 @@ namespace partialdownloadgui.Components
                 while (bytesRead > 0)
                 {
                     streamFile.Write(buffer, 0, bytesRead);
-                    this.downloadSection.LastDownloadTime = DateTimeOffset.UtcNow;
                     this.downloadSection.BytesDownloaded += bytesRead;
                     // End can be reduced by Scheduler thread.
                     currentEnd = this.downloadSection.End;
