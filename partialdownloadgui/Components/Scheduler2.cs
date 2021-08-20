@@ -97,7 +97,7 @@ namespace partialdownloadgui.Components
             }
         }
 
-        private bool ErrorAndUnstableSectionExists()
+        private bool ErrorAndUnstableSectionsExist()
         {
             foreach (DownloadSection ds in download.Sections)
             {
@@ -132,6 +132,7 @@ namespace partialdownloadgui.Components
                 this.sectionBeingEvaluated.Tag = null;
                 lock (sectionsLock)
                 {
+                    // Downloader class has been designed in a way which won't cause havoc if Scheduler class does this
                     parent.NextSection = this.sectionBeingEvaluated;
                     parent.NextSectionId = this.sectionBeingEvaluated.Id;
                     parent.End = this.sectionBeingEvaluated.Start - 1;
@@ -143,7 +144,7 @@ namespace partialdownloadgui.Components
 
         private void CreateNewSectionIfFeasible()
         {
-            if (ErrorAndUnstableSectionExists() || FindFreeDownloader() == (-1)) return;
+            if (ErrorAndUnstableSectionsExist() || FindFreeDownloader() == (-1)) return;
             int biggestBeingDownloadedSection = (-1);
             long biggestDownloadingSectionSize = 0;
             // find current biggest downloading section
@@ -247,19 +248,21 @@ namespace partialdownloadgui.Components
             download.SummarySection.BytesDownloaded = totalDownloaded;
             pd.ProgressBar = sb.ToString();
             sc.RegisterBytes(totalDownloaded);
-            pd.DownloadView.Speed = Util.GetEasyToUnderstandFileSize(sc.GetSpeed()) + "/sec";
+            long speed = sc.GetSpeed();
+            pd.DownloadView.Speed = Util.GetEasyToUnderstandFileSize(speed) + "/sec";
             pd.DownloadView.Progress = Util.CalculateProgress(totalDownloaded, total);
+            pd.DownloadView.Eta = Util.CalculateEta(total - totalDownloaded, speed);
 
             return pd;
         }
 
         private bool IsDownloadHalted()
         {
-            for (int i = 0; i < download.Sections.Count; i++)
+            foreach (DownloadSection ds in download.Sections)
             {
-                DownloadStatus ds = download.Sections[i].DownloadStatus;
-                if (ds == DownloadStatus.Stopped || ds == DownloadStatus.DownloadError ||
-                    ds == DownloadStatus.PrepareToDownload || ds == DownloadStatus.Downloading)
+                DownloadStatus status = ds.DownloadStatus;
+                if (status == DownloadStatus.Stopped || status == DownloadStatus.DownloadError ||
+                    status == DownloadStatus.PrepareToDownload || status == DownloadStatus.Downloading)
                     return false;
             }
             return true;
@@ -409,7 +412,7 @@ namespace partialdownloadgui.Components
                 Thread.Sleep(500);
                 if (IsDownloadHalted()) break;
             }
-            if (ErrorAndUnstableSectionExists()) return;
+            if (ErrorAndUnstableSectionsExist()) return;
             try
             {
                 JoinSectionsToFile();

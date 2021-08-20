@@ -160,7 +160,8 @@
                                                 <TextBlock Text="{Binding Path=Size}"></TextBlock>
                                                 <TextBlock Text=", "></TextBlock>
                                                 <TextBlock Text="{Binding Path=Progress, StringFormat=N1}"></TextBlock>
-                                                <TextBlock Text="% completed"></TextBlock>
+                                                <TextBlock Text="% completed. "></TextBlock>
+                                                <TextBlock Text="{Binding Path=Eta}"></TextBlock>
                                             </WrapPanel>
                                             <ProgressBar HorizontalAlignment="Left" Minimum="0" Maximum="100" Value="{Binding Path=Progress}" Width="250" Height="8" Margin="2"></ProgressBar>
                                             <WrapPanel Margin="2">

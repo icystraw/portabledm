@@ -276,6 +276,34 @@ namespace partialdownloadgui.Components
             }
         }
 
+        public static string CalculateEta(long remaining, long speed)
+        {
+            if (remaining <= 0 || speed == 0) return string.Empty;
+            long seconds = remaining / speed;
+
+            StringBuilder sb = new();
+            sb.Append("ETA ");
+
+            if (seconds > 3600)
+            {
+                sb.Append(seconds / 3600);
+                sb.Append('h');
+                seconds %= 3600;
+            }
+            if (seconds > 60)
+            {
+                sb.Append(seconds / 60);
+                sb.Append('m');
+                seconds %= 60;
+            }
+            if (seconds > 0)
+            {
+                sb.Append(seconds);
+                sb.Append('s');
+            }
+            return sb.ToString();
+        }
+
         public static string GetDownloadFileNameFromDownloadSection(DownloadSection ds)
         {
             if (!string.IsNullOrEmpty(ds.SuggestedName))

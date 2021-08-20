@@ -16,6 +16,7 @@ namespace partialdownloadgui.Components
         private string error;
         private Guid downloadGroup;
         private object tag;
+        private string eta;
 
         public string FileName
         {
@@ -78,6 +79,15 @@ namespace partialdownloadgui.Components
         public string DownloadFolder { get => downloadFolder; set => downloadFolder = value; }
         public object Tag { get => tag; set => tag = value; }
         public Guid DownloadGroup { get => downloadGroup; set => downloadGroup = value; }
+        public string Eta
+        {
+            get => eta;
+            set
+            {
+                eta = value;
+                OnPropertyChanged(nameof(Eta));
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

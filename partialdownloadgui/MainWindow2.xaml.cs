@@ -101,6 +101,7 @@ namespace partialdownloadgui
                             }
                         }
                         dv.Status = pd.DownloadView.Status;
+                        dv.Eta = pd.DownloadView.Eta;
                         break;
                     }
                 }
