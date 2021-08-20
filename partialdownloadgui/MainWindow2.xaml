@@ -289,7 +289,7 @@
                             <GridViewColumn Width="30">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Image>
+                                        <Image MaxWidth="20">
                                             <Image.Style>
                                                 <Style TargetType="Image">
                                                     <Style.Triggers>
