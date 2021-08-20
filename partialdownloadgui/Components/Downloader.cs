@@ -181,7 +181,8 @@ namespace partialdownloadgui.Components
                 request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes(this.downloadSection.UserName + ':' + this.downloadSection.Password)));
             }
 
-            byte[] buffer = new byte[1048576];
+            int bufferSize = 1048576;
+            byte[] buffer = new byte[bufferSize];
             HttpResponseMessage response = null;
             Stream streamHttp = null;
             Stream streamFile = null;
@@ -276,7 +277,7 @@ namespace partialdownloadgui.Components
                     streamFile = File.Open(this.downloadSection.FileName, FileMode.Create, FileAccess.Write);
                 }
                 this.downloadSection.DownloadStatus = DownloadStatus.Downloading;
-                int bytesRead = streamHttp.Read(buffer, 0, 1048576);
+                int bytesRead = streamHttp.Read(buffer, 0, bufferSize);
                 long currentEnd = this.downloadSection.End;
                 while (bytesRead > 0)
                 {
@@ -285,23 +286,16 @@ namespace partialdownloadgui.Components
                     this.downloadSection.BytesDownloaded += bytesRead;
                     // End can be reduced by Scheduler thread.
                     currentEnd = this.downloadSection.End;
+                    if (currentEnd >= 0 && this.downloadSection.BytesDownloaded >= (currentEnd - this.downloadSection.Start + 1)) break;
                     if (this.downloadStopFlag)
                     {
                         streamFile.Close();
                         streamHttp.Close();
                         response.Dispose();
-                        if (currentEnd >= 0 && this.downloadSection.BytesDownloaded >= (currentEnd - this.downloadSection.Start + 1))
-                        {
-                            this.downloadSection.DownloadStatus = DownloadStatus.Finished;
-                        }
-                        else
-                        {
-                            this.downloadSection.DownloadStatus = DownloadStatus.Stopped;
-                        }
+                        this.downloadSection.DownloadStatus = DownloadStatus.Stopped;
                         return;
                     }
-                    if (currentEnd >= 0 && this.downloadSection.BytesDownloaded >= (currentEnd - this.downloadSection.Start + 1)) break;
-                    bytesRead = streamHttp.Read(buffer, 0, 1048576);
+                    bytesRead = streamHttp.Read(buffer, 0, bufferSize);
                 }
                 streamFile.Close();
                 streamHttp.Close();

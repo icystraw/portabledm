@@ -31,6 +31,7 @@ namespace partialdownloadgui.Components
             {
                 throw new ArgumentNullException(nameof(d));
             }
+            if (d.NoDownloader == 0) throw new ArgumentOutOfRangeException(nameof(d));
             download = d;
             if (download.SummarySection.DownloadStatus == DownloadStatus.Downloading)
             {
