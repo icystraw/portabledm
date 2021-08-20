@@ -208,6 +208,16 @@ namespace partialdownloadgui.Components
                     ds.DownloadStatus = DownloadStatus.DownloadError;
                     return;
                 }
+                if (ds.LastDownloadTime != DateTimeOffset.MaxValue && response.Content.Headers.LastModified != null)
+                {
+                    if (ds.LastDownloadTime < response.Content.Headers.LastModified)
+                    {
+                        response.Dispose();
+                        ds.Error = "Content changed since last time you download it. Please re-download this file.";
+                        ds.DownloadStatus = DownloadStatus.DownloadError;
+                        return;
+                    }
+                }
                 // if requested section is not from the beginning and server does not support resuming
                 if (response.StatusCode == HttpStatusCode.OK && ds.Start > 0)
                 {

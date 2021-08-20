@@ -276,12 +276,12 @@ namespace partialdownloadgui.Components
                     streamFile = File.Open(this.downloadSection.FileName, FileMode.Create, FileAccess.Write);
                 }
                 this.downloadSection.DownloadStatus = DownloadStatus.Downloading;
-                this.downloadSection.LastDownloadTime = DateTimeOffset.UtcNow;
                 int bytesRead = streamHttp.Read(buffer, 0, 1048576);
                 long currentEnd = this.downloadSection.End;
                 while (bytesRead > 0)
                 {
                     streamFile.Write(buffer, 0, bytesRead);
+                    this.downloadSection.LastDownloadTime = DateTimeOffset.UtcNow;
                     this.downloadSection.BytesDownloaded += bytesRead;
                     // End can be reduced by Scheduler thread.
                     currentEnd = this.downloadSection.End;
