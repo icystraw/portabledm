@@ -265,6 +265,7 @@ namespace partialdownloadgui.Components
                     status == DownloadStatus.PrepareToDownload || status == DownloadStatus.Downloading)
                     return false;
             }
+            if (this.sectionBeingEvaluated != null) return false;
             return true;
         }
 
@@ -412,7 +413,13 @@ namespace partialdownloadgui.Components
                 Thread.Sleep(500);
                 if (IsDownloadHalted()) break;
             }
-            if (ErrorAndUnstableSectionsExist()) return;
+            // if there is section with logical error
+            if (ErrorAndUnstableSectionsExist())
+            {
+                this.exMessage = new Exception("There are unusual sections, try re-download this file.");
+                download.SummarySection.DownloadStatus = DownloadStatus.DownloadError;
+                return;
+            }
             try
             {
                 JoinSectionsToFile();
