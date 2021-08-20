@@ -124,7 +124,7 @@ namespace partialdownloadgui
                 return;
             }
             download.SummarySection = ds;
-            download.Sections.Add(download.SummarySection.Clone());
+            download.Sections.Add(download.SummarySection.Copy());
             download.NoDownloader = cbThreads.SelectedIndex + 1;
             this.DialogResult = true;
             this.Close();

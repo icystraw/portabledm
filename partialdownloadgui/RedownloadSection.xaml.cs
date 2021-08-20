@@ -76,7 +76,7 @@ namespace partialdownloadgui
             }
             download = new();
             download.SummarySection = newDs;
-            download.Sections.Add(download.SummarySection.Clone());
+            download.Sections.Add(download.SummarySection.Copy());
             download.NoDownloader = cbThreads.SelectedIndex + 1;
             download.DownloadFolder = System.IO.Path.GetDirectoryName(newDs.ParentFile);
             this.DialogResult = true;

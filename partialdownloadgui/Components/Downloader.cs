@@ -197,6 +197,16 @@ namespace partialdownloadgui.Components
                     this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
                     return;
                 }
+                if (this.downloadSection.LastDownloadTime != DateTimeOffset.MaxValue && response.Content.Headers.LastModified != null)
+                {
+                    if (this.downloadSection.LastDownloadTime < response.Content.Headers.LastModified)
+                    {
+                        response.Dispose();
+                        this.downloadSection.Error = "Content changed since last time you download it. Please re-download this file.";
+                        this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
+                        return;
+                    }
+                }
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     if (this.downloadSection.Start > 0)
@@ -266,6 +276,7 @@ namespace partialdownloadgui.Components
                     streamFile = File.Open(this.downloadSection.FileName, FileMode.Create, FileAccess.Write);
                 }
                 this.downloadSection.DownloadStatus = DownloadStatus.Downloading;
+                this.downloadSection.LastDownloadTime = DateTimeOffset.UtcNow;
                 int bytesRead = streamHttp.Read(buffer, 0, 1048576);
                 long currentEnd = this.downloadSection.End;
                 while (bytesRead > 0)

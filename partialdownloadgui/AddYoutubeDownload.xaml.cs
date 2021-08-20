@@ -120,7 +120,7 @@ namespace partialdownloadgui
                         catch { }
                         if (!CheckPreprocessedDownloadSection(d.SummarySection)) continue;
                     }
-                    d.Sections.Add(d.SummarySection.Clone());
+                    d.Sections.Add(d.SummarySection.Copy());
                     if (cbCombine.IsChecked == true)
                     {
                         if (isRecent)

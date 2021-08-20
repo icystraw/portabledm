@@ -6,7 +6,7 @@ namespace partialdownloadgui.Components
 {
     public class DownloadSection
     {
-        public DownloadSection Clone()
+        public DownloadSection Copy()
         {
             DownloadSection newSection = new();
             newSection.Url = this.url;
@@ -15,7 +15,6 @@ namespace partialdownloadgui.Components
             newSection.SuggestedName = this.suggestedName;
             newSection.ContentType = this.contentType;
             newSection.DownloadStatus = DownloadStatus.Stopped;
-            newSection.BytesDownloaded = 0;
             newSection.HttpStatusCode = 0;
             newSection.UserName = this.userName;
             newSection.Password = this.password;
@@ -33,7 +32,6 @@ namespace partialdownloadgui.Components
             newSection.End = this.end;
             if (newSection.Start > newSection.End) return null;
             newSection.DownloadStatus = DownloadStatus.Stopped;
-            newSection.BytesDownloaded = 0;
             newSection.HttpStatusCode = 0;
             newSection.UserName = this.userName;
             newSection.Password = this.password;
@@ -53,6 +51,7 @@ namespace partialdownloadgui.Components
             this.fileName = Util.appDataDirectory + this.id.ToString();
             this.bytesDownloaded = 0;
             this.error = string.Empty;
+            this.lastDownloadTime = DateTimeOffset.MaxValue;
         }
 
         private Guid id;
@@ -73,6 +72,7 @@ namespace partialdownloadgui.Components
         private object tag;
         private DateTime lastStatusChange;
         private string parentFile;
+        private DateTimeOffset lastDownloadTime;
 
         [JsonIgnore]
         public long Total
@@ -111,5 +111,6 @@ namespace partialdownloadgui.Components
         public object Tag { get => tag; set => tag = value; }
         public DateTime LastStatusChange { get => lastStatusChange; set => lastStatusChange = value; }
         public string ParentFile { get => parentFile; set => parentFile = value; }
+        public DateTimeOffset LastDownloadTime { get => lastDownloadTime; set => lastDownloadTime = value; }
     }
 }
