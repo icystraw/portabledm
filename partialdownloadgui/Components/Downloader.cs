@@ -24,7 +24,7 @@ namespace partialdownloadgui.Components
             get => downloadSection;
             set
             {
-                this.downloadSection = value ?? throw new ArgumentException("Argument cannot be null.", nameof(value));
+                this.downloadSection = value ?? throw new ArgumentNullException(nameof(value));
             }
         }
 

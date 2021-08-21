@@ -31,7 +31,7 @@ namespace partialdownloadgui.Components
             {
                 throw new ArgumentNullException(nameof(d));
             }
-            if (d.NoDownloader == 0) throw new ArgumentOutOfRangeException(nameof(d));
+            if (d.NoDownloader == 0) throw new ArgumentOutOfRangeException(nameof(d), "Number of download threads cannot be zero.");
             download = d;
             if (download.SummarySection.DownloadStatus == DownloadStatus.Downloading)
             {
@@ -417,7 +417,7 @@ namespace partialdownloadgui.Components
             // if there is section with logical error
             if (ErrorAndUnstableSectionsExist())
             {
-                this.exMessage = new Exception("There are unusual sections, try re-download this file.");
+                this.exMessage = new InvalidOperationException("There are sections that are in invalid states. Download cannot continue. Try re-download this file.");
                 download.SummarySection.DownloadStatus = DownloadStatus.DownloadError;
                 return;
             }

@@ -62,7 +62,7 @@ namespace partialdownloadgui.Components
 
         public void FindScramblerAlgorithm()
         {
-            if (scramblerFunctions.Count == 0) throw new ArgumentNullException(nameof(scramblerFunctions));
+            if (scramblerFunctions.Count == 0) throw new ArgumentOutOfRangeException(nameof(scramblerFunctions), "No scrambler functions present.");
             string pattern = @"var\s" + scramblerFunctions[0].FunctionVariable + @"=\{(.+?)\}\};";
             Match m = Regex.Match(playerFile, pattern, RegexOptions.Singleline);
             if (m.Success)

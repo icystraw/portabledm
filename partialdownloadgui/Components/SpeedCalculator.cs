@@ -11,7 +11,7 @@ namespace partialdownloadgui.Components
 
         public void RegisterBytes(long bytes)
         {
-            if (bytes < 0) throw new ArgumentException("bytes cannot be less than zero.", nameof(bytes));
+            if (bytes < 0) throw new ArgumentOutOfRangeException(nameof(bytes), "bytes cannot be less than zero.");
             if (dt1 == DateTime.MinValue && dt2 == DateTime.MinValue)
             {
                 dt1 = DateTime.Now;

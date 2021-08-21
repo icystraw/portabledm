@@ -8,6 +8,11 @@
 		<ApplicationIcon>Images\decrease.ico</ApplicationIcon>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <DebugType>none</DebugType>
+	  <DebugSymbols>false</DebugSymbols>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<None Remove="Images\bilibili.png" />
 		<None Remove="Images\cancel.png" />
