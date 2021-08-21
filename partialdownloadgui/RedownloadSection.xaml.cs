@@ -50,7 +50,7 @@ namespace partialdownloadgui
             }
             if (!File.Exists(section.FileName) || (new FileInfo(section.FileName)).Length != section.Total)
             {
-                MessageBox.Show("Original file does not exists or is not correct size.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Original file does not exist or is not correct size.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
             DownloadSection newDs = new();
