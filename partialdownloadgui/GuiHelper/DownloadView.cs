@@ -17,6 +17,7 @@ namespace partialdownloadgui.Components
         private Guid downloadGroup;
         private object tag;
         private string eta;
+        private string lastModified;
 
         public string FileName
         {
@@ -88,6 +89,8 @@ namespace partialdownloadgui.Components
                 OnPropertyChanged(nameof(Eta));
             }
         }
+
+        public string LastModified { get => lastModified; set => lastModified = value; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

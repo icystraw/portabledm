@@ -199,6 +199,7 @@ namespace partialdownloadgui.Components
             ProgressData pd = new();
             pd.DownloadId = download.SummarySection.Id;
             pd.DownloadView.Url = download.SummarySection.Url;
+            pd.DownloadView.LastModified = download.SummarySection.LastModified == DateTimeOffset.MaxValue ? "Not available" : download.SummarySection.LastModified.ToLocalTime().ToString();
             pd.DownloadView.DownloadFolder = download.DownloadFolder;
             pd.DownloadView.Id = download.SummarySection.Id;
             if (IsDownloadFinished())

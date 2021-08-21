@@ -179,6 +179,7 @@ namespace partialdownloadgui
         private void ShowDownloadProgress(ProgressData pd)
         {
             txtUrl.Text = pd.DownloadView.Url;
+            txtLastModified.Text = pd.DownloadView.LastModified;
             txtDownloadFolder.Text = pd.DownloadView.DownloadFolder;
             if (pd.DownloadView.Status == DownloadStatus.Finished)
             {
@@ -193,7 +194,7 @@ namespace partialdownloadgui
             {
                 if (sv.HttpStatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    txtResumability.Text = "NOT RESUMABLE!";
+                    txtResumability.Text = "NO";
                     txtResumability.Foreground = Brushes.Red;
                     return;
                 }
@@ -222,6 +223,7 @@ namespace partialdownloadgui
             if (null == dv)
             {
                 txtUrl.Text = string.Empty;
+                txtLastModified.Text = string.Empty;
                 txtDownloadFolder.Text = string.Empty;
                 txtResumability.Text = string.Empty;
                 lstSections.ItemsSource = null;

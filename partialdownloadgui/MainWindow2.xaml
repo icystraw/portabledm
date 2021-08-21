@@ -245,6 +245,10 @@
                         <TextBlock Margin="2">Ability to resume:</TextBlock>
                         <TextBlock Margin="2" Name="txtResumability" />
                     </WrapPanel>
+                    <WrapPanel>
+                        <TextBlock Margin="2">Last modified:</TextBlock>
+                        <TextBlock Margin="2" Name="txtLastModified"></TextBlock>
+                    </WrapPanel>
                     <WrapPanel Name="wpProgress" Margin="0,10,0,0" />
                 </StackPanel>
             </GroupBox>
