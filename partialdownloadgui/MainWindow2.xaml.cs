@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -623,6 +624,23 @@ namespace partialdownloadgui
             {
                 AddDownloadWorker(rs.Download).Start();
             }
+        }
+
+        private void btnAddVideoDownload_Click(object sender, RoutedEventArgs e)
+        {
+            ContextMenu menu = FindResource("mnuVideoDownload") as ContextMenu;
+            if (menu != null)
+            {
+                menu.PlacementTarget = sender as Button;
+                menu.IsOpen = true;
+            }
+        }
+
+        private void btnAbout_Click(object sender, RoutedEventArgs e)
+        {
+            About a = new();
+            a.Owner = this;
+            a.ShowDialog();
         }
     }
 }

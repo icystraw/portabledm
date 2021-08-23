@@ -6,6 +6,20 @@
         xmlns:local="clr-namespace:partialdownloadgui"
         mc:Ignorable="d"
         Title="Portable HTTP Download Manager" Background="#FFF2F5FC" Height="500" Width="1000" Closed="Window_Closed" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen" Closing="Window_Closing" StateChanged="Window_StateChanged">
+    <Window.Resources>
+        <ContextMenu x:Key="mnuVideoDownload">
+            <MenuItem Header="Download YouTube Videos" Click="btnAddYoutube_Click">
+                <MenuItem.Icon>
+                    <Image Source="pack://application:,,,/Images/youtube.png"></Image>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Download bilibili.com Videos" Click="btnAddBilibili_Click">
+                <MenuItem.Icon>
+                    <Image Source="pack://application:,,,/Images/bilibili.png"></Image>
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
@@ -19,6 +33,7 @@
                         <CheckBox Name="chkShutdown">Shut down computer after active downloads finish</CheckBox>
                         <CheckBox Name="chkBrowserDownload" Unchecked="chkBrowserDownload_Unchecked" Checked="chkBrowserDownload_Checked">Take over download from browser (needs browser extension)</CheckBox>
                         <CheckBox Name="chkMinimizeToTray" Unchecked="chkMinimizeToTray_Unchecked" Checked="chkMinimizeToTray_Checked">Minimize to system tray</CheckBox>
+                        <Button Name="btnAbout" HorizontalAlignment="Left" Style="{DynamicResource RoundCorner}" Click="btnAbout_Click" Width="60" Margin="2" Content="About"></Button>
                     </StackPanel>
                 </GroupBox>
             </Expander>
@@ -33,19 +48,11 @@
                                 </ToolTip>
                             </Button.ToolTip>
                         </Button>
-                        <Button Name="btnAddYoutube" Click="btnAddYoutube_Click" Margin="2" Width="40" Style="{DynamicResource RoundCorner}">
-                            <Image Source="pack://application:,,,/Images/youtube.png" />
+                        <Button Name="btnAddVideoDownload" Click="btnAddVideoDownload_Click" Margin="2" Width="40" Style="{DynamicResource RoundCorner}">
+                            <Image Source="pack://application:,,,/Images/video.png" />
                             <Button.ToolTip>
                                 <ToolTip>
-                                    <TextBlock>Download videos from Youtube.</TextBlock>
-                                </ToolTip>
-                            </Button.ToolTip>
-                        </Button>
-                        <Button Name="btnAddBilibili" Click="btnAddBilibili_Click" Margin="2" Width="40" Style="{DynamicResource RoundCorner}">
-                            <Image Source="pack://application:,,,/Images/bilibili.png" />
-                            <Button.ToolTip>
-                                <ToolTip>
-                                    <TextBlock>Download videos from bilibili.com.</TextBlock>
+                                    <TextBlock>Download videos from video hosting sites.</TextBlock>
                                 </ToolTip>
                             </Button.ToolTip>
                         </Button>

@@ -1,0 +1,14 @@
+﻿<Window x:Class="partialdownloadgui.About"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:partialdownloadgui"
+        mc:Ignorable="d"
+        Title="About" SizeToContent="Height" Width="500" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Background="#FFF2F5FC">
+    <StackPanel>
+        <TextBlock FontSize="16" FontWeight="Bold" Margin="40,30,0,0">Portable HTTP Download Manager</TextBlock>
+        <TextBlock Margin="40,0,0,0">An open source HTTP file download manager built with .NET.</TextBlock>
+        <TextBlock Margin="40,0,0,40">Version 1.0</TextBlock>
+    </StackPanel>
+</Window>

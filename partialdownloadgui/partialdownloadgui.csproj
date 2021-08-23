@@ -35,6 +35,7 @@
 		<None Remove="Images\play.png" />
 		<None Remove="Images\sortfile.png" />
 		<None Remove="Images\sortprogress.png" />
+		<None Remove="Images\video.png" />
 		<None Remove="Images\youtube.png" />
 	</ItemGroup>
 
@@ -55,6 +56,7 @@
 		<Resource Include="Images\play.png" />
 		<Resource Include="Images\sortfile.png" />
 		<Resource Include="Images\sortprogress.png" />
+		<Resource Include="Images\video.png" />
 		<Resource Include="Images\youtube.png" />
 	</ItemGroup>
 
