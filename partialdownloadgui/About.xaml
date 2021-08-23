@@ -5,10 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:partialdownloadgui"
         mc:Ignorable="d"
-        Title="About" SizeToContent="Height" Width="500" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Background="#FFF2F5FC">
-    <StackPanel>
-        <TextBlock FontSize="16" FontWeight="Bold" Margin="40,30,0,0">Portable HTTP Download Manager</TextBlock>
-        <TextBlock Margin="40,0,0,0">An open source HTTP file download manager built with .NET.</TextBlock>
-        <TextBlock Margin="40,0,0,40">Version 1.0</TextBlock>
-    </StackPanel>
+        Title="About" AllowsTransparency="True" Background="Transparent" WindowStyle="None" SizeToContent="Height" Width="500" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" MouseLeftButtonUp="Window_MouseLeftButtonUp">
+    <Border CornerRadius="10" BorderThickness="1" BorderBrush="#FF7F9DFF" Background="#FFCFDBFF">
+        <StackPanel>
+            <TextBlock FontSize="16" FontWeight="Bold" Margin="40,30,0,0">Portable HTTP Download Manager</TextBlock>
+            <TextBlock Margin="40,0,0,0">An open source HTTP file download manager built with .NET.</TextBlock>
+            <TextBlock Margin="40,0,0,40">Version 1.0, icystraw</TextBlock>
+        </StackPanel>
+    </Border>
 </Window>
