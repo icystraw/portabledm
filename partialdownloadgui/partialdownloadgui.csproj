@@ -6,6 +6,11 @@
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
 		<ApplicationIcon>Images\decrease.ico</ApplicationIcon>
+		<PackageId>Portable HTTP Download Manager</PackageId>
+		<Authors>icystraw</Authors>
+		<Product>Portable HTTP Download Manager</Product>
+		<AssemblyName>portabledm</AssemblyName>
+		<Copyright>icystraw</Copyright>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
