@@ -202,18 +202,22 @@ namespace partialdownloadgui.Components
             pd.DownloadView.LastModified = download.SummarySection.LastModified == DateTimeOffset.MaxValue ? "Not available" : download.SummarySection.LastModified.ToLocalTime().ToString();
             pd.DownloadView.DownloadFolder = download.DownloadFolder;
             pd.DownloadView.Id = download.SummarySection.Id;
-            if (IsDownloadFinished())
+            pd.DownloadView.Size = Util.GetEasyToUnderstandFileSize(download.SummarySection.Total);
+            pd.DownloadView.Status = download.SummarySection.DownloadStatus;
+            pd.DownloadView.Error = this.exMessage == null ? string.Empty : this.exMessage.Message;
+            pd.DownloadView.DownloadGroup = download.DownloadGroup;
+            if (pd.DownloadView.Status == DownloadStatus.Finished)
             {
                 pd.DownloadView.FileName = download.SummarySection.FileName;
+                pd.DownloadView.Speed = string.Empty;
+                pd.DownloadView.Progress = 100;
+                pd.DownloadView.Eta = string.Empty;
+                return pd;
             }
             else
             {
                 pd.DownloadView.FileName = Util.GetDownloadFileNameFromDownloadSection(download.SummarySection);
             }
-            pd.DownloadView.Size = Util.GetEasyToUnderstandFileSize(download.SummarySection.Total);
-            pd.DownloadView.Status = download.SummarySection.DownloadStatus;
-            pd.DownloadView.Error = this.exMessage == null ? string.Empty : this.exMessage.Message;
-            pd.DownloadView.DownloadGroup = download.DownloadGroup;
 
             long total = download.SummarySection.Total;
             long totalDownloaded = 0;
@@ -321,6 +325,7 @@ namespace partialdownloadgui.Components
                 streamDest.Close();
                 download.SummarySection.FileName = fileNameWithPath;
                 download.SummarySection.End = download.SummarySection.Start + totalFileSize - 1;
+                download.SummarySection.BytesDownloaded = totalFileSize;
             }
             finally
             {

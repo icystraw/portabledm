@@ -87,6 +87,10 @@ namespace partialdownloadgui
                 {
                     if (dv.Id == pd.DownloadId)
                     {
+                        if (dv.Status == DownloadStatus.Finished && pd.DownloadView.Status == DownloadStatus.Finished)
+                        {
+                            break;
+                        }
                         dv.Size = pd.DownloadView.Size;
                         dv.Progress = pd.DownloadView.Progress;
                         dv.Speed = pd.DownloadView.Speed;
