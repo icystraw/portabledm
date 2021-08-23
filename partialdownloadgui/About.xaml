@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:partialdownloadgui"
         mc:Ignorable="d"
-        Title="About" AllowsTransparency="True" Background="Transparent" WindowStyle="None" SizeToContent="Height" Width="500" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" MouseLeftButtonUp="Window_MouseLeftButtonUp">
+        Title="About" ShowInTaskbar="False" AllowsTransparency="True" Background="Transparent" WindowStyle="None" SizeToContent="Height" Width="500" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" MouseLeftButtonUp="Window_MouseLeftButtonUp">
     <Border CornerRadius="10" BorderThickness="1" BorderBrush="#FF7F9DFF" Background="#FFCFDBFF">
         <StackPanel>
             <TextBlock FontSize="16" FontWeight="Bold" Margin="40,30,0,0">Portable HTTP Download Manager</TextBlock>
