@@ -13,6 +13,7 @@ namespace partialdownloadgui.Components
 
         private readonly Downloader[] downloaders = new Downloader[maxNoDownloader];
         private readonly Download download;
+        private readonly ProgressData pd;
         private readonly object sectionsLock = new();
 
         private DownloadSection sectionBeingEvaluated;
@@ -24,6 +25,8 @@ namespace partialdownloadgui.Components
         private Exception exMessage;
 
         public Download Download => download;
+
+        public ProgressData ProgressData => pd;
 
         public Scheduler2(Download d)
         {
@@ -37,6 +40,7 @@ namespace partialdownloadgui.Components
             {
                 download.SummarySection.DownloadStatus = DownloadStatus.Stopped;
             }
+            pd = new();
         }
 
         private int FindFreeDownloader()
@@ -194,9 +198,12 @@ namespace partialdownloadgui.Components
             TryDownloadingAllUnfinishedSections();
         }
 
-        public ProgressData GetDownloadStatusData()
+        public void RefreshDownloadStatusData()
         {
-            ProgressData pd = new();
+            pd.SectionViews.Clear();
+            pd.ProgressBar = string.Empty;
+
+            pd.DownloadView.Tag = this;
             pd.DownloadId = download.SummarySection.Id;
             pd.DownloadView.Url = download.SummarySection.Url;
             pd.DownloadView.LastModified = download.SummarySection.LastModified == DateTimeOffset.MaxValue ? "Not available" : download.SummarySection.LastModified.ToLocalTime().ToString();
@@ -212,7 +219,7 @@ namespace partialdownloadgui.Components
                 pd.DownloadView.Speed = string.Empty;
                 pd.DownloadView.Progress = 100;
                 pd.DownloadView.Eta = string.Empty;
-                return pd;
+                return;
             }
             else
             {
@@ -258,8 +265,6 @@ namespace partialdownloadgui.Components
             pd.DownloadView.Speed = Util.GetEasyToUnderstandFileSize(speed) + "/sec";
             pd.DownloadView.Progress = Util.CalculateProgress(totalDownloaded, total);
             pd.DownloadView.Eta = Util.CalculateEta(total - totalDownloaded, speed);
-
-            return pd;
         }
 
         private bool IsDownloadHalted()

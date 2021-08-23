@@ -28,7 +28,6 @@ namespace partialdownloadgui
 
             schedulers = new();
             downloadViews = new();
-            progressData = new();
 
             timer = new DispatcherTimer();
             timer.Tick += Timer_Tick;
@@ -43,7 +42,6 @@ namespace partialdownloadgui
 
         private List<Scheduler2> schedulers;
         private ObservableCollection<DownloadView> downloadViews;
-        private List<ProgressData> progressData;
         private DispatcherTimer timer;
         private System.Windows.Forms.NotifyIcon notifyIcon;
 
@@ -78,36 +76,21 @@ namespace partialdownloadgui
         {
             List<Guid> downloadGroupsWithJustFinishedDownloads = new();
             List<Scheduler2> justFinishedDownloads = new();
-            progressData = new();
             foreach (Scheduler2 s in schedulers)
             {
-                ProgressData pd = s.GetDownloadStatusData();
-                progressData.Add(pd);
-                foreach (DownloadView dv in downloadViews)
+                DownloadStatus oldStatus = s.ProgressData.DownloadView.Status;
+                if (oldStatus == DownloadStatus.Finished) continue;
+                s.RefreshDownloadStatusData();
+                DownloadStatus newStatus = s.ProgressData.DownloadView.Status;
+                // if there is a download that has just completed
+                if (newStatus == DownloadStatus.Finished && oldStatus == DownloadStatus.Downloading)
                 {
-                    if (dv.Id == pd.DownloadId)
+                    justFinishedDownloads.Add(s);
+                    DownloadView dv = s.ProgressData.DownloadView;
+                    // does the finished download belong to any download group
+                    if (dv.DownloadGroup != Guid.Empty && !downloadGroupsWithJustFinishedDownloads.Contains(dv.DownloadGroup))
                     {
-                        if (dv.Status == DownloadStatus.Finished)
-                        {
-                            break;
-                        }
-                        dv.Size = pd.DownloadView.Size;
-                        dv.Progress = pd.DownloadView.Progress;
-                        dv.Speed = pd.DownloadView.Speed;
-                        dv.FileName = pd.DownloadView.FileName;
-                        // if there is a download that has just completed
-                        if (dv.Status == DownloadStatus.Downloading && pd.DownloadView.Status == DownloadStatus.Finished)
-                        {
-                            justFinishedDownloads.Add(s);
-                            // does the finished download belong to any download group
-                            if (dv.DownloadGroup != Guid.Empty && !downloadGroupsWithJustFinishedDownloads.Contains(dv.DownloadGroup))
-                            {
-                                downloadGroupsWithJustFinishedDownloads.Add(dv.DownloadGroup);
-                            }
-                        }
-                        dv.Status = pd.DownloadView.Status;
-                        dv.Eta = pd.DownloadView.Eta;
-                        break;
+                        downloadGroupsWithJustFinishedDownloads.Add(dv.DownloadGroup);
                     }
                 }
             }
@@ -237,13 +220,8 @@ namespace partialdownloadgui
             }
             else
             {
-                foreach (ProgressData pv in progressData)
-                {
-                    if (pv.DownloadId == dv.Id)
-                    {
-                        ShowDownloadProgress(pv);
-                    }
-                }
+                Scheduler2 s = dv.Tag as Scheduler2;
+                ShowDownloadProgress(s.ProgressData);
             }
 
             btnDelete.IsEnabled = true;
@@ -326,11 +304,9 @@ namespace partialdownloadgui
         private Scheduler2 AddDownloadWorker(Download d)
         {
             Scheduler2 s = new(d);
-            ProgressData pd = s.GetDownloadStatusData();
+            s.RefreshDownloadStatusData();
             schedulers.Add(s);
-            progressData.Add(pd);
-            pd.DownloadView.Tag = s;
-            downloadViews.Add(pd.DownloadView);
+            downloadViews.Add(s.ProgressData.DownloadView);
             return s;
         }
 
@@ -456,7 +432,7 @@ namespace partialdownloadgui
             DownloadView dv = lstDownloads.SelectedItem as DownloadView;
             if (null == dv) return;
             Scheduler2 s = dv.Tag as Scheduler2;
-            if (s != null) Process.Start("explorer.exe", s.Download.DownloadFolder);
+            if (s != null) Process.Start("explorer.exe", s.ProgressData.DownloadView.DownloadFolder);
         }
 
         private void mnuOpenFolder_Click(object sender, RoutedEventArgs e)
