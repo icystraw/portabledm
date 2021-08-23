@@ -74,7 +74,7 @@ namespace partialdownloadgui
             Util.SaveDownloadsToFile(downloads);
         }
 
-        private void UpdateDownloads()
+        private void ReactToDownloadStatusChanges()
         {
             List<Guid> downloadGroupsWithJustFinishedDownloads = new();
             List<Scheduler2> justFinishedDownloads = new();
@@ -87,7 +87,7 @@ namespace partialdownloadgui
                 {
                     if (dv.Id == pd.DownloadId)
                     {
-                        if (dv.Status == DownloadStatus.Finished && pd.DownloadView.Status == DownloadStatus.Finished)
+                        if (dv.Status == DownloadStatus.Finished)
                         {
                             break;
                         }
@@ -440,7 +440,7 @@ namespace partialdownloadgui
         private void Timer_Tick(object sender, EventArgs e)
         {
             timer.Stop();
-            UpdateDownloads();
+            ReactToDownloadStatusChanges();
             UpdateControlsStatus();
             SeeIfThereIsDownloadFromBrowser();
             timer.Start();
