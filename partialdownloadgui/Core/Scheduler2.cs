@@ -41,6 +41,9 @@ namespace partialdownloadgui.Components
                 download.SummarySection.DownloadStatus = DownloadStatus.Stopped;
             }
             pd = new();
+            pd.DownloadView.Id = download.SummarySection.Id;
+            pd.DownloadView.Tag = this;
+            pd.DownloadView.Url = download.SummarySection.Url;
         }
 
         private int FindFreeDownloader()
@@ -203,12 +206,8 @@ namespace partialdownloadgui.Components
             pd.SectionViews.Clear();
             pd.ProgressBar = string.Empty;
 
-            pd.DownloadView.Tag = this;
-            pd.DownloadId = download.SummarySection.Id;
-            pd.DownloadView.Url = download.SummarySection.Url;
             pd.DownloadView.LastModified = download.SummarySection.LastModified == DateTimeOffset.MaxValue ? "Not available" : download.SummarySection.LastModified.ToLocalTime().ToString();
             pd.DownloadView.DownloadFolder = download.DownloadFolder;
-            pd.DownloadView.Id = download.SummarySection.Id;
             pd.DownloadView.Size = Util.GetEasyToUnderstandFileSize(download.SummarySection.Total);
             pd.DownloadView.Status = download.SummarySection.DownloadStatus;
             pd.DownloadView.Error = this.exMessage == null ? string.Empty : this.exMessage.Message;

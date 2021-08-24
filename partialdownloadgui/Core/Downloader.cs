@@ -78,10 +78,11 @@ namespace partialdownloadgui.Components
 
         public void StartDownloading()
         {
+            if (IsBusy()) return;
             this.downloadStopFlag = false;
             if (this.downloadSection.DownloadStatus == DownloadStatus.Finished) return;
             if (!Util.CheckDownloadSectionAgainstLogicalErrors(this.downloadSection)) return;
-            if (this.downloadSection.DownloadStatus == DownloadStatus.DownloadError || this.downloadSection.DownloadStatus == DownloadStatus.LogicalError)
+            if (this.downloadSection.DownloadStatus == DownloadStatus.DownloadError)
             {
                 if (DateTime.Now.Subtract(this.downloadSection.LastStatusChange) < retryTimeSpan) return;
             }

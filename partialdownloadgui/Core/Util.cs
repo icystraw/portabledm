@@ -205,7 +205,7 @@ namespace partialdownloadgui.Components
                     if (ds.End < 0) ds.End = contentLength - 1;
                     else if (contentLength < ds.Total)
                     {
-                        ds.Error = "Content length returned from server is smaller than the section requested.";
+                        ds.Error = "Content length returned from server is smaller than the section requested. Content length: " + contentLength;
                         ds.DownloadStatus = DownloadStatus.DownloadError;
                         return false;
                     }
@@ -233,12 +233,8 @@ namespace partialdownloadgui.Components
                     ds.End = ds.Start + contentLength - 1;
                 }
             }
-            if (headers.ContentDisposition != null && !string.IsNullOrEmpty(headers.ContentDisposition.FileName))
-            {
-                if (string.IsNullOrEmpty(ds.SuggestedName)) ds.SuggestedName = headers.ContentDisposition.FileName;
-            }
-            if (headers.ContentType != null && headers.ContentType.MediaType != null)
-                ds.ContentType = headers.ContentType.MediaType;
+            if (string.IsNullOrEmpty(ds.SuggestedName)) ds.SuggestedName = headers.ContentDisposition?.FileName;
+            ds.ContentType = headers.ContentType?.MediaType;
             ds.LastModified = headers.LastModified ?? DateTimeOffset.MaxValue;
 
             return true;
