@@ -239,8 +239,7 @@ namespace partialdownloadgui.Components
             }
             if (headers.ContentType != null && headers.ContentType.MediaType != null)
                 ds.ContentType = headers.ContentType.MediaType;
-            if (headers.LastModified != null)
-                ds.LastModified = headers.LastModified ?? DateTimeOffset.MaxValue;
+            ds.LastModified = headers.LastModified ?? DateTimeOffset.MaxValue;
 
             return true;
         }
