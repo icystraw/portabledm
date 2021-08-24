@@ -7,10 +7,13 @@
         mc:Ignorable="d"
         Title="About" ShowInTaskbar="False" AllowsTransparency="True" Background="Transparent" WindowStyle="None" SizeToContent="Height" Width="500" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" MouseLeftButtonUp="Window_MouseLeftButtonUp">
     <Border CornerRadius="10" BorderThickness="1" BorderBrush="#FF7F9DFF" Background="#FFCFDBFF">
-        <StackPanel>
-            <TextBlock FontSize="16" FontWeight="Bold" Margin="40,30,0,0">Portable HTTP Download Manager</TextBlock>
-            <TextBlock Margin="40,0,0,0">An open source HTTP file download manager built with .NET.</TextBlock>
-            <TextBlock Margin="40,0,0,40">Version 1.0, icystraw</TextBlock>
-        </StackPanel>
+        <DockPanel>
+            <Image DockPanel.Dock="Left" Source="pack://application:,,,/Images/decrease.ico" Width="40" Margin="30"></Image>
+            <StackPanel>
+                <TextBlock FontSize="16" FontWeight="Bold" Margin="0,25,0,0">Portable HTTP Download Manager</TextBlock>
+                <TextBlock>An open source HTTP file download manager built with .NET.</TextBlock>
+                <TextBlock Margin="0,0,0,30">Version 1.0, icystraw</TextBlock>
+            </StackPanel>
+        </DockPanel>
     </Border>
 </Window>
