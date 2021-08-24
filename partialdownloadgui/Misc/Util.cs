@@ -135,45 +135,129 @@ namespace partialdownloadgui.Components
             return ret;
         }
 
-        public static void DownloadPreprocess(DownloadSection ds)
+        public static HttpRequestMessage ConstructHttpRequest(string url, long start, long end, string userName, string password)
+        {
+            HttpRequestMessage request = new(HttpMethod.Get, url);
+            request.Headers.Referrer = request.RequestUri;
+            long? endParam = (end >= 0 ? end : null);
+            request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(start, endParam);
+            if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
+            {
+                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes(userName + ':' + password)));
+            }
+            return request;
+        }
+
+        public static bool CheckDownloadSectionAgainstLogicalErrors(DownloadSection ds)
         {
             if (ds.Start < 0)
             {
                 ds.Error = "Download start position less than zero.";
                 ds.DownloadStatus = DownloadStatus.LogicalError;
-                return;
+                return false;
             }
             if (ds.End >= 0 && ds.Start > ds.End)
             {
                 ds.Error = "Download start position greater than end position.";
                 ds.DownloadStatus = DownloadStatus.LogicalError;
-                return;
+                return false;
             }
-            if (string.IsNullOrEmpty(ds.Url))
+            if (string.IsNullOrEmpty(ds.Url) || string.IsNullOrEmpty(ds.FileName))
             {
-                ds.Error = "Download URL missing.";
+                ds.Error = "Download URL or target file name missing.";
                 ds.DownloadStatus = DownloadStatus.LogicalError;
-                return;
+                return false;
             }
+            return true;
+        }
+
+        public static bool SyncDownloadSectionAgainstHTTPResponse(DownloadSection ds, HttpResponseMessage response)
+        {
+            System.Net.Http.Headers.HttpContentHeaders headers = response.Content.Headers;
+
+            if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.PartialContent)
+            {
+                ds.Error = "HTTP status is not 200 or 206. Maybe try again later.";
+                ds.DownloadStatus = DownloadStatus.DownloadError;
+                return false;
+            }
+            if (ds.LastModified != DateTimeOffset.MaxValue && headers.LastModified != null)
+            {
+                if (ds.LastModified != headers.LastModified)
+                {
+                    ds.Error = "Content changed since last time you download it. Please re-download this file.";
+                    ds.DownloadStatus = DownloadStatus.DownloadError;
+                    return false;
+                }
+            }
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                // if requested section is not from the beginning and server does not support resuming
+                if (ds.Start > 0)
+                {
+                    ds.Error = "Server does not support resuming, however requested section is not from the beginning of file.";
+                    ds.DownloadStatus = DownloadStatus.DownloadError;
+                    return false;
+                }
+                if (headers.ContentLength != null)
+                {
+                    long contentLength = (headers.ContentLength ?? 0);
+                    if (ds.End < 0) ds.End = contentLength - 1;
+                    else if (contentLength < ds.Total)
+                    {
+                        ds.Error = "Content length returned from server is smaller than the section requested.";
+                        ds.DownloadStatus = DownloadStatus.DownloadError;
+                        return false;
+                    }
+                }
+                ds.BytesDownloaded = 0;
+            }
+            if (response.StatusCode == HttpStatusCode.PartialContent)
+            {
+                if (headers.ContentLength == null)
+                {
+                    ds.Error = "HTTP ContentLength missing.";
+                    ds.DownloadStatus = DownloadStatus.DownloadError;
+                    return false;
+                }
+                long contentLength = (headers.ContentLength ?? 0);
+                if (ds.End >= 0 && ds.Start + ds.BytesDownloaded + contentLength - 1 != ds.End)
+                {
+                    ds.Error = "Content length from server does not match download section.";
+                    ds.DownloadStatus = DownloadStatus.DownloadError;
+                    return false;
+                }
+                // if it is a new download and all goes well
+                if (ds.End < 0)
+                {
+                    ds.End = ds.Start + contentLength - 1;
+                }
+            }
+            if (headers.ContentDisposition != null && !string.IsNullOrEmpty(headers.ContentDisposition.FileName))
+            {
+                if (string.IsNullOrEmpty(ds.SuggestedName)) ds.SuggestedName = headers.ContentDisposition.FileName;
+            }
+            if (headers.ContentType != null && headers.ContentType.MediaType != null)
+                ds.ContentType = headers.ContentType.MediaType;
+            if (headers.LastModified != null)
+                ds.LastModified = headers.LastModified ?? DateTimeOffset.MaxValue;
+
+            return true;
+        }
+
+        public static void DownloadPreprocess(DownloadSection ds)
+        {
+            if (!CheckDownloadSectionAgainstLogicalErrors(ds)) return;
             ds.HttpStatusCode = 0;
             ds.Error = string.Empty;
-            HttpRequestMessage request = new(HttpMethod.Get, ds.Url);
-            request.Headers.Referrer = request.RequestUri;
-            long? endParam = (ds.End >= 0 ? ds.End : null);
-            request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(ds.Start, endParam);
-            if (!string.IsNullOrEmpty(ds.UserName) && !string.IsNullOrEmpty(ds.Password))
-            {
-                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes(ds.UserName + ':' + ds.Password)));
-            }
+            HttpRequestMessage request = ConstructHttpRequest(ds.Url, ds.Start, ds.End, ds.UserName, ds.Password);
             HttpResponseMessage response = null;
-            System.Net.Http.Headers.HttpContentHeaders headers = null;
             try
             {
                 response = Downloader.Client.Send(request, HttpCompletionOption.ResponseHeadersRead);
                 Debug.WriteLine(response.Headers.ToString());
                 Debug.WriteLine(response.Content.Headers.ToString());
                 ds.HttpStatusCode = response.StatusCode;
-                headers = response.Content.Headers;
                 // handle http redirection up to 5 times
                 for (int retry = 0; retry < 5; retry++)
                 {
@@ -183,104 +267,28 @@ namespace partialdownloadgui.Components
                         ds.HttpStatusCode == HttpStatusCode.TemporaryRedirect ||
                         ds.HttpStatusCode == HttpStatusCode.PermanentRedirect)
                     {
-                        request = new();
+                        Uri uri;
                         if (response.Headers.Location != null)
                         {
-                            request.RequestUri = response.Headers.Location;
+                            uri = response.Headers.Location;
                         }
-                        else if (headers.ContentLocation != null)
+                        else if (response.Content.Headers.ContentLocation != null)
                         {
-                            request.RequestUri = headers.ContentLocation;
+                            uri = response.Content.Headers.ContentLocation;
                         }
                         else break;
-                        request.Headers.Referrer = request.RequestUri;
-                        request.Method = HttpMethod.Get;
-                        request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(ds.Start, endParam);
-                        if (!string.IsNullOrEmpty(ds.UserName) && !string.IsNullOrEmpty(ds.Password))
-                        {
-                            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes(ds.UserName + ':' + ds.Password)));
-                        }
-                        ds.Url = request.RequestUri.AbsoluteUri;
+                        ds.Url = uri.AbsoluteUri;
+                        request = ConstructHttpRequest(ds.Url, ds.Start, ds.End, ds.UserName, ds.Password);
                         response = Downloader.Client.Send(request, HttpCompletionOption.ResponseHeadersRead);
                         ds.HttpStatusCode = response.StatusCode;
-                        headers = response.Content.Headers;
                     }
                     else break;
                 }
-                if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.PartialContent)
+                if (SyncDownloadSectionAgainstHTTPResponse(ds, response))
                 {
-                    response.Dispose();
-                    ds.Error = "HTTP status is not 200 or 206. Maybe try again later.";
-                    ds.DownloadStatus = DownloadStatus.DownloadError;
-                    return;
+                    ds.DownloadStatus = DownloadStatus.Stopped;
                 }
-                if (ds.LastModified != DateTimeOffset.MaxValue && headers.LastModified != null)
-                {
-                    if (ds.LastModified != headers.LastModified)
-                    {
-                        response.Dispose();
-                        ds.Error = "Content changed since last time you download it. Please re-download this file.";
-                        ds.DownloadStatus = DownloadStatus.DownloadError;
-                        return;
-                    }
-                }
-                // if requested section is not from the beginning and server does not support resuming
-                if (response.StatusCode == HttpStatusCode.OK && ds.Start > 0)
-                {
-                    response.Dispose();
-                    ds.Error = "Server does not support resuming, however requested section is not from the beginning of file.";
-                    ds.DownloadStatus = DownloadStatus.DownloadError;
-                    return;
-                }
-                if (response.StatusCode == HttpStatusCode.OK && ds.Start == 0)
-                {
-                    if (headers.ContentLength != null)
-                    {
-                        long contentLength = (headers.ContentLength ?? 0);
-                        if (ds.End < 0) ds.End = contentLength - 1;
-                        else if (contentLength < ds.Total)
-                        {
-                            response.Dispose();
-                            ds.Error = "Content length returned from server is smaller than the section requested.";
-                            ds.DownloadStatus = DownloadStatus.DownloadError;
-                            return;
-                        }
-                    }
-                }
-                // if server supports resuming
-                if (response.StatusCode == HttpStatusCode.PartialContent)
-                {
-                    if (headers.ContentLength == null)
-                    {
-                        response.Dispose();
-                        ds.Error = "HTTP ContentLength missing.";
-                        ds.DownloadStatus = DownloadStatus.DownloadError;
-                        return;
-                    }
-                    long contentLength = (headers.ContentLength ?? 0);
-                    if (ds.End >= 0 && ds.Start + contentLength - 1 != ds.End)
-                    {
-                        response.Dispose();
-                        ds.Error = "Content length from server does not match download section.";
-                        ds.DownloadStatus = DownloadStatus.DownloadError;
-                        return;
-                    }
-                    // if it is a new download and all goes well
-                    if (ds.End < 0)
-                    {
-                        ds.End = ds.Start + contentLength - 1;
-                    }
-                }
-                if (headers.ContentDisposition != null && !string.IsNullOrEmpty(headers.ContentDisposition.FileName))
-                {
-                    if (string.IsNullOrEmpty(ds.SuggestedName)) ds.SuggestedName = headers.ContentDisposition.FileName;
-                }
-                if (headers.ContentType != null && headers.ContentType.MediaType != null)
-                    ds.ContentType = headers.ContentType.MediaType;
-                if (headers.LastModified != null)
-                    ds.LastModified = headers.LastModified ?? DateTimeOffset.MaxValue;
                 response.Dispose();
-                ds.DownloadStatus = DownloadStatus.Stopped;
             }
             catch (Exception ex)
             {

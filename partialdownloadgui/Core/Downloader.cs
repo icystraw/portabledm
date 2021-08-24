@@ -80,27 +80,10 @@ namespace partialdownloadgui.Components
         {
             this.downloadStopFlag = false;
             if (this.downloadSection.DownloadStatus == DownloadStatus.Finished) return;
+            if (!Util.CheckDownloadSectionAgainstLogicalErrors(this.downloadSection)) return;
             if (this.downloadSection.DownloadStatus == DownloadStatus.DownloadError || this.downloadSection.DownloadStatus == DownloadStatus.LogicalError)
             {
                 if (DateTime.Now.Subtract(this.downloadSection.LastStatusChange) < retryTimeSpan) return;
-            }
-            if (this.downloadSection.Start < 0)
-            {
-                this.downloadSection.Error = "Download start position less than zero.";
-                this.downloadSection.DownloadStatus = DownloadStatus.LogicalError;
-                return;
-            }
-            if (this.downloadSection.End >= 0 && this.downloadSection.Start > this.downloadSection.End)
-            {
-                this.downloadSection.Error = "Download start position greater than end position.";
-                this.downloadSection.DownloadStatus = DownloadStatus.LogicalError;
-                return;
-            }
-            if (string.IsNullOrEmpty(this.downloadSection.Url) || string.IsNullOrEmpty(this.downloadSection.FileName))
-            {
-                this.downloadSection.Error = "Download URL missing.";
-                this.downloadSection.DownloadStatus = DownloadStatus.LogicalError;
-                return;
             }
 
             this.downloadSection.DownloadStatus = DownloadStatus.PrepareToDownload;
@@ -160,9 +143,6 @@ namespace partialdownloadgui.Components
 
         private void DownloadThreadProc()
         {
-            HttpRequestMessage request = new(HttpMethod.Get, this.downloadSection.Url);
-            request.Headers.Referrer = request.RequestUri;
-            long? endParam = (this.downloadSection.End >= 0 ? this.downloadSection.End : null);
             if (this.downloadSection.BytesDownloaded > 0)
             {
                 if (!File.Exists(this.downloadSection.FileName) || (new FileInfo(this.downloadSection.FileName)).Length != this.downloadSection.BytesDownloaded)
@@ -175,95 +155,24 @@ namespace partialdownloadgui.Components
                 this.downloadSection.DownloadStatus = DownloadStatus.Finished;
                 return;
             }
-            request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(this.downloadSection.Start + this.downloadSection.BytesDownloaded, endParam);
-            if (!string.IsNullOrEmpty(this.downloadSection.UserName) && !string.IsNullOrEmpty(this.downloadSection.Password))
-            {
-                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes(this.downloadSection.UserName + ':' + this.downloadSection.Password)));
-            }
+
+            HttpRequestMessage request = Util.ConstructHttpRequest(this.downloadSection.Url, this.downloadSection.Start + this.downloadSection.BytesDownloaded, this.downloadSection.End, this.downloadSection.UserName, this.downloadSection.Password);
 
             int bufferSize = 1048576;
             byte[] buffer = new byte[bufferSize];
             HttpResponseMessage response = null;
             Stream streamHttp = null;
             Stream streamFile = null;
-            System.Net.Http.Headers.HttpContentHeaders headers = null;
 
             try
             {
                 response = client.Send(request, HttpCompletionOption.ResponseHeadersRead);
                 this.downloadSection.HttpStatusCode = response.StatusCode;
-                headers = response.Content.Headers;
-                if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.PartialContent)
+                if (!Util.SyncDownloadSectionAgainstHTTPResponse(this.downloadSection, response))
                 {
                     response.Dispose();
-                    this.downloadSection.Error = "HTTP status is not 200 or 206. Maybe try again later.";
-                    this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
                     return;
                 }
-                if (this.downloadSection.LastModified != DateTimeOffset.MaxValue && headers.LastModified != null)
-                {
-                    if (this.downloadSection.LastModified != headers.LastModified)
-                    {
-                        response.Dispose();
-                        this.downloadSection.Error = "Content changed since last time you download it. Please re-download this file.";
-                        this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
-                        return;
-                    }
-                }
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    if (this.downloadSection.Start > 0)
-                    {
-                        response.Dispose();
-                        this.downloadSection.Error = "Server does not support resuming, however requested section is not from the beginning of file.";
-                        this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
-                        return;
-                    }
-                    if (headers.ContentLength != null)
-                    {
-                        long contentLength = (headers.ContentLength ?? 0);
-                        if (this.downloadSection.End < 0) this.downloadSection.End = contentLength - 1;
-                        else if (contentLength < this.downloadSection.Total)
-                        {
-                            response.Dispose();
-                            this.downloadSection.Error = "Content length returned from server is smaller than the section requested.";
-                            this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
-                            return;
-                        }
-                    }
-                    this.downloadSection.BytesDownloaded = 0;
-                }
-                if (response.StatusCode == HttpStatusCode.PartialContent)
-                {
-                    if (headers.ContentLength == null)
-                    {
-                        response.Dispose();
-                        this.downloadSection.Error = "HTTP ContentLength missing.";
-                        this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
-                        return;
-                    }
-                    long contentLength = (headers.ContentLength ?? 0);
-                    if (this.downloadSection.End >= 0 && this.downloadSection.Start + this.downloadSection.BytesDownloaded + contentLength - 1 != this.downloadSection.End)
-                    {
-                        response.Dispose();
-                        this.downloadSection.Error = "Content length from server does not match download section.";
-                        this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
-                        return;
-                    }
-                    // if it is a new download and all goes well
-                    if (this.downloadSection.End < 0)
-                    {
-                        this.downloadSection.End = this.downloadSection.Start + contentLength - 1;
-                    }
-                }
-                if (headers.ContentDisposition != null && !string.IsNullOrEmpty(headers.ContentDisposition.FileName))
-                {
-                    if (string.IsNullOrEmpty(this.downloadSection.SuggestedName)) this.downloadSection.SuggestedName = headers.ContentDisposition.FileName;
-                }
-                if (headers.ContentType != null && headers.ContentType.MediaType != null)
-                    this.downloadSection.ContentType = headers.ContentType.MediaType;
-                if (headers.LastModified != null)
-                    this.downloadSection.LastModified = headers.LastModified ?? DateTimeOffset.MaxValue;
                 if (this.downloadStopFlag)
                 {
                     response.Dispose();
