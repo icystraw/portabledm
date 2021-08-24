@@ -26,9 +26,9 @@ namespace partialdownloadgui.Components
 
         public void SetCredentials(string userName, string password)
         {
-            this.summarySection.UserName = userName;
-            this.summarySection.Password = password;
-            foreach (DownloadSection ds in this.sections)
+            summarySection.UserName = userName;
+            summarySection.Password = password;
+            foreach (DownloadSection ds in sections)
             {
                 ds.UserName = userName;
                 ds.Password = password;

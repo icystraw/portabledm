@@ -23,8 +23,8 @@ namespace partialdownloadgui.Components
         public YoutubeWatchPageParser(string file)
         {
             if (string.IsNullOrEmpty(file)) throw new ArgumentNullException(nameof(file));
-            this.watchPageFile = file;
-            this.videos = new();
+            watchPageFile = file;
+            videos = new();
         }
 
         public void GetPageTitle()
@@ -34,7 +34,7 @@ namespace partialdownloadgui.Components
             Match m = Regex.Match(watchPageFile, pattern, RegexOptions.Singleline);
             if (m.Success)
             {
-                this.pageTitle = Util.RemoveLineBreaks(m.Groups[1].Value);
+                pageTitle = Util.RemoveLineBreaks(m.Groups[1].Value);
                 Debug.WriteLine(pageTitle);
             }
         }
@@ -46,7 +46,7 @@ namespace partialdownloadgui.Components
             Match m = Regex.Match(watchPageFile, pattern, RegexOptions.Singleline);
             if (m.Success)
             {
-                this.playerJsUrl = m.Groups[1].Value;
+                playerJsUrl = m.Groups[1].Value;
                 Debug.WriteLine(playerJsUrl);
             }
         }
@@ -58,7 +58,7 @@ namespace partialdownloadgui.Components
             Match m = Regex.Match(watchPageFile, pattern, RegexOptions.Singleline);
             if (m.Success)
             {
-                this.adaptiveFormats = m.Groups[1].Value;
+                adaptiveFormats = m.Groups[1].Value;
                 Debug.WriteLine(adaptiveFormats);
             }
         }

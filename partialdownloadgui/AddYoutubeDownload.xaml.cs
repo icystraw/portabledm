@@ -96,8 +96,8 @@ namespace partialdownloadgui
             addDownload(spAudios, false);
             addDownload(spRecentVideos, true);
             addDownload(spRecentAudios, true);
-            this.DialogResult = true;
-            this.Close();
+            DialogResult = true;
+            Close();
         }
 
         private void addDownload(StackPanel sp, bool isRecent)
@@ -136,7 +136,7 @@ namespace partialdownloadgui
             }
         }
 
-        private bool CheckPreprocessedDownloadSection(DownloadSection ds)
+        private static bool CheckPreprocessedDownloadSection(DownloadSection ds)
         {
             if (ds.DownloadStatus == DownloadStatus.DownloadError || ds.HttpStatusCode == System.Net.HttpStatusCode.OK) return false;
             if (!string.IsNullOrEmpty(ds.ContentType) && ds.ContentType.Contains("text")) return false;
@@ -145,8 +145,8 @@ namespace partialdownloadgui
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = false;
-            this.Close();
+            DialogResult = false;
+            Close();
         }
 
         private void btnAnalyse_Click(object sender, RoutedEventArgs e)
@@ -173,7 +173,7 @@ namespace partialdownloadgui
                 MessageBox.Show("The page given is not a Youtube watch page.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
-            this.Title = wp.PageTitle;
+            Title = wp.PageTitle;
             string player = Downloader.SimpleDownloadToString("https://www.youtube.com" + wp.PlayerJsUrl);
             if (string.IsNullOrEmpty(player))
             {

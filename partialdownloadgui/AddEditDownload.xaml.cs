@@ -61,8 +61,8 @@ namespace partialdownloadgui
             {
                 download.NoDownloader = cbThreads.SelectedIndex - 1;
                 download.SetCredentials(txtUsername.Text, txtPassword.Password);
-                this.DialogResult = true;
-                this.Close();
+                DialogResult = true;
+                Close();
                 return;
             }
             if (string.Empty == txtUrl.Text.Trim())
@@ -126,14 +126,14 @@ namespace partialdownloadgui
             download.SummarySection = ds;
             download.Sections.Add(download.SummarySection.Copy());
             download.NoDownloader = cbThreads.SelectedIndex + 1;
-            this.DialogResult = true;
-            this.Close();
+            DialogResult = true;
+            Close();
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = false;
-            this.Close();
+            DialogResult = false;
+            Close();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -146,9 +146,9 @@ namespace partialdownloadgui
                     download.DownloadFolder = App.AppSettings.DownloadFolder;
                     btnBrowse.Content = download.DownloadFolder;
                 }
-                if (!string.IsNullOrEmpty(this.url))
+                if (!string.IsNullOrEmpty(url))
                 {
-                    txtUrl.Text = this.url;
+                    txtUrl.Text = url;
                 }
                 else if (Clipboard.ContainsText())
                 {

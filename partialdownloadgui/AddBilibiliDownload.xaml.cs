@@ -44,8 +44,8 @@ namespace partialdownloadgui
             }
             addDownload(spVideos);
             addDownload(spAudios);
-            this.DialogResult = true;
-            this.Close();
+            DialogResult = true;
+            Close();
         }
 
         private void addDownload(StackPanel sp)
@@ -82,8 +82,8 @@ namespace partialdownloadgui
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = false;
-            this.Close();
+            DialogResult = false;
+            Close();
         }
 
         private void btnAnalyse_Click(object sender, RoutedEventArgs e)
@@ -110,7 +110,7 @@ namespace partialdownloadgui
                 MessageBox.Show("The page given is not a bilibili.com watch page.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
-            this.Title = wp.PageTitle;
+            Title = wp.PageTitle;
             spVideos.Children.Clear();
             spAudios.Children.Clear();
             foreach (Video v in wp.Videos)

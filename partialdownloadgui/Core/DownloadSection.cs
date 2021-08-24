@@ -9,37 +9,37 @@ namespace partialdownloadgui.Components
         public DownloadSection Copy()
         {
             DownloadSection newSection = new();
-            newSection.Url = this.url;
-            newSection.Start = this.start;
-            newSection.End = this.end;
-            newSection.SuggestedName = this.suggestedName;
-            newSection.ContentType = this.contentType;
+            newSection.Url = url;
+            newSection.Start = start;
+            newSection.End = end;
+            newSection.SuggestedName = suggestedName;
+            newSection.ContentType = contentType;
             newSection.DownloadStatus = DownloadStatus.Stopped;
             newSection.HttpStatusCode = 0;
-            newSection.UserName = this.userName;
-            newSection.Password = this.password;
-            newSection.ParentFile = this.parentFile;
-            newSection.LastModified = this.lastModified;
+            newSection.UserName = userName;
+            newSection.Password = password;
+            newSection.ParentFile = parentFile;
+            newSection.LastModified = lastModified;
 
             return newSection;
         }
 
         public DownloadSection Split()
         {
-            long _bytesDownloaded = this.bytesDownloaded;
+            long _bytesDownloaded = bytesDownloaded;
             DownloadSection newSection = new();
-            newSection.Url = this.url;
-            newSection.Start = this.start + _bytesDownloaded + (this.end - (this.start + _bytesDownloaded)) / 2;
-            newSection.End = this.end;
+            newSection.Url = url;
+            newSection.Start = start + _bytesDownloaded + (end - (start + _bytesDownloaded)) / 2;
+            newSection.End = end;
             if (newSection.Start > newSection.End) return null;
             newSection.DownloadStatus = DownloadStatus.Stopped;
             newSection.HttpStatusCode = 0;
-            newSection.UserName = this.userName;
-            newSection.Password = this.password;
-            newSection.SuggestedName = this.suggestedName;
-            newSection.ContentType = this.contentType;
-            newSection.ParentFile = this.parentFile;
-            newSection.LastModified = this.lastModified;
+            newSection.UserName = userName;
+            newSection.Password = password;
+            newSection.SuggestedName = suggestedName;
+            newSection.ContentType = contentType;
+            newSection.ParentFile = parentFile;
+            newSection.LastModified = lastModified;
             // store a reference of this section in the new section, in order to add the
             // new section into the section chain in future should the HTTP request succeed.
             newSection.Tag = this;
@@ -49,11 +49,11 @@ namespace partialdownloadgui.Components
 
         public DownloadSection()
         {
-            this.id = Guid.NewGuid();
-            this.fileName = Util.appDataDirectory + this.id.ToString();
-            this.bytesDownloaded = 0;
-            this.error = string.Empty;
-            this.lastModified = DateTimeOffset.MaxValue;
+            id = Guid.NewGuid();
+            fileName = Util.appDataDirectory + id.ToString();
+            bytesDownloaded = 0;
+            error = string.Empty;
+            lastModified = DateTimeOffset.MaxValue;
         }
 
         private Guid id;

@@ -25,9 +25,9 @@ namespace partialdownloadgui.Components
         public BilibiliWatchPageParser(byte[] file)
         {
             if (null == file || file.Length == 0) throw new ArgumentNullException(nameof(file));
-            this.watchPageFile = Util.GZipDecompress(file);
-            this.videos = new();
-            this.audios = new();
+            watchPageFile = Util.GZipDecompress(file);
+            videos = new();
+            audios = new();
         }
 
         public void GetPageTitle()
@@ -37,7 +37,7 @@ namespace partialdownloadgui.Components
             Match m = Regex.Match(watchPageFile, pattern, RegexOptions.Singleline);
             if (m.Success)
             {
-                this.pageTitle = Util.RemoveLineBreaks(m.Groups[1].Value);
+                pageTitle = Util.RemoveLineBreaks(m.Groups[1].Value);
                 Debug.WriteLine(pageTitle);
             }
         }
@@ -49,8 +49,8 @@ namespace partialdownloadgui.Components
             Match m = Regex.Match(watchPageFile, pattern, RegexOptions.Singleline);
             if (m.Success)
             {
-                this.videoFormats = m.Groups[1].Value;
-                this.audioFormats = m.Groups[2].Value;
+                videoFormats = m.Groups[1].Value;
+                audioFormats = m.Groups[2].Value;
                 Debug.WriteLine(videoFormats);
                 Debug.WriteLine(audioFormats);
             }

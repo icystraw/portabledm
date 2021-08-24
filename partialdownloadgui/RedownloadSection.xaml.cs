@@ -34,7 +34,7 @@ namespace partialdownloadgui
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (null == this.section) return;
+            if (null == section) return;
             txtFileName.Text = section.FileName;
             txtFileSize.Text = section.Total.ToString() + " bytes (" + section.Start + '-' + section.End + ')';
         }
@@ -80,14 +80,14 @@ namespace partialdownloadgui
             download.Sections.Add(download.SummarySection.Copy());
             download.NoDownloader = cbThreads.SelectedIndex + 1;
             download.DownloadFolder = System.IO.Path.GetDirectoryName(newDs.ParentFile);
-            this.DialogResult = true;
-            this.Close();
+            DialogResult = true;
+            Close();
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = false;
-            this.Close();
+            DialogResult = false;
+            Close();
         }
 
         private void rectPV2_SizeChanged(object sender, SizeChangedEventArgs e)

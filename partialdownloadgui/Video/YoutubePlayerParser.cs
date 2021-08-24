@@ -24,7 +24,7 @@ namespace partialdownloadgui.Components
         public YoutubePlayerParser(string file)
         {
             if (string.IsNullOrEmpty(file)) throw new ArgumentNullException(nameof(file));
-            this.playerFile = file;
+            playerFile = file;
             scramblerFunctions = new List<ScramblerFunction>();
         }
 
@@ -34,8 +34,8 @@ namespace partialdownloadgui.Components
             Match m = Regex.Match(playerFile, pattern, RegexOptions.Singleline);
             if (m.Success)
             {
-                this.scramblerFunction = Util.RemoveLineBreaks(m.Groups[0].Value);
-                Debug.WriteLine(this.scramblerFunction);
+                scramblerFunction = Util.RemoveLineBreaks(m.Groups[0].Value);
+                Debug.WriteLine(scramblerFunction);
             }
         }
 
@@ -67,15 +67,15 @@ namespace partialdownloadgui.Components
             Match m = Regex.Match(playerFile, pattern, RegexOptions.Singleline);
             if (m.Success)
             {
-                this.scramblerAlgorithm = Util.RemoveLineBreaks(m.Groups[1].Value);
-                Debug.WriteLine(this.scramblerAlgorithm);
+                scramblerAlgorithm = Util.RemoveLineBreaks(m.Groups[1].Value);
+                Debug.WriteLine(scramblerAlgorithm);
             }
         }
 
         public void MatchAlgorithmWithFunction()
         {
             if (string.IsNullOrEmpty(scramblerAlgorithm)) throw new ArgumentNullException(nameof(scramblerAlgorithm));
-            string s = Util.RemoveSpaces(this.scramblerAlgorithm);
+            string s = Util.RemoveSpaces(scramblerAlgorithm);
             string[] ss = s.Split("},");
             Dictionary<string, ScramblerType> dic = new();
             foreach (string func in ss)
@@ -87,7 +87,7 @@ namespace partialdownloadgui.Components
                 else if (func.Contains("splice")) dic.Add(name, ScramblerType.Slice);
                 else dic.Add(name, ScramblerType.Swap);
             }
-            foreach (ScramblerFunction f in this.scramblerFunctions)
+            foreach (ScramblerFunction f in scramblerFunctions)
             {
                 f.Type = dic[f.FunctionName];
                 Debug.WriteLine(f.FunctionName + " " + f.Type + " " + f.Parameter);
@@ -98,14 +98,14 @@ namespace partialdownloadgui.Components
         {
             if (string.IsNullOrEmpty(paramS)) throw new ArgumentNullException(nameof(paramS));
             this.paramS = paramS;
-            this.signature = paramS;
-            foreach (ScramblerFunction f in this.scramblerFunctions)
+            signature = paramS;
+            foreach (ScramblerFunction f in scramblerFunctions)
             {
-                if (f.Type == ScramblerType.Reverse) this.signature = Reverse(this.signature);
-                else if (f.Type == ScramblerType.Slice) this.signature = Slice(this.signature, f.Parameter);
-                else this.signature = Swap(this.signature, f.Parameter);
+                if (f.Type == ScramblerType.Reverse) signature = Reverse(signature);
+                else if (f.Type == ScramblerType.Slice) signature = Slice(signature, f.Parameter);
+                else signature = Swap(signature, f.Parameter);
             }
-            Debug.WriteLine(this.signature);
+            Debug.WriteLine(signature);
         }
 
         public void Parse()

@@ -12,7 +12,7 @@ namespace partialdownloadgui.Components
     {
         private static readonly string userAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36";
         private static readonly TimeSpan retryTimeSpan = new(0, 0, 10);
-        private static HttpClient client;
+        private static readonly HttpClient client;
 
         private DownloadSection downloadSection;
         private Thread downloadThread;
@@ -24,7 +24,7 @@ namespace partialdownloadgui.Components
             get => downloadSection;
             set
             {
-                this.downloadSection = value ?? throw new ArgumentNullException(nameof(value));
+                downloadSection = value ?? throw new ArgumentNullException(nameof(value));
             }
         }
 
@@ -45,16 +45,16 @@ namespace partialdownloadgui.Components
 
         public Downloader(DownloadSection section)
         {
-            this.DownloadSection = section;
+            DownloadSection = section;
             ResetDownloadStatus();
         }
 
         public void StopDownloading()
         {
             if (!IsBusy()) return;
-            this.downloadStopFlag = true;
+            downloadStopFlag = true;
             if (downloadThread != null && downloadThread.IsAlive) downloadThread.Join();
-            this.downloadStopFlag = false;
+            downloadStopFlag = false;
         }
 
         public void WaitForFinish()
@@ -64,14 +64,14 @@ namespace partialdownloadgui.Components
 
         public bool IsBusy()
         {
-            DownloadStatus ds = this.downloadSection.DownloadStatus;
+            DownloadStatus ds = downloadSection.DownloadStatus;
             return (ds == DownloadStatus.PrepareToDownload || ds == DownloadStatus.Downloading);
         }
 
         public bool ChangeDownloadSection(DownloadSection newSection)
         {
             if (IsBusy()) return false;
-            this.downloadSection = newSection;
+            downloadSection = newSection;
             ResetDownloadStatus();
             return true;
         }
@@ -79,26 +79,26 @@ namespace partialdownloadgui.Components
         public void StartDownloading()
         {
             if (IsBusy()) return;
-            this.downloadStopFlag = false;
-            if (this.downloadSection.DownloadStatus == DownloadStatus.Finished) return;
-            if (!Util.CheckDownloadSectionAgainstLogicalErrors(this.downloadSection)) return;
-            if (this.downloadSection.DownloadStatus == DownloadStatus.DownloadError)
+            downloadStopFlag = false;
+            if (downloadSection.DownloadStatus == DownloadStatus.Finished) return;
+            if (!Util.CheckDownloadSectionAgainstLogicalErrors(downloadSection)) return;
+            if (downloadSection.DownloadStatus == DownloadStatus.DownloadError)
             {
-                if (DateTime.Now.Subtract(this.downloadSection.LastStatusChange) < retryTimeSpan) return;
+                if (DateTime.Now.Subtract(downloadSection.LastStatusChange) < retryTimeSpan) return;
             }
 
-            this.downloadSection.DownloadStatus = DownloadStatus.PrepareToDownload;
-            this.downloadSection.HttpStatusCode = 0;
-            this.downloadSection.Error = string.Empty;
+            downloadSection.DownloadStatus = DownloadStatus.PrepareToDownload;
+            downloadSection.HttpStatusCode = 0;
+            downloadSection.Error = string.Empty;
             downloadThread = new(new ThreadStart(DownloadThreadProc));
             downloadThread.Start();
         }
 
         private void ResetDownloadStatus()
         {
-            if (this.downloadSection.DownloadStatus == DownloadStatus.PrepareToDownload || this.downloadSection.DownloadStatus == DownloadStatus.Downloading)
+            if (downloadSection.DownloadStatus == DownloadStatus.PrepareToDownload || downloadSection.DownloadStatus == DownloadStatus.Downloading)
             {
-                this.downloadSection.DownloadStatus = DownloadStatus.Stopped;
+                downloadSection.DownloadStatus = DownloadStatus.Stopped;
             }
         }
 
@@ -144,20 +144,20 @@ namespace partialdownloadgui.Components
 
         private void DownloadThreadProc()
         {
-            if (this.downloadSection.BytesDownloaded > 0)
+            if (downloadSection.BytesDownloaded > 0)
             {
-                if (!File.Exists(this.downloadSection.FileName) || (new FileInfo(this.downloadSection.FileName)).Length != this.downloadSection.BytesDownloaded)
+                if (!File.Exists(downloadSection.FileName) || (new FileInfo(downloadSection.FileName)).Length != downloadSection.BytesDownloaded)
                 {
-                    this.downloadSection.BytesDownloaded = 0;
+                    downloadSection.BytesDownloaded = 0;
                 }
             }
-            if (this.downloadSection.End >= 0 && this.downloadSection.BytesDownloaded >= this.downloadSection.Total)
+            if (downloadSection.End >= 0 && downloadSection.BytesDownloaded >= downloadSection.Total)
             {
-                this.downloadSection.DownloadStatus = DownloadStatus.Finished;
+                downloadSection.DownloadStatus = DownloadStatus.Finished;
                 return;
             }
 
-            HttpRequestMessage request = Util.ConstructHttpRequest(this.downloadSection.Url, this.downloadSection.Start + this.downloadSection.BytesDownloaded, this.downloadSection.End, this.downloadSection.UserName, this.downloadSection.Password);
+            HttpRequestMessage request = Util.ConstructHttpRequest(downloadSection.Url, downloadSection.Start + downloadSection.BytesDownloaded, downloadSection.End, downloadSection.UserName, downloadSection.Password);
 
             int bufferSize = 1048576;
             byte[] buffer = new byte[bufferSize];
@@ -168,44 +168,44 @@ namespace partialdownloadgui.Components
             try
             {
                 response = client.Send(request, HttpCompletionOption.ResponseHeadersRead);
-                this.downloadSection.HttpStatusCode = response.StatusCode;
-                if (!Util.SyncDownloadSectionAgainstHTTPResponse(this.downloadSection, response))
+                downloadSection.HttpStatusCode = response.StatusCode;
+                if (!Util.SyncDownloadSectionAgainstHTTPResponse(downloadSection, response))
                 {
                     response.Dispose();
                     return;
                 }
-                if (this.downloadStopFlag)
+                if (downloadStopFlag)
                 {
                     response.Dispose();
-                    this.downloadSection.DownloadStatus = DownloadStatus.Stopped;
+                    downloadSection.DownloadStatus = DownloadStatus.Stopped;
                     return;
                 }
 
                 streamHttp = response.Content.ReadAsStream();
-                if (this.downloadSection.BytesDownloaded > 0)
+                if (downloadSection.BytesDownloaded > 0)
                 {
-                    streamFile = File.Open(this.downloadSection.FileName, FileMode.Append, FileAccess.Write);
+                    streamFile = File.Open(downloadSection.FileName, FileMode.Append, FileAccess.Write);
                 }
                 else
                 {
-                    streamFile = File.Open(this.downloadSection.FileName, FileMode.Create, FileAccess.Write);
+                    streamFile = File.Open(downloadSection.FileName, FileMode.Create, FileAccess.Write);
                 }
-                this.downloadSection.DownloadStatus = DownloadStatus.Downloading;
+                downloadSection.DownloadStatus = DownloadStatus.Downloading;
                 int bytesRead = streamHttp.Read(buffer, 0, bufferSize);
-                long currentEnd = this.downloadSection.End;
+                long currentEnd = downloadSection.End;
                 while (bytesRead > 0)
                 {
                     streamFile.Write(buffer, 0, bytesRead);
-                    this.downloadSection.BytesDownloaded += bytesRead;
+                    downloadSection.BytesDownloaded += bytesRead;
                     // End can be reduced by Scheduler thread.
-                    currentEnd = this.downloadSection.End;
-                    if (currentEnd >= 0 && this.downloadSection.BytesDownloaded >= (currentEnd - this.downloadSection.Start + 1)) break;
-                    if (this.downloadStopFlag)
+                    currentEnd = downloadSection.End;
+                    if (currentEnd >= 0 && downloadSection.BytesDownloaded >= (currentEnd - downloadSection.Start + 1)) break;
+                    if (downloadStopFlag)
                     {
                         streamFile.Close();
                         streamHttp.Close();
                         response.Dispose();
-                        this.downloadSection.DownloadStatus = DownloadStatus.Stopped;
+                        downloadSection.DownloadStatus = DownloadStatus.Stopped;
                         return;
                     }
                     bytesRead = streamHttp.Read(buffer, 0, bufferSize);
@@ -213,26 +213,26 @@ namespace partialdownloadgui.Components
                 streamFile.Close();
                 streamHttp.Close();
                 response.Dispose();
-                currentEnd = this.downloadSection.End;
-                if (currentEnd >= 0 && this.downloadSection.BytesDownloaded < (currentEnd - this.downloadSection.Start + 1))
+                currentEnd = downloadSection.End;
+                if (currentEnd >= 0 && downloadSection.BytesDownloaded < (currentEnd - downloadSection.Start + 1))
                 {
-                    this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
-                    this.downloadSection.Error = "Download stream reached the end, but not enough data transmitted.";
+                    downloadSection.DownloadStatus = DownloadStatus.DownloadError;
+                    downloadSection.Error = "Download stream reached the end, but not enough data transmitted.";
                     return;
                 }
-                if (this.downloadSection.HttpStatusCode == HttpStatusCode.OK && this.downloadSection.End < 0)
+                if (downloadSection.HttpStatusCode == HttpStatusCode.OK && downloadSection.End < 0)
                 {
-                    this.downloadSection.End = this.downloadSection.BytesDownloaded - 1;
+                    downloadSection.End = downloadSection.BytesDownloaded - 1;
                 }
-                this.downloadSection.DownloadStatus = DownloadStatus.Finished;
+                downloadSection.DownloadStatus = DownloadStatus.Finished;
             }
             catch (Exception ex)
             {
                 if (streamFile != null) streamFile.Close();
                 if (streamHttp != null) streamHttp.Close();
                 if (response != null) response.Dispose();
-                this.downloadSection.Error = ex.Message;
-                this.downloadSection.DownloadStatus = DownloadStatus.DownloadError;
+                downloadSection.Error = ex.Message;
+                downloadSection.DownloadStatus = DownloadStatus.DownloadError;
             }
         }
     }

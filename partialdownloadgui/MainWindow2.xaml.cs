@@ -35,8 +35,8 @@ namespace partialdownloadgui
 
             if (App.AppSettings.MainWindowWidth > 0 && App.AppSettings.MainWindowHeight > 0)
             {
-                this.Width = App.AppSettings.MainWindowWidth;
-                this.Height = App.AppSettings.MainWindowHeight;
+                Width = App.AppSettings.MainWindowWidth;
+                Height = App.AppSettings.MainWindowHeight;
             }
         }
 
@@ -100,7 +100,7 @@ namespace partialdownloadgui
                 {
                     List<string> files = new();
                     // see if all files in this group have finished downloading
-                    foreach (DownloadView dv in this.downloadViews)
+                    foreach (DownloadView dv in downloadViews)
                     {
                         if (dv.DownloadGroup == g)
                         {
@@ -479,8 +479,8 @@ namespace partialdownloadgui
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            App.AppSettings.MainWindowWidth = this.Width;
-            App.AppSettings.MainWindowHeight = this.Height;
+            App.AppSettings.MainWindowWidth = Width;
+            App.AppSettings.MainWindowHeight = Height;
             if (IsBusy())
             {
                 if (MessageBox.Show("Downloads are running. Do you want to exit? Please note if there are downloads that are not resumable, you would have to start over again next time.", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
@@ -506,7 +506,7 @@ namespace partialdownloadgui
             {
                 if (App.AppSettings.MinimizeToSystemTray)
                 {
-                    this.ShowInTaskbar = false;
+                    ShowInTaskbar = false;
                     notifyIcon.Visible = true;
                 }
             }
@@ -516,7 +516,7 @@ namespace partialdownloadgui
         {
             WindowState = WindowState.Normal;
             notifyIcon.Visible = false;
-            this.ShowInTaskbar = true;
+            ShowInTaskbar = true;
         }
 
         private void lstDownloads_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)

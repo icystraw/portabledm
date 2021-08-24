@@ -115,38 +115,38 @@ namespace partialdownloadgui.Components
                     return true;
                 }
             }
-            if (this.sectionBeingEvaluated != null) return true;
+            if (sectionBeingEvaluated != null) return true;
             return false;
         }
 
         private void EvaluateStatusOfJustCreatedSectionIfExists()
         {
-            if (null == this.sectionBeingEvaluated) return;
+            if (null == sectionBeingEvaluated) return;
 
-            DownloadStatus ds = this.sectionBeingEvaluated.DownloadStatus;
+            DownloadStatus ds = sectionBeingEvaluated.DownloadStatus;
             if (ds == DownloadStatus.DownloadError || ds == DownloadStatus.LogicalError)
             {
                 // fail to create new section. Throw this section away.
-                this.sectionBeingEvaluated = null;
+                sectionBeingEvaluated = null;
                 return;
             }
             // section creation successful
             if (ds == DownloadStatus.Downloading || ds == DownloadStatus.Finished)
             {
                 // add the new section to section chain
-                DownloadSection parent = this.sectionBeingEvaluated.Tag as DownloadSection;
-                this.sectionBeingEvaluated.NextSection = parent.NextSection;
-                if (parent.NextSection != null) this.sectionBeingEvaluated.NextSectionId = parent.NextSection.Id;
-                this.sectionBeingEvaluated.Tag = null;
+                DownloadSection parent = sectionBeingEvaluated.Tag as DownloadSection;
+                sectionBeingEvaluated.NextSection = parent.NextSection;
+                if (parent.NextSection != null) sectionBeingEvaluated.NextSectionId = parent.NextSection.Id;
+                sectionBeingEvaluated.Tag = null;
                 lock (sectionsLock)
                 {
                     // Downloader class has been designed in a way which won't cause havoc if Scheduler class does this
-                    parent.NextSection = this.sectionBeingEvaluated;
-                    parent.NextSectionId = this.sectionBeingEvaluated.Id;
-                    parent.End = this.sectionBeingEvaluated.Start - 1;
-                    download.Sections.Add(this.sectionBeingEvaluated);
+                    parent.NextSection = sectionBeingEvaluated;
+                    parent.NextSectionId = sectionBeingEvaluated.Id;
+                    parent.End = sectionBeingEvaluated.Start - 1;
+                    download.Sections.Add(sectionBeingEvaluated);
                 }
-                this.sectionBeingEvaluated = null;
+                sectionBeingEvaluated = null;
             }
         }
 
@@ -174,15 +174,15 @@ namespace partialdownloadgui.Components
             // and start downloading the new section without adjusting the size of the old section.
             if (biggestDownloadingSectionSize / 2 > minSectionSize)
             {
-                this.sectionBeingEvaluated = download.Sections[biggestBeingDownloadedSection].Split();
+                sectionBeingEvaluated = download.Sections[biggestBeingDownloadedSection].Split();
             }
         }
 
         private void TryDownloadingAllUnfinishedSections()
         {
-            if (this.sectionBeingEvaluated != null && this.sectionBeingEvaluated.DownloadStatus == DownloadStatus.Stopped)
+            if (sectionBeingEvaluated != null && sectionBeingEvaluated.DownloadStatus == DownloadStatus.Stopped)
             {
-                AutoDownloadSection(this.sectionBeingEvaluated);
+                AutoDownloadSection(sectionBeingEvaluated);
             }
             foreach (DownloadSection ds in download.Sections)
             {
@@ -210,7 +210,7 @@ namespace partialdownloadgui.Components
             pd.DownloadView.DownloadFolder = download.DownloadFolder;
             pd.DownloadView.Size = Util.GetEasyToUnderstandFileSize(download.SummarySection.Total);
             pd.DownloadView.Status = download.SummarySection.DownloadStatus;
-            pd.DownloadView.Error = this.exMessage == null ? string.Empty : this.exMessage.Message;
+            pd.DownloadView.Error = exMessage == null ? string.Empty : exMessage.Message;
             pd.DownloadView.DownloadGroup = download.DownloadGroup;
             if (pd.DownloadView.Status == DownloadStatus.Finished)
             {
@@ -275,7 +275,7 @@ namespace partialdownloadgui.Components
                     status == DownloadStatus.PrepareToDownload || status == DownloadStatus.Downloading)
                     return false;
             }
-            if (this.sectionBeingEvaluated != null) return false;
+            if (sectionBeingEvaluated != null) return false;
             return true;
         }
 
@@ -381,7 +381,7 @@ namespace partialdownloadgui.Components
         {
             if (IsDownloading())
             {
-                this.downloadStopFlag = true;
+                downloadStopFlag = true;
                 if (cancel)
                 {
                     if (downloadThread != null && downloadThread.IsAlive) downloadThread.Join();
@@ -402,9 +402,9 @@ namespace partialdownloadgui.Components
         {
             if (IsDownloadFinished() || IsDownloading()) return;
             download.SummarySection.DownloadStatus = DownloadStatus.Downloading;
-            this.exMessage = null;
+            exMessage = null;
             sc = new();
-            this.downloadStopFlag = false;
+            downloadStopFlag = false;
             downloadThread = new(new ThreadStart(DownloadThreadProc));
             downloadThread.Start();
         }
@@ -414,7 +414,7 @@ namespace partialdownloadgui.Components
             while (true)
             {
                 // if there is download stop request from other thread
-                if (this.downloadStopFlag)
+                if (downloadStopFlag)
                 {
                     StopDownload();
                     download.SummarySection.DownloadStatus = DownloadStatus.Stopped;
@@ -427,7 +427,7 @@ namespace partialdownloadgui.Components
             // if there is section with logical error
             if (ErrorAndUnstableSectionsExist())
             {
-                this.exMessage = new InvalidOperationException("There are sections that are in invalid states. Download cannot continue. Try re-download this file.");
+                exMessage = new InvalidOperationException("There are sections that are in invalid states. Download cannot continue. Try re-download this file.");
                 download.SummarySection.DownloadStatus = DownloadStatus.DownloadError;
                 return;
             }
@@ -437,12 +437,12 @@ namespace partialdownloadgui.Components
             }
             catch (Exception ex)
             {
-                this.exMessage = ex;
+                exMessage = ex;
                 download.SummarySection.DownloadStatus = DownloadStatus.DownloadError;
                 return;
             }
             CleanTempFiles();
-            this.exMessage = null;
+            exMessage = null;
             download.SummarySection.DownloadStatus = DownloadStatus.Finished;
         }
     }

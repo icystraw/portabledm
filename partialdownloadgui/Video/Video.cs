@@ -43,9 +43,9 @@ namespace partialdownloadgui.Components
             {
                 _signatureCipher = value;
                 NameValueCollection parameters = HttpUtility.ParseQueryString(value);
-                this._url = parameters.Get("url");
-                this._paramS = parameters.Get("s");
-                this._paramSp = parameters.Get("sp");
+                _url = parameters.Get("url");
+                _paramS = parameters.Get("s");
+                _paramSp = parameters.Get("sp");
             }
         }
         public string signature
@@ -55,7 +55,7 @@ namespace partialdownloadgui.Components
             {
                 _signature = value;
                 // combine signature with url
-                this.url += "&" + this._paramSp + "=" + Uri.EscapeDataString(this._signature);
+                _url += "&" + _paramSp + "=" + Uri.EscapeDataString(_signature);
             }
         }
 
