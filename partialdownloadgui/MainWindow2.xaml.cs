@@ -125,9 +125,9 @@ namespace partialdownloadgui
                             sb.Append('\"');
                             sb.Append(f);
                             sb.Append("\" ");
-                            if (f.Contains(".video"))
+                            if (f.EndsWith(".video"))
                             {
-                                outputFile = "-o \"" + f + ".mkv\" ";
+                                outputFile = "-o \"" + f.Remove(f.Length - 6) + ".mkv\" ";
                             }
                             else
                             {
