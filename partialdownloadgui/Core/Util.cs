@@ -177,7 +177,7 @@ namespace partialdownloadgui.Components
 
             if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.PartialContent)
             {
-                ds.Error = "HTTP status is not 200 or 206. Maybe try again later.";
+                ds.Error = "HTTP request not successful. Maybe try again later. Status: " + response.StatusCode;
                 ds.DownloadStatus = DownloadStatus.DownloadError;
                 return false;
             }
@@ -216,7 +216,7 @@ namespace partialdownloadgui.Components
             {
                 if (headers.ContentLength == null)
                 {
-                    ds.Error = "HTTP ContentLength missing.";
+                    ds.Error = "HTTP Content-Length missing.";
                     ds.DownloadStatus = DownloadStatus.DownloadError;
                     return false;
                 }
