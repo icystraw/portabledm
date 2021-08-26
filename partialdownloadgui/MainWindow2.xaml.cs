@@ -177,7 +177,7 @@ namespace partialdownloadgui
                 return;
             }
             lstSections.ItemsSource = pd.SectionViews;
-            DrawProgress(pd.ProgressBar);
+            DrawProgress(pd);
             foreach (SectionView sv in pd.SectionViews)
             {
                 if (sv.HttpStatusCode == System.Net.HttpStatusCode.OK)
@@ -267,27 +267,46 @@ namespace partialdownloadgui
             return false;
         }
 
-        private void DrawProgress(string progress)
+        private void DrawProgress(ProgressData pd)
         {
             wpProgress.Children.Clear();
-            for (int i = 0; i < progress.Length; i++)
+            if (pd.DownloadView.Total > 0)
             {
-                Rectangle r = new();
-                r.Height = 10;
-                r.Width = 10;
-                r.RadiusX = 3;
-                r.RadiusY = 3;
-                r.Margin = new Thickness(1);
-                if (progress[i] == '\u2593')
+                foreach (SectionView sv in pd.SectionViews)
                 {
-                    r.Fill = Brushes.LightSeaGreen;
+                    // make sure there are set number of squares for each section
+                    decimal totalSectionSquares = Math.Round(sv.Total * 200m / pd.DownloadView.Total, MidpointRounding.AwayFromZero);
+                    decimal downloadedSquares = Math.Round(sv.BytesDownloaded * 200m / pd.DownloadView.Total, MidpointRounding.AwayFromZero);
+                    decimal pendingSquares = totalSectionSquares - downloadedSquares;
+                    for (long i = 0; i < downloadedSquares; i++)
+                    {
+                        wpProgress.Children.Add(GetRectangle(true));
+                    }
+                    for (long i = 0; i < pendingSquares; i++)
+                    {
+                        wpProgress.Children.Add(GetRectangle(false));
+                    }
                 }
-                else
-                {
-                    r.Fill = Brushes.LightGray;
-                }
-                wpProgress.Children.Add(r);
             }
+        }
+
+        private Rectangle GetRectangle(bool isDownloaded)
+        {
+            Rectangle r = new();
+            r.Height = 10;
+            r.Width = 10;
+            r.RadiusX = 3;
+            r.RadiusY = 3;
+            r.Margin = new Thickness(1);
+            if (isDownloaded)
+            {
+                r.Fill = Brushes.LightSeaGreen;
+            }
+            else
+            {
+                r.Fill = Brushes.LightGray;
+            }
+            return r;
         }
 
         private void AddDownload(string url)

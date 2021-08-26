@@ -18,6 +18,7 @@ namespace partialdownloadgui.Components
         private object tag;
         private string eta;
         private string lastModified;
+        private long total;
 
         public string FileName
         {
@@ -91,6 +92,7 @@ namespace partialdownloadgui.Components
         }
 
         public string LastModified { get => lastModified; set => lastModified = value; }
+        public long Total { get => total; set => total = value; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

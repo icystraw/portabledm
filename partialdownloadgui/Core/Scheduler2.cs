@@ -204,11 +204,11 @@ namespace partialdownloadgui.Components
         public void RefreshDownloadStatusData()
         {
             pd.SectionViews.Clear();
-            pd.ProgressBar = string.Empty;
 
             pd.DownloadView.LastModified = download.SummarySection.LastModified == DateTimeOffset.MaxValue ? "Not available" : download.SummarySection.LastModified.ToLocalTime().ToString();
             pd.DownloadView.DownloadFolder = download.DownloadFolder;
-            pd.DownloadView.Size = Util.GetEasyToUnderstandFileSize(download.SummarySection.Total);
+            pd.DownloadView.Total = download.SummarySection.Total;
+            pd.DownloadView.Size = Util.GetEasyToUnderstandFileSize(pd.DownloadView.Total);
             pd.DownloadView.Status = download.SummarySection.DownloadStatus;
             pd.DownloadView.Error = exMessage == null ? string.Empty : exMessage.Message;
             pd.DownloadView.DownloadGroup = download.DownloadGroup;
@@ -225,9 +225,8 @@ namespace partialdownloadgui.Components
                 pd.DownloadView.FileName = Util.GetDownloadFileNameFromDownloadSection(download.SummarySection);
             }
 
-            long total = download.SummarySection.Total;
+            long total = pd.DownloadView.Total;
             long totalDownloaded = 0;
-            StringBuilder sb = new();
             lock (sectionsLock)
             {
                 DownloadSection ds = download.Sections[0];
@@ -236,29 +235,20 @@ namespace partialdownloadgui.Components
                     SectionView sv = new();
                     sv.HttpStatusCode = ds.HttpStatusCode;
                     sv.Status = ds.DownloadStatus;
-                    long secTotal = ds.Total, secDownloaded = ds.BytesDownloaded;
+                    sv.Total = ds.Total;
+                    sv.BytesDownloaded = ds.BytesDownloaded;
                     // if a 206 section has been splitted before, downloader could download a little more than needed.
-                    if (secTotal > 0 && secDownloaded > secTotal) secDownloaded = secTotal;
-                    totalDownloaded += secDownloaded;
-                    sv.Size = Util.GetEasyToUnderstandFileSize(secTotal);
-                    sv.Progress = Util.CalculateProgress(secDownloaded, secTotal);
+                    if (sv.Total > 0 && sv.BytesDownloaded > sv.Total) sv.BytesDownloaded = sv.Total;
+                    totalDownloaded += sv.BytesDownloaded;
+                    sv.Size = Util.GetEasyToUnderstandFileSize(sv.Total);
+                    sv.Progress = Util.CalculateProgress(sv.BytesDownloaded, sv.Total);
                     sv.Error = ds.Error;
                     pd.SectionViews.Add(sv);
-                    if (total > 0)
-                    {
-                        // make sure there are set number of squares for each section
-                        decimal totalSectionSquares = Math.Round((decimal)secTotal * 200m / (decimal)total, MidpointRounding.AwayFromZero);
-                        decimal downloadedSquares = Math.Round((decimal)secDownloaded * 200m / (decimal)total, MidpointRounding.AwayFromZero);
-                        decimal pendingSquares = totalSectionSquares - downloadedSquares;
-                        for (long i = 0; i < downloadedSquares; i++) sb.Append('\u2593');
-                        for (long i = 0; i < pendingSquares; i++) sb.Append('\u2591');
-                    }
                     ds = ds.NextSection;
                 }
                 while (ds != null);
             }
             download.SummarySection.BytesDownloaded = totalDownloaded;
-            pd.ProgressBar = sb.ToString();
             sc.RegisterBytes(totalDownloaded);
             long speed = sc.GetSpeed();
             pd.DownloadView.Speed = Util.GetEasyToUnderstandFileSize(speed) + "/sec";
