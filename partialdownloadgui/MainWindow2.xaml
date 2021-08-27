@@ -324,7 +324,7 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn DisplayMemberBinding="{Binding Path=HttpStatusCode}" Header="Section" Width="100"/>
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=Size}" Header="Size" Width="80"/>
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=Total}" Header="Bytes" Width="80"/>
                             <GridViewColumn Header="Progress" Width="100">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>

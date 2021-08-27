@@ -44,7 +44,15 @@ namespace partialdownloadgui.Components
             pd.DownloadView.Id = download.SummarySection.Id;
             pd.DownloadView.Tag = this;
             pd.DownloadView.Url = download.SummarySection.Url;
+            pd.DownloadView.DownloadGroup = download.DownloadGroup;
+            pd.DownloadView.LastModified = download.SummarySection.LastModified == DateTimeOffset.MaxValue ? "Not available" : download.SummarySection.LastModified.ToLocalTime().ToString();
+            pd.DownloadView.Total = download.SummarySection.Total;
+            pd.DownloadView.Size = Util.GetEasyToUnderstandFileSize(pd.DownloadView.Total);
             pd.DownloadView.Status = download.SummarySection.DownloadStatus;
+            if (pd.DownloadView.Status != DownloadStatus.Finished)
+            {
+                pd.DownloadView.FileName = Util.GetDownloadFileNameFromDownloadSection(download.SummarySection);
+            }
             RefreshDownloadStatusData(true);
         }
 
@@ -215,23 +223,17 @@ namespace partialdownloadgui.Components
 
             pd.SectionViews.Clear();
             pd.DownloadView.Status = newStatus;
-            pd.DownloadView.LastModified = download.SummarySection.LastModified == DateTimeOffset.MaxValue ? "Not available" : download.SummarySection.LastModified.ToLocalTime().ToString();
             pd.DownloadView.DownloadFolder = download.DownloadFolder;
-            pd.DownloadView.Total = download.SummarySection.Total;
-            pd.DownloadView.Size = Util.GetEasyToUnderstandFileSize(pd.DownloadView.Total);
             pd.DownloadView.Error = exMessage == null ? string.Empty : exMessage.Message;
-            pd.DownloadView.DownloadGroup = download.DownloadGroup;
             if (pd.DownloadView.Status == DownloadStatus.Finished)
             {
+                pd.DownloadView.Total = download.SummarySection.Total;
+                pd.DownloadView.Size = Util.GetEasyToUnderstandFileSize(pd.DownloadView.Total);
                 pd.DownloadView.FileName = download.SummarySection.FileName;
                 pd.DownloadView.Speed = string.Empty;
                 pd.DownloadView.Progress = 100;
                 pd.DownloadView.Eta = string.Empty;
                 return;
-            }
-            else
-            {
-                pd.DownloadView.FileName = Util.GetDownloadFileNameFromDownloadSection(download.SummarySection);
             }
 
             long total = pd.DownloadView.Total;
@@ -249,7 +251,6 @@ namespace partialdownloadgui.Components
                     // if a 206 section has been splitted before, downloader could download a little more than needed.
                     if (sv.Total > 0 && sv.BytesDownloaded > sv.Total) sv.BytesDownloaded = sv.Total;
                     totalDownloaded += sv.BytesDownloaded;
-                    sv.Size = Util.GetEasyToUnderstandFileSize(sv.Total);
                     sv.Progress = Util.CalculateProgress(sv.BytesDownloaded, sv.Total);
                     sv.Error = ds.Error;
                     pd.SectionViews.Add(sv);
