@@ -13,10 +13,10 @@ namespace partialdownloadgui.Components
 
         private readonly Downloader[] downloaders = new Downloader[maxNoDownloader];
         private readonly Download download;
-        private readonly ProgressData pd;
         private readonly object sectionsLock = new();
 
         private DownloadSection sectionBeingEvaluated;
+        private ProgressData pd;
 
         private bool downloadStopFlag = false;
         private SpeedCalculator sc = new();
@@ -26,7 +26,7 @@ namespace partialdownloadgui.Components
 
         public Download Download => download;
 
-        public ProgressData ProgressData => pd;
+        public ProgressData ProgressData { get => pd; }
 
         public Scheduler2(Download d)
         {
@@ -40,6 +40,11 @@ namespace partialdownloadgui.Components
             {
                 download.SummarySection.DownloadStatus = DownloadStatus.Stopped;
             }
+            InitProgressData();
+        }
+
+        private void InitProgressData()
+        {
             pd = new();
             pd.DownloadView.Id = download.SummarySection.Id;
             pd.DownloadView.Tag = this;
@@ -216,10 +221,7 @@ namespace partialdownloadgui.Components
             DownloadStatus newStatus = download.SummarySection.DownloadStatus;
             DownloadStatus oldStatus = pd.DownloadView.Status;
             pd.DownloadView.StayedInactive = (oldStatus == DownloadStatus.Stopped && newStatus == DownloadStatus.Stopped) || oldStatus == DownloadStatus.Finished;
-            if (!forced)
-            {
-                if (pd.DownloadView.StayedInactive) return;
-            }
+            if (!forced && pd.DownloadView.StayedInactive) return;
 
             pd.SectionViews.Clear();
             pd.DownloadView.Status = newStatus;
@@ -312,14 +314,12 @@ namespace partialdownloadgui.Components
                         long bytesRead = 0;
                         while (true)
                         {
-                            long bytesToReadThisTime = bufferSize;
-                            if (ds.Total > 0) bytesToReadThisTime = (ds.Total - bytesRead >= bufferSize) ? bufferSize : (ds.Total - bytesRead);
-                            long bytesReadThisTime = streamSection.Read(buffer, 0, (int)bytesToReadThisTime);
+                            long bytesToReadThisTime = (ds.Total - bytesRead >= bufferSize) ? bufferSize : (ds.Total - bytesRead);
                             // stream reached the end
-                            if (bytesReadThisTime == 0) break;
+                            if (bytesToReadThisTime == 0) break;
+                            long bytesReadThisTime = streamSection.Read(buffer, 0, (int)bytesToReadThisTime);
                             bytesRead += bytesReadThisTime;
                             streamDest.Write(buffer, 0, (int)bytesReadThisTime);
-                            if (ds.Total > 0 && bytesRead >= ds.Total) break;
                         }
                         streamSection.Close();
                     }
