@@ -214,7 +214,7 @@ namespace partialdownloadgui.Components
             }
 
             pd.SectionViews.Clear();
-            pd.DownloadView.Status = download.SummarySection.DownloadStatus;
+            pd.DownloadView.Status = newStatus;
             pd.DownloadView.LastModified = download.SummarySection.LastModified == DateTimeOffset.MaxValue ? "Not available" : download.SummarySection.LastModified.ToLocalTime().ToString();
             pd.DownloadView.DownloadFolder = download.DownloadFolder;
             pd.DownloadView.Total = download.SummarySection.Total;
