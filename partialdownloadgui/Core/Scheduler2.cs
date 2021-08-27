@@ -44,6 +44,8 @@ namespace partialdownloadgui.Components
             pd.DownloadView.Id = download.SummarySection.Id;
             pd.DownloadView.Tag = this;
             pd.DownloadView.Url = download.SummarySection.Url;
+            pd.DownloadView.Status = download.SummarySection.DownloadStatus;
+            RefreshDownloadStatusData(true);
         }
 
         private int FindFreeDownloader()
@@ -201,15 +203,22 @@ namespace partialdownloadgui.Components
             TryDownloadingAllUnfinishedSections();
         }
 
-        public void RefreshDownloadStatusData()
+        public void RefreshDownloadStatusData(bool forced)
         {
-            pd.SectionViews.Clear();
+            DownloadStatus newStatus = download.SummarySection.DownloadStatus;
+            DownloadStatus oldStatus = pd.DownloadView.Status;
+            pd.DownloadView.StayedInactive = (oldStatus == DownloadStatus.Stopped && newStatus == DownloadStatus.Stopped) || oldStatus == DownloadStatus.Finished;
+            if (!forced)
+            {
+                if (pd.DownloadView.StayedInactive) return;
+            }
 
+            pd.SectionViews.Clear();
+            pd.DownloadView.Status = download.SummarySection.DownloadStatus;
             pd.DownloadView.LastModified = download.SummarySection.LastModified == DateTimeOffset.MaxValue ? "Not available" : download.SummarySection.LastModified.ToLocalTime().ToString();
             pd.DownloadView.DownloadFolder = download.DownloadFolder;
             pd.DownloadView.Total = download.SummarySection.Total;
             pd.DownloadView.Size = Util.GetEasyToUnderstandFileSize(pd.DownloadView.Total);
-            pd.DownloadView.Status = download.SummarySection.DownloadStatus;
             pd.DownloadView.Error = exMessage == null ? string.Empty : exMessage.Message;
             pd.DownloadView.DownloadGroup = download.DownloadGroup;
             if (pd.DownloadView.Status == DownloadStatus.Finished)

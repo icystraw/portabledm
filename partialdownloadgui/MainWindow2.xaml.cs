@@ -80,7 +80,7 @@ namespace partialdownloadgui
             {
                 DownloadStatus oldStatus = s.ProgressData.DownloadView.Status;
                 if (oldStatus == DownloadStatus.Finished) continue;
-                s.RefreshDownloadStatusData();
+                s.RefreshDownloadStatusData(false);
                 DownloadStatus newStatus = s.ProgressData.DownloadView.Status;
                 // if there is a download that has just completed
                 if (newStatus == DownloadStatus.Finished && oldStatus == DownloadStatus.Downloading)
@@ -191,20 +191,17 @@ namespace partialdownloadgui
             txtResumability.Foreground = Brushes.Blue;
         }
 
-        private void UpdateControlsStatus()
+        private void UpdateControlsStatus(bool forced)
         {
             btnEdit.IsEnabled = false;
             btnStart.IsEnabled = false;
             btnStop.IsEnabled = false;
             btnDelete.IsEnabled = false;
-            btnOpenFolder.IsEnabled = false;
-            btnOpenFolder2.IsEnabled = false;
 
             mnuEdit.IsEnabled = false;
             mnuStart.IsEnabled = false;
             mnuStop.IsEnabled = false;
             mnuDelete.IsEnabled = false;
-            mnuOpenFolder.IsEnabled = false;
             mnuRedownload.IsEnabled = false;
 
             DownloadView dv = lstDownloads.SelectedItem as DownloadView;
@@ -220,16 +217,17 @@ namespace partialdownloadgui
             }
             else
             {
-                Scheduler2 s = dv.Tag as Scheduler2;
-                ShowDownloadProgress(s.ProgressData);
+                bool updateProgress = forced || !dv.StayedInactive;
+                if (updateProgress)
+                {
+                    Scheduler2 s = dv.Tag as Scheduler2;
+                    ShowDownloadProgress(s.ProgressData);
+                }
             }
 
             btnDelete.IsEnabled = true;
-            btnOpenFolder.IsEnabled = true;
-            btnOpenFolder2.IsEnabled = true;
 
             mnuDelete.IsEnabled = true;
-            mnuOpenFolder.IsEnabled = true;
             if (dv.Status == DownloadStatus.DownloadError)
             {
                 btnEdit.IsEnabled = true;
@@ -323,7 +321,6 @@ namespace partialdownloadgui
         private Scheduler2 AddDownloadWorker(Download d)
         {
             Scheduler2 s = new(d);
-            s.RefreshDownloadStatusData();
             schedulers.Add(s);
             downloadViews.Add(s.ProgressData.DownloadView);
             return s;
@@ -426,7 +423,7 @@ namespace partialdownloadgui
             }
             catch { }
             lstDownloads.ItemsSource = downloadViews;
-            UpdateControlsStatus();
+            UpdateControlsStatus(false);
             if (App.AppSettings.StartTcpServer) chkBrowserDownload.IsChecked = true;
             if (App.AppSettings.MinimizeToSystemTray) chkMinimizeToTray.IsChecked = true;
             timer.Start();
@@ -436,20 +433,27 @@ namespace partialdownloadgui
         {
             timer.Stop();
             ReactToDownloadStatusChanges();
-            UpdateControlsStatus();
+            UpdateControlsStatus(false);
             SeeIfThereIsDownloadFromBrowser();
             timer.Start();
         }
 
         private void lstDownloads_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            UpdateControlsStatus();
+            UpdateControlsStatus(true);
         }
 
         private void btnOpenFolder_Click(object sender, RoutedEventArgs e)
         {
             DownloadView dv = lstDownloads.SelectedItem as DownloadView;
-            if (null == dv) return;
+            if (null == dv)
+            {
+                if (!string.IsNullOrEmpty(App.AppSettings.DownloadFolder))
+                {
+                    Process.Start("explorer.exe", App.AppSettings.DownloadFolder);
+                }
+                return;
+            }
             Scheduler2 s = dv.Tag as Scheduler2;
             if (s != null) Process.Start("explorer.exe", s.ProgressData.DownloadView.DownloadFolder);
         }
