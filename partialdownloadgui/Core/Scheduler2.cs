@@ -22,7 +22,6 @@ namespace partialdownloadgui.Components
         private SpeedCalculator sc = new();
 
         private Thread downloadThread;
-        private Exception exMessage;
 
         public Download Download => download;
 
@@ -34,7 +33,7 @@ namespace partialdownloadgui.Components
             {
                 throw new ArgumentNullException(nameof(d));
             }
-            if (d.NoDownloader == 0) throw new ArgumentOutOfRangeException(nameof(d), "Number of download threads cannot be zero.");
+            if (d.NoDownloader <= 0 || d.NoDownloader > maxNoDownloader) throw new ArgumentOutOfRangeException(nameof(d), "Number of download threads is out of range.");
             download = d;
             if (download.SummarySection.DownloadStatus == DownloadStatus.Downloading)
             {
@@ -226,7 +225,7 @@ namespace partialdownloadgui.Components
             pd.SectionViews.Clear();
             pd.DownloadView.Status = newStatus;
             pd.DownloadView.DownloadFolder = download.DownloadFolder;
-            pd.DownloadView.Error = exMessage == null ? string.Empty : exMessage.Message;
+            pd.DownloadView.Error = download.SummarySection.Error;
             if (pd.DownloadView.Status == DownloadStatus.Finished)
             {
                 pd.DownloadView.Total = download.SummarySection.Total;
@@ -401,10 +400,10 @@ namespace partialdownloadgui.Components
         public void Start()
         {
             if (IsDownloadFinished() || IsDownloading()) return;
-            download.SummarySection.DownloadStatus = DownloadStatus.Downloading;
-            exMessage = null;
-            sc = new();
             downloadStopFlag = false;
+            download.SummarySection.DownloadStatus = DownloadStatus.Downloading;
+            download.SummarySection.Error = string.Empty;
+            sc = new();
             downloadThread = new(new ThreadStart(DownloadThreadProc));
             downloadThread.Start();
         }
@@ -427,7 +426,7 @@ namespace partialdownloadgui.Components
             // if there is section with logical error
             if (ErrorAndUnstableSectionsExist())
             {
-                exMessage = new InvalidOperationException("There are sections that are in invalid states. Download cannot continue. Try re-download this file.");
+                download.SummarySection.Error = "There are sections that are in invalid states. Download cannot continue. Try re-download this file.";
                 download.SummarySection.DownloadStatus = DownloadStatus.DownloadError;
                 return;
             }
@@ -437,12 +436,11 @@ namespace partialdownloadgui.Components
             }
             catch (Exception ex)
             {
-                exMessage = ex;
+                download.SummarySection.Error = ex.Message;
                 download.SummarySection.DownloadStatus = DownloadStatus.DownloadError;
                 return;
             }
             CleanTempFiles();
-            exMessage = null;
             download.SummarySection.DownloadStatus = DownloadStatus.Finished;
         }
     }

@@ -175,6 +175,12 @@ namespace partialdownloadgui.Components
         {
             System.Net.Http.Headers.HttpContentHeaders headers = response.Content.Headers;
 
+            if (response.StatusCode == HttpStatusCode.RequestedRangeNotSatisfiable)
+            {
+                ds.Error = "Requested range not satisfiable. Content-Range: " + (headers.ContentRange != null ? headers.ContentRange.ToString() : string.Empty);
+                ds.DownloadStatus = DownloadStatus.DownloadError;
+                return false;
+            }
             if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.PartialContent)
             {
                 ds.Error = "HTTP request not successful. Maybe try again later. Status: " + response.StatusCode;
@@ -223,7 +229,7 @@ namespace partialdownloadgui.Components
                 long contentLength = (headers.ContentLength ?? 0);
                 if (ds.End >= 0 && ds.Start + ds.BytesDownloaded + contentLength - 1 != ds.End)
                 {
-                    ds.Error = "Content length from server does not match download section.";
+                    ds.Error = "Content length from server does not match requested download section. Content length: " + contentLength;
                     ds.DownloadStatus = DownloadStatus.DownloadError;
                     return false;
                 }
