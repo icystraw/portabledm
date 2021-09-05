@@ -345,6 +345,10 @@ namespace partialdownloadgui.Components
                 {
                     if (File.Exists(ds.FileName)) File.Delete(ds.FileName);
                 }
+                if (sectionBeingEvaluated != null)
+                {
+                    if (File.Exists(sectionBeingEvaluated.FileName)) File.Delete(sectionBeingEvaluated.FileName);
+                }
             }
             catch
             {
