@@ -267,10 +267,16 @@ namespace partialdownloadgui.Components
                 while (ds != null);
             }
             download.SummarySection.BytesDownloaded = totalDownloaded;
+            pd.DownloadView.Progress = Util.CalculateProgress(totalDownloaded, total);
+            if (pd.DownloadView.Status == DownloadStatus.Stopped || pd.DownloadView.Status == DownloadStatus.DownloadError)
+            {
+                pd.DownloadView.Speed = string.Empty;
+                pd.DownloadView.Eta = string.Empty;
+                return;
+            }
             sc.RegisterBytes(totalDownloaded);
             long speed = sc.GetSpeed();
             pd.DownloadView.Speed = Util.GetEasyToUnderstandFileSize(speed) + "/sec";
-            pd.DownloadView.Progress = Util.CalculateProgress(totalDownloaded, total);
             pd.DownloadView.Eta = Util.CalculateEta(total - totalDownloaded, speed);
         }
 
