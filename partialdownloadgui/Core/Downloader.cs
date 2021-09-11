@@ -53,13 +53,12 @@ namespace partialdownloadgui.Components
         {
             if (!IsBusy()) return;
             downloadStopFlag = true;
-            WaitForFinish();
-            downloadStopFlag = false;
         }
 
         public void WaitForFinish()
         {
             if (downloadThread != null && downloadThread.IsAlive) downloadThread.Join();
+            downloadStopFlag = false;
         }
 
         public bool IsBusy()

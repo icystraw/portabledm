@@ -78,6 +78,13 @@ namespace partialdownloadgui.Components
                     downloaders[i].StopDownloading();
                 }
             }
+            for (int i = 0; i < download.NoDownloader; i++)
+            {
+                if (downloaders[i] != null)
+                {
+                    downloaders[i].WaitForFinish();
+                }
+            }
         }
 
         private int FindDownloaderBySection(DownloadSection ds)
