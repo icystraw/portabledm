@@ -8,8 +8,6 @@ namespace partialdownloadgui.Components
     public class YoutubePlayerParser
     {
         private string playerFile;
-        private string paramS;
-        private string signature;
         private string scramblerFunction;
         private string scramblerAlgorithm;
         private List<ScramblerFunction> scramblerFunctions;
@@ -18,8 +16,6 @@ namespace partialdownloadgui.Components
         public string ScramblerFunction { get => scramblerFunction; set => scramblerFunction = value; }
         public List<ScramblerFunction> ScramblerFunctions { get => scramblerFunctions; set => scramblerFunctions = value; }
         public string ScramblerAlgorithm { get => scramblerAlgorithm; set => scramblerAlgorithm = value; }
-        public string Signature { get => signature; set => signature = value; }
-        public string ParamS { get => paramS; set => paramS = value; }
 
         public YoutubePlayerParser(string file)
         {
@@ -94,11 +90,10 @@ namespace partialdownloadgui.Components
             }
         }
 
-        public void CalculateSignature(string paramS)
+        public string CalculateSignature(string paramS)
         {
             if (string.IsNullOrEmpty(paramS)) throw new ArgumentNullException(nameof(paramS));
-            this.paramS = paramS;
-            signature = paramS;
+            string signature = paramS;
             foreach (ScramblerFunction f in scramblerFunctions)
             {
                 if (f.Type == ScramblerType.Reverse) signature = Reverse(signature);
@@ -106,6 +101,7 @@ namespace partialdownloadgui.Components
                 else signature = Swap(signature, f.Parameter);
             }
             Debug.WriteLine(signature);
+            return signature;
         }
 
         public void Parse()

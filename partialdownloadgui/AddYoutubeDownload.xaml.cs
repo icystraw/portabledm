@@ -174,21 +174,25 @@ namespace partialdownloadgui
                 return;
             }
             Title = wp.PageTitle;
-            string player = Downloader.SimpleDownloadToString("https://www.youtube.com" + wp.PlayerJsUrl);
-            if (string.IsNullOrEmpty(player))
+            YoutubePlayerParser pp = null;
+            if (wp.Videos.Count > 0 && !string.IsNullOrEmpty(wp.Videos[0].signatureCipher))
             {
-                MessageBox.Show("Cannot get player script file.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
-            }
-            YoutubePlayerParser pp = new(player);
-            try
-            {
-                pp.Parse();
-            }
-            catch
-            {
-                MessageBox.Show("Parsing player script file failed.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
+                string player = Downloader.SimpleDownloadToString("https://www.youtube.com" + wp.PlayerJsUrl);
+                if (string.IsNullOrEmpty(player))
+                {
+                    MessageBox.Show("Cannot get player script file.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+                pp = new(player);
+                try
+                {
+                    pp.Parse();
+                }
+                catch
+                {
+                    MessageBox.Show("Parsing player script file failed.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
             }
             spVideos.Children.Clear();
             spAudios.Children.Clear();
@@ -196,8 +200,7 @@ namespace partialdownloadgui
             {
                 if (!string.IsNullOrEmpty(v.signatureCipher) && !string.IsNullOrEmpty(v.paramS))
                 {
-                    pp.CalculateSignature(v.paramS);
-                    v.signature = pp.Signature;
+                    v.signature = pp.CalculateSignature(v.paramS);
                 }
                 long fileSize = 0;
                 try
