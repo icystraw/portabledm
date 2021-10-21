@@ -33,13 +33,13 @@ function syncIconStatus(tab) {
 
 function setIconStyle(bEnabled) {
   if (bEnabled) {
-    chrome.browserAction.setIcon({ path: normalIcons });
+    chrome.action.setIcon({ path: normalIcons });
   }
   else {
-    chrome.browserAction.setIcon({ path: bwIcon });
+    chrome.action.setIcon({ path: bwIcon });
   }
 }
 
 chrome.tabs.onCreated.addListener(syncIconStatus);
 chrome.downloads.onCreated.addListener(sendDownload);
-chrome.browserAction.onClicked.addListener(toggleIconStatus);
+chrome.action.onClicked.addListener(toggleIconStatus);

@@ -1,18 +1,16 @@
 {
-  "name": "Link Grabber",
+  "name": "Link Grabber for Portable HTTP Download Manager",
   "version": "1.0",
-  "description": "Take over download from browser",
-  "manifest_version": 2,
+  "description": "Take over downloads from Chromium based browser",
+  "manifest_version": 3,
   "background": {
-    "scripts": [
-      "background.js"
-    ]
+    "service_worker": "background.js"
   },
   "permissions": [
     "downloads",
     "storage"
   ],
-  "browser_action": {
+  "action": {
     "default_icon": {
       "16": "16.png",
       "48": "48.png",
