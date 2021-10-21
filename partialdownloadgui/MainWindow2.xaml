@@ -222,7 +222,9 @@
                             </Button.ToolTip>
                         </Button>
                         <TextBlock Margin="2">URL:</TextBlock>
-                        <TextBlock Name="txtUrl" TextWrapping="Wrap" Margin="2"></TextBlock>
+                        <ScrollViewer Name="spAV" MaxHeight="80" VerticalScrollBarVisibility="Auto">
+                            <TextBlock Name="txtUrl" TextWrapping="Wrap" Margin="2"></TextBlock>
+                        </ScrollViewer>
                     </WrapPanel>
                     <WrapPanel>
                         <Button Name="btnOpenFolder2" Click="btnOpenFolder_Click" Width="25" Margin="2" Style="{DynamicResource RoundCorner}">
