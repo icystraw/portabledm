@@ -11,18 +11,15 @@ namespace partialdownloadgui.Components
     public class TcpServer
     {
         private static readonly int listenPort = 13000;
-        private static readonly int maxYoutubeVideoRecordsKept = 6;
         private static string downloadUrl;
-        private static Queue<Video> youtubeVideos = new();
         private static Thread serverThread;
 
         public static string DownloadUrl { get => downloadUrl; set => downloadUrl = value; }
-        public static Queue<Video> YoutubeVideos { get => youtubeVideos; }
 
         public static void Start()
         {
             if (serverThread != null && serverThread.IsAlive) return;
-            serverThread = new(new ThreadStart(tcpServerThreadWorker));
+            serverThread = new(new ThreadStart(TcpServerThreadWorker));
             serverThread.Start();
         }
 
@@ -41,7 +38,7 @@ namespace partialdownloadgui.Components
             }
         }
 
-        public static void tcpServerThreadWorker()
+        private static void TcpServerThreadWorker()
         {
             TcpListener server = new(IPAddress.Parse("127.0.0.1"), listenPort);
             try
@@ -87,32 +84,7 @@ namespace partialdownloadgui.Components
                     else if (request.StartsWith("GET /") && request.Contains(" HTTP"))
                     {
                         string encodedUrl = request.Substring(5, request.IndexOf(" HTTP") - 5);
-                        if (encodedUrl.Contains("/")) // it is a Youtube url
-                        {
-                            Video video = Video.ParseYoutubeEncodedUrlFromExtension(encodedUrl);
-                            if (video != null)
-                            {
-                                bool foundSameUrl = false;
-                                foreach (Video v in youtubeVideos)
-                                {
-                                    if (v.url == video.url)
-                                    {
-                                        v.title = video.title;
-                                        foundSameUrl = true;
-                                        break;
-                                    }
-                                }
-                                if (!foundSameUrl)
-                                {
-                                    if (youtubeVideos.Count >= maxYoutubeVideoRecordsKept) youtubeVideos.Dequeue();
-                                    youtubeVideos.Enqueue(video);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            downloadUrl = Uri.UnescapeDataString(encodedUrl);
-                        }
+                        downloadUrl = Uri.UnescapeDataString(encodedUrl);
                     }
                 }
                 catch

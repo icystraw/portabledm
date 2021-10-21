@@ -47,30 +47,6 @@ function setIconStyle(bEnabled) {
   }
 }
 
-function sendYTDetails(details) {
-  chrome.storage.local.get(["enabled"], function (result) {
-    var isEnabled = result.hasOwnProperty("enabled") ? result.enabled : true;
-    if (!isEnabled) return;
-    if (details.tabId == (-1)) return;
-    chrome.tabs.get(details.tabId, function (tab) {
-      var encodedUrl;
-      if (tab.title) {
-        encodedUrl = encodeURIComponent(details.url) + "/" + encodeURIComponent(tab.title);
-      }
-      else {
-        encodedUrl = encodeURIComponent(details.url) + "/" + "YouTube";
-      }
-      fetch("http://localhost:13000/" + encodedUrl)
-        .catch((error) => {
-          console.error(error);
-        });
-    });
-  });
-}
-
 chrome.tabs.onCreated.addListener(syncIconStatus);
 chrome.downloads.onCreated.addListener(sendDownload);
 chrome.browserAction.onClicked.addListener(toggleIconStatus);
-chrome.webRequest.onBeforeRequest.addListener(sendYTDetails,
-  { urls: ["https://*.googlevideo.com/videoplayback*"] },
-);

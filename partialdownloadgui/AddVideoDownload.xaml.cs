@@ -7,11 +7,11 @@ using System.Windows.Controls;
 namespace partialdownloadgui
 {
     /// <summary>
-    /// Interaction logic for AddBilibiliDownload.xaml
+    /// Interaction logic for AddVideoDownload.xaml
     /// </summary>
-    public partial class AddBilibiliDownload : Window
+    public partial class AddVideoDownload : Window
     {
-        public AddBilibiliDownload()
+        public AddVideoDownload()
         {
             InitializeComponent();
         }
@@ -76,7 +76,8 @@ namespace partialdownloadgui
 
         private static bool CheckPreprocessedDownloadSection(DownloadSection ds)
         {
-            if (ds.DownloadStatus == DownloadStatus.DownloadError) return false;
+            if (ds.DownloadStatus == DownloadStatus.DownloadError || ds.HttpStatusCode == System.Net.HttpStatusCode.OK) return false;
+            if (!string.IsNullOrEmpty(ds.ContentType) && ds.ContentType.Contains("text")) return false;
             return true;
         }
 
@@ -88,54 +89,7 @@ namespace partialdownloadgui
 
         private void btnAnalyse_Click(object sender, RoutedEventArgs e)
         {
-            string urlText = txtUrl.Text.Trim();
-            if (!urlText.Contains("bilibili.com/video/"))
-            {
-                MessageBox.Show("Does not appear to be a valid bilibili.com watch page URL.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
-            }
-            byte[] page = Downloader.SimpleDownloadToByteArray(urlText);
-            if (page.Length == 0)
-            {
-                MessageBox.Show("Cannot access the page.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
-            }
-            BilibiliWatchPageParser wp = new(page);
-            try
-            {
-                wp.Parse();
-            }
-            catch
-            {
-                MessageBox.Show("The page given is not a bilibili.com watch page.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
-            }
-            Title = wp.PageTitle;
-            spVideos.Children.Clear();
-            spAudios.Children.Clear();
-            foreach (Video v in wp.Videos)
-            {
-                DownloadSection ds = new();
-                ds.Url = v.url;
-                ds.End = (-1);
-                ds.SuggestedName = wp.PageTitle + ".video";
-                CheckBox cb = new();
-                cb.Tag = ds;
-                cb.Content = v.width + "x" + v.height + ", " + v.mimeType + ", " + v.codecs;
-                spVideos.Children.Add(cb);
-            }
-            foreach (Video v in wp.Audios)
-            {
-                DownloadSection ds = new();
-                ds.Url = v.url;
-                ds.End = (-1);
-                ds.SuggestedName = wp.PageTitle + ".audio";
-                CheckBox cb = new();
-                cb.Tag = ds;
-                cb.Content = "Bitrate " + v.bandwidth / 1000 + "K, " + v.mimeType + ", " + v.codecs;
-                spAudios.Children.Add(cb);
-            }
-            spAV.Visibility = Visibility.Visible;
+
         }
     }
 }

@@ -59,32 +59,6 @@ namespace partialdownloadgui.Components
             }
         }
 
-        public static Video ParseYoutubeEncodedUrlFromExtension(string url)
-        {
-            Video v = new();
-            string[] queries = url.Split('/');
-            if (queries.Length != 2) return null;
-            string encodedUrl = queries[0];
-            string escapedTitle = queries[1];
-            v.title = Uri.UnescapeDataString(escapedTitle);
-            v.url = Uri.UnescapeDataString(encodedUrl);
-
-            v.url = Regex.Replace(v.url, @"[\?&](range|rn|rbuf)=[^&]+", string.Empty);
-            NameValueCollection parameters = HttpUtility.ParseQueryString(new Uri(v.url).Query);
-            if (parameters.Get("dur") != null)
-            {
-                v.duration = Util.CalculateDurationFromYoutubeUrlParam(parameters.Get("dur"));
-            }
-            else v.duration = string.Empty;
-            if (parameters.Get("mime") != null)
-            {
-                v.mimeType = parameters.Get("mime");
-            }
-            else v.mimeType = string.Empty;
-
-            return v;
-        }
-
         // properties for bilibili
         private string _codecs;
         public int bandwidth { get => _bitrate; set => _bitrate = value; }

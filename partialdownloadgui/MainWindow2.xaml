@@ -7,18 +7,6 @@
         mc:Ignorable="d"
         Title="Portable HTTP Download Manager" Background="#FFF2F5FC" Height="500" Width="1000" Closed="Window_Closed" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen" Closing="Window_Closing" StateChanged="Window_StateChanged">
     <Window.Resources>
-        <ContextMenu x:Key="mnuVideoDownload">
-            <MenuItem Header="Download YouTube Videos" Click="btnAddYoutube_Click">
-                <MenuItem.Icon>
-                    <Image Source="pack://application:,,,/Images/youtube.png"></Image>
-                </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem Header="Download bilibili.com Videos" Click="btnAddBilibili_Click">
-                <MenuItem.Icon>
-                    <Image Source="pack://application:,,,/Images/bilibili.png"></Image>
-                </MenuItem.Icon>
-            </MenuItem>
-        </ContextMenu>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>

@@ -547,19 +547,6 @@ namespace partialdownloadgui
             btnOpenFolder_Click(this, null);
         }
 
-        private void btnAddYoutube_Click(object sender, RoutedEventArgs e)
-        {
-            AddYoutubeDownload ad = new();
-            ad.Owner = this;
-            if (ad.ShowDialog() == true)
-            {
-                foreach (Download d in ad.Downloads)
-                {
-                    AddDownloadWorker(d).Start();
-                }
-            }
-        }
-
         private void btnSortFileName_Click(object sender, RoutedEventArgs e)
         {
             SortUsing("FileName");
@@ -598,20 +585,6 @@ namespace partialdownloadgui
             {
                 view.SortDescriptions.Add(new System.ComponentModel.SortDescription(property, System.ComponentModel.ListSortDirection.Ascending));
             }
-
-        }
-
-        private void btnAddBilibili_Click(object sender, RoutedEventArgs e)
-        {
-            AddBilibiliDownload ad = new();
-            ad.Owner = this;
-            if (ad.ShowDialog() == true)
-            {
-                foreach (Download d in ad.Downloads)
-                {
-                    AddDownloadWorker(d).Start();
-                }
-            }
         }
 
         private void mnuRedownload_Click(object sender, RoutedEventArgs e)
@@ -631,11 +604,14 @@ namespace partialdownloadgui
 
         private void btnAddVideoDownload_Click(object sender, RoutedEventArgs e)
         {
-            ContextMenu menu = FindResource("mnuVideoDownload") as ContextMenu;
-            if (menu != null)
+            AddVideoDownload ad = new();
+            ad.Owner = this;
+            if (ad.ShowDialog() == true)
             {
-                menu.PlacementTarget = sender as Button;
-                menu.IsOpen = true;
+                foreach (Download d in ad.Downloads)
+                {
+                    AddDownloadWorker(d).Start();
+                }
             }
         }
 

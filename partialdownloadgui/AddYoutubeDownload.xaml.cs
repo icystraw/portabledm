@@ -1,7 +1,6 @@
 ﻿using partialdownloadgui.Components;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -18,7 +17,6 @@ namespace partialdownloadgui
         }
 
         private List<Download> downloads = new();
-        private Guid downloadGroupRecent = Guid.NewGuid();
         private Guid downloadGroup = Guid.NewGuid();
 
         public List<Download> Downloads { get => downloads; set => downloads = value; }
@@ -30,54 +28,6 @@ namespace partialdownloadgui
                 btnBrowse.Content = App.AppSettings.DownloadFolder;
             }
             txtUrl.Focus();
-            if (TcpServer.YoutubeVideos.Count == 0) return;
-            Video[] videos = TcpServer.YoutubeVideos.ToArray();
-            List<DownloadSection> dsPreprocess = new();
-            List<Thread> threads = new();
-            foreach (Video v in videos)
-            {
-                DownloadSection ds = new();
-                ds.Url = v.url;
-                ds.End = (-1);
-                if (v.mimeType.Contains("video"))
-                {
-                    ds.SuggestedName = v.title + ".video";
-                }
-                else
-                {
-                    ds.SuggestedName = v.title + ".audio";
-                }
-                ds.Tag = v;
-                dsPreprocess.Add(ds);
-                Thread t = new(downloadPreprocess);
-                threads.Add(t);
-                t.Start(ds);
-            }
-            foreach (Thread t in threads) t.Join();
-            spRecentVideos.Children.Clear();
-            spRecentAudios.Children.Clear();
-            foreach (DownloadSection ds in dsPreprocess)
-            {
-                if (!CheckPreprocessedDownloadSection(ds)) continue;
-                CheckBox cb = new();
-                cb.Tag = ds;
-                Video v = ds.Tag as Video;
-                cb.Content = v.mimeType + ", " + Util.GetEasyToUnderstandFileSize(ds.Total) + ", " + v.duration + ", " + v.title;
-                if (v.mimeType.Contains("video"))
-                    spRecentVideos.Children.Add(cb);
-                else
-                    spRecentAudios.Children.Add(cb);
-            }
-        }
-
-        private void downloadPreprocess(object obj)
-        {
-            DownloadSection ds = obj as DownloadSection;
-            try
-            {
-                Util.DownloadPreprocess(ds);
-            }
-            catch { }
         }
 
         private void btnBrowse_Click(object sender, RoutedEventArgs e)
@@ -92,44 +42,32 @@ namespace partialdownloadgui
                 MessageBox.Show("You need to specify a folder for downloaded files.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
-            addDownload(spVideos, false);
-            addDownload(spAudios, false);
-            addDownload(spRecentVideos, true);
-            addDownload(spRecentAudios, true);
+            addDownload(spVideos);
+            addDownload(spAudios);
             DialogResult = true;
             Close();
         }
 
-        private void addDownload(StackPanel sp, bool isRecent)
+        private void addDownload(StackPanel sp)
         {
-            foreach (UIElement cb in sp.Children)
+            foreach (CheckBox box in sp.Children)
             {
-                if (cb is CheckBox box && box.IsChecked == true)
+                if (box.IsChecked == true)
                 {
                     Download d = new();
                     d.DownloadFolder = App.AppSettings.DownloadFolder;
                     d.NoDownloader = cbThreads.SelectedIndex + 1;
                     d.SummarySection = box.Tag as DownloadSection;
-                    if (!isRecent)
+                    try
                     {
-                        try
-                        {
-                            Util.DownloadPreprocess(d.SummarySection);
-                        }
-                        catch { }
-                        if (!CheckPreprocessedDownloadSection(d.SummarySection)) continue;
+                        Util.DownloadPreprocess(d.SummarySection);
                     }
+                    catch { }
+                    if (!CheckPreprocessedDownloadSection(d.SummarySection)) continue;
                     d.Sections.Add(d.SummarySection.Copy());
                     if (cbCombine.IsChecked == true)
                     {
-                        if (isRecent)
-                        {
-                            d.DownloadGroup = downloadGroupRecent;
-                        }
-                        else
-                        {
-                            d.DownloadGroup = downloadGroup;
-                        }
+                        d.DownloadGroup = downloadGroup;
                     }
                     downloads.Add(d);
                 }

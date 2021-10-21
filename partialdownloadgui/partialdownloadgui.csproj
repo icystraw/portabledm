@@ -19,7 +19,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Remove="Images\bilibili.png" />
 		<None Remove="Images\cancel.png" />
 		<None Remove="Images\clipboard.png" />
 		<None Remove="Images\decrease.ico" />
@@ -36,11 +35,9 @@
 		<None Remove="Images\sortfile.png" />
 		<None Remove="Images\sortprogress.png" />
 		<None Remove="Images\video.png" />
-		<None Remove="Images\youtube.png" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Resource Include="Images\bilibili.png" />
 		<Resource Include="Images\cancel.png" />
 		<Resource Include="Images\clipboard.png" />
 		<Resource Include="Images\decrease.ico" />
@@ -57,7 +54,6 @@
 		<Resource Include="Images\sortfile.png" />
 		<Resource Include="Images\sortprogress.png" />
 		<Resource Include="Images\video.png" />
-		<Resource Include="Images\youtube.png" />
 	</ItemGroup>
 
 </Project>
