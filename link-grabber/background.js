@@ -9,15 +9,8 @@ function sendDownload(downloadItem) {
     var now = Date.now();
     if (Math.abs(now - startTime) < 1000) {
       var encodedUrl = encodeURIComponent(downloadItem.finalUrl);
-      fetch("http://localhost:13000/" + encodedUrl)
-        .then(function (response) {
-          if (response.status == 403) {
-            chrome.downloads.cancel(downloadItem.id);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      chrome.downloads.cancel(downloadItem.id);
+      fetch("http://localhost:13000/" + encodedUrl, { mode: 'no-cors' });
     }
   });
 }
