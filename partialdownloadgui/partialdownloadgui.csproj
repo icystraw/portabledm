@@ -56,4 +56,10 @@
 		<Resource Include="Images\video.png" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="mkvmerge.exe">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
 </Project>
