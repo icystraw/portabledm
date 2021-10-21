@@ -169,32 +169,7 @@ namespace partialdownloadgui.Components
             {
                 response = client.Send(request, HttpCompletionOption.ResponseHeadersRead);
                 downloadSection.HttpStatusCode = response.StatusCode;
-                // handle http redirection up to 5 times
-                for (int retry = 0; retry < 5; retry++)
-                {
-                    if (downloadSection.HttpStatusCode == HttpStatusCode.OK || downloadSection.HttpStatusCode == HttpStatusCode.PartialContent) break;
-                    else if (downloadSection.HttpStatusCode == HttpStatusCode.MovedPermanently ||
-                        downloadSection.HttpStatusCode == HttpStatusCode.Found ||
-                        downloadSection.HttpStatusCode == HttpStatusCode.TemporaryRedirect ||
-                        downloadSection.HttpStatusCode == HttpStatusCode.PermanentRedirect)
-                    {
-                        Uri uri;
-                        if (response.Headers.Location != null)
-                        {
-                            uri = response.Headers.Location;
-                        }
-                        else if (response.Content.Headers.ContentLocation != null)
-                        {
-                            uri = response.Content.Headers.ContentLocation;
-                        }
-                        else break;
-                        downloadSection.Url = uri.AbsoluteUri;
-                        request = Util.ConstructHttpRequest(downloadSection.Url, downloadSection.Start, downloadSection.End, downloadSection.UserName, downloadSection.Password);
-                        response = client.Send(request, HttpCompletionOption.ResponseHeadersRead);
-                        downloadSection.HttpStatusCode = response.StatusCode;
-                    }
-                    else break;
-                }
+                Util.HandleHttpRedirection(downloadSection, ref response);
                 if (!Util.SyncDownloadSectionAgainstHTTPResponse(downloadSection, response))
                 {
                     response.Dispose();

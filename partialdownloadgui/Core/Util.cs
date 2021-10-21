@@ -246,6 +246,36 @@ namespace partialdownloadgui.Components
             return true;
         }
 
+        public static void HandleHttpRedirection(DownloadSection ds, ref HttpResponseMessage response)
+        {
+            // handle http redirection up to 5 times
+            for (int retry = 0; retry < 5; retry++)
+            {
+                if (ds.HttpStatusCode == HttpStatusCode.OK || ds.HttpStatusCode == HttpStatusCode.PartialContent) break;
+                else if (ds.HttpStatusCode == HttpStatusCode.MovedPermanently ||
+                    ds.HttpStatusCode == HttpStatusCode.Found ||
+                    ds.HttpStatusCode == HttpStatusCode.TemporaryRedirect ||
+                    ds.HttpStatusCode == HttpStatusCode.PermanentRedirect)
+                {
+                    Uri uri;
+                    if (response.Headers.Location != null)
+                    {
+                        uri = response.Headers.Location;
+                    }
+                    else if (response.Content.Headers.ContentLocation != null)
+                    {
+                        uri = response.Content.Headers.ContentLocation;
+                    }
+                    else break;
+                    ds.Url = uri.AbsoluteUri;
+                    HttpRequestMessage request = ConstructHttpRequest(ds.Url, ds.Start, ds.End, ds.UserName, ds.Password);
+                    response = Downloader.Client.Send(request, HttpCompletionOption.ResponseHeadersRead);
+                    ds.HttpStatusCode = response.StatusCode;
+                }
+                else break;
+            }
+        }
+
         public static void DownloadPreprocess(DownloadSection ds)
         {
             if (!CheckDownloadSectionAgainstLogicalErrors(ds)) return;
@@ -259,32 +289,7 @@ namespace partialdownloadgui.Components
                 Debug.WriteLine(response.Headers.ToString());
                 Debug.WriteLine(response.Content.Headers.ToString());
                 ds.HttpStatusCode = response.StatusCode;
-                // handle http redirection up to 5 times
-                for (int retry = 0; retry < 5; retry++)
-                {
-                    if (ds.HttpStatusCode == HttpStatusCode.OK || ds.HttpStatusCode == HttpStatusCode.PartialContent) break;
-                    else if (ds.HttpStatusCode == HttpStatusCode.MovedPermanently ||
-                        ds.HttpStatusCode == HttpStatusCode.Found ||
-                        ds.HttpStatusCode == HttpStatusCode.TemporaryRedirect ||
-                        ds.HttpStatusCode == HttpStatusCode.PermanentRedirect)
-                    {
-                        Uri uri;
-                        if (response.Headers.Location != null)
-                        {
-                            uri = response.Headers.Location;
-                        }
-                        else if (response.Content.Headers.ContentLocation != null)
-                        {
-                            uri = response.Content.Headers.ContentLocation;
-                        }
-                        else break;
-                        ds.Url = uri.AbsoluteUri;
-                        request = ConstructHttpRequest(ds.Url, ds.Start, ds.End, ds.UserName, ds.Password);
-                        response = Downloader.Client.Send(request, HttpCompletionOption.ResponseHeadersRead);
-                        ds.HttpStatusCode = response.StatusCode;
-                    }
-                    else break;
-                }
+                HandleHttpRedirection(ds, ref response);
                 if (SyncDownloadSectionAgainstHTTPResponse(ds, response))
                 {
                     ds.DownloadStatus = DownloadStatus.Stopped;
