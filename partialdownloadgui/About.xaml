@@ -12,7 +12,8 @@
             <StackPanel>
                 <TextBlock FontSize="16" FontWeight="Bold" Margin="0,25,0,0">Portable HTTP Download Manager</TextBlock>
                 <TextBlock>An open source HTTP file download manager built with .NET.</TextBlock>
-                <TextBlock Margin="0,0,0,30">Version 1.0, icystraw</TextBlock>
+                <TextBlock>Version 1.0, icystraw</TextBlock>
+                <TextBlock Margin="0,0,0,30">This program uses mkvmerge.exe from MKVToolNix to create mkv files.</TextBlock>
             </StackPanel>
         </DockPanel>
     </Border>
