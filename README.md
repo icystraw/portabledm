@@ -13,3 +13,4 @@ An easy to use, fully-featured HTTP file download manager.
 * Open partialdownloadgui.sln with Visual Studio and build both projects.
 * Copy secreplace.exe from x64\Release to partialdownloadgui\bin\Release\net5.0-windows.
 * Press Ctrl-F5 within Visual Studio to run the program.
+* Chromium based browser extension is located in link-grabber folder.
